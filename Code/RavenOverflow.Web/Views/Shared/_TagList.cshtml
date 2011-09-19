@@ -1,0 +1,27 @@
+﻿@using System.Text
+@model IList<string>
+
+@if (Model == null | Model.Count <= 0)
+{ 
+    <p>No tags</p>
+}
+else
+{
+    StringBuilder tags = new StringBuilder();
+    foreach (var tag in Model)
+    {
+        tags.AppendFormat("{0}{1}{2}", tags.Length > 0 ? " " : string.Empty, "t-", tag);
+    }
+    
+    <div class="tags @tags.ToString()">
+    @{ bool isFirstTag = true; }
+    @foreach (var tag in Model)
+    {
+        if (!isFirstTag)
+        {
+            @:&nbsp;
+        }
+    <a href="#" class="post-tag" title="show questions tagged '@tag'" rel="tag">@tag</a>
+    }
+    </div>  
+}

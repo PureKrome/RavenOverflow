@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenOverflow.Core", "Code\RavenOverflow.Core\RavenOverflow.Core.csproj", "{58D8E77E-68D3-4623-A558-84B731E7725F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenOverflow.Services", "Code\RavenOverflow.Services\RavenOverflow.Services.csproj", "{A1F07927-5943-44D6-9FD4-FF36AE6C25DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenOverflow.Web", "Code\RavenOverflow.Web\RavenOverflow.Web.csproj", "{44F86C85-B711-4CF5-A161-862EE6E5D160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenOverflow.FakeData", "Code\RavenOverflow.FakeData\RavenOverflow.FakeData.csproj", "{71DACF07-CC2C-4AD3-BF61-FF953DE917FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{58D8E77E-68D3-4623-A558-84B731E7725F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58D8E77E-68D3-4623-A558-84B731E7725F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58D8E77E-68D3-4623-A558-84B731E7725F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58D8E77E-68D3-4623-A558-84B731E7725F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F07927-5943-44D6-9FD4-FF36AE6C25DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F07927-5943-44D6-9FD4-FF36AE6C25DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F07927-5943-44D6-9FD4-FF36AE6C25DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F07927-5943-44D6-9FD4-FF36AE6C25DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44F86C85-B711-4CF5-A161-862EE6E5D160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44F86C85-B711-4CF5-A161-862EE6E5D160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44F86C85-B711-4CF5-A161-862EE6E5D160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44F86C85-B711-4CF5-A161-862EE6E5D160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71DACF07-CC2C-4AD3-BF61-FF953DE917FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71DACF07-CC2C-4AD3-BF61-FF953DE917FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71DACF07-CC2C-4AD3-BF61-FF953DE917FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71DACF07-CC2C-4AD3-BF61-FF953DE917FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
