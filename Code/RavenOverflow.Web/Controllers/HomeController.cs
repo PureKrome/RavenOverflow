@@ -30,8 +30,10 @@ namespace RavenOverflow.Web.Controllers
                                     // TODO: I think this will be a facetted index.
 
                                     // 3. Log in user information.
-                                    AuthenticationViewModel = AuthenticationViewModel
+                                    //AuthenticationViewModel = AuthenticationViewModel
                                 };
+
+            ViewBag.UserDetails = AuthenticationViewModel;
 
             return View(viewModel);
         }

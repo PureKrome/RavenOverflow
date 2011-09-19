@@ -1,2 +1,16 @@
 ﻿@model RavenOverflow.Web.Views.Shared.AuthenticationViewModel
-<div>Login | Logout</div>
+@if(Model != null && !string.IsNullOrEmpty(Model.DisplayName))
+{
+    @:Welcome <strong>@Model.DisplayName</strong>!
+    <ul>
+        <li>Settings</li>
+        <li>@Html.ActionLink("LogOff", "LogOffIndex", "Account")</li>
+    </ul>
+}
+else
+{
+    <ul>
+        <li>@Html.ActionLink("Register", "Authenticate", "Account")</li>
+        <li>@Html.ActionLink("Log On", "LogOn", new { controller = "Account", returnUrl = HttpContext.Current.Request.RawUrl })</li>
+    </ul>
+}

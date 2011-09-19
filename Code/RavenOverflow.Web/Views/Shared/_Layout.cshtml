@@ -1,4 +1,5 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+﻿@using RavenOverflow.Web.Views.Shared
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <title>Raven Overflow</title>
@@ -26,7 +27,7 @@
             <div id="topbar">
                 <div id="hlinks">
                     <span id="hlinks-user">
-                        @*@Html.Partial("_Authentication", (RavenOverflow.Web.Views.Shared.AuthenticationViewModel)ViewBag.UserDetails)*@
+                        @Html.Partial("_Authentication", ViewBag.UserDetails == null ? null : (AuthenticationViewModel)ViewBag.UserDetails)
                         @*<span class="profile-triangle">&#9662;</span>
                         <a href="/users/30674/pure-krome" class="profile-link">Pure.Krome</a>&nbsp;*@
                   </span>
@@ -36,7 +37,7 @@
             <br class="cbt">
 
             <div id="hlogo">
-                <a href="/" >Stack Overflow</a>
+                <img src="http://ravendb.net/static/logo/RavenDBlogo.png" height="61px" alt="RavenDb"/>
             </div>
 
             <div id="hmenus">
@@ -51,24 +52,21 @@
                         interesting | featured | hot | week | month
                     </div>
                 </div>
-            <div id="question-mini-list">
-                @RenderBody()
-            </div>
-
-            <h2 class="bottom-notice">Looking for more? Goto the real <a href="http://stackoverflow.com">Stack Overflow site</a>.</h2>
-        </div>
-
-        
-        
-
-
-        <div id="sidebar">
-            @RenderSection("SideBar", false)
-            @*<div class="module" id="recent-tags">
-                <h4 id="h-recent-tags">Recent Tags</h4>
-                <div id="recent-tags-list">
+                <div id="question-mini-list">
+                    @RenderBody()
                 </div>
-            </div>*@
+
+                <h2 class="bottom-notice">Looking for more? Goto the real <a href="http://stackoverflow.com">Stack Overflow site</a>.</h2>
+            </div>
+        
+            <div id="sidebar">
+                @RenderSection("SideBar", false)
+                @*<div class="module" id="recent-tags">
+                    <h4 id="h-recent-tags">Recent Tags</h4>
+                    <div id="recent-tags-list">
+                    </div>
+                </div>*@
+            </div>
         </div>
     </div>
 
