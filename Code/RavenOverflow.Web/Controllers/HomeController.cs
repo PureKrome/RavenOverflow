@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using Raven.Client;
-using RavenOverflow.Core.Services;
+using RavenOverflow.Core.Entities;
 using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Views.Home;
 
@@ -9,11 +9,8 @@ namespace RavenOverflow.Web.Controllers
 {
     public class HomeController : AbstractController
     {
-        private readonly IQuestionService _questionService;
-
-        public HomeController(IDocumentStore documentStore, IQuestionService questionService) : base(documentStore)
+        public HomeController(IDocumentStore documentStore) : base(documentStore)
         {
-            _questionService = questionService;
         }
 
         [RavenActionFilter]
@@ -22,7 +19,7 @@ namespace RavenOverflow.Web.Controllers
             var viewModel = new IndexViewModel
                                 {
                                     // 1. All the questions, ordered by most recent.
-                                    Questions = _questionService.Query()
+                                    Questions = DocumentSession.Query<Question>()
                                         .OrderByDescending(x => x.CreatedOn)
                                         .Take(20)
                                         .ToList(),

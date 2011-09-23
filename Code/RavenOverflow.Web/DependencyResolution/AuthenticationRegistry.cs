@@ -13,6 +13,9 @@ namespace RavenOverflow.Web.DependencyResolution
                 .Ctor<string>("consumerKey").Is(twitterConsumerKey)
                 .Ctor<string>("consumerSecret").Is(twitterConsumerSecret)
                 .Named("RavenDb OAuth Consumer Token Manager.");
+
+            
+
         }
     }
 }

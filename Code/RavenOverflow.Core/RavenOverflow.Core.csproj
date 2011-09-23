@@ -40,8 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\OAuthData.cs" />
     <Compile Include="Entities\Comment.cs" />
     <Compile Include="Entities\Extensions.cs" />
+    <Compile Include="Entities\OAuthProvider.cs" />
     <Compile Include="Entities\Post.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\Answer.cs" />
@@ -49,8 +51,6 @@
     <Compile Include="Entities\RootAggregate.cs" />
     <Compile Include="Entities\Vote.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IUserService.cs" />
-    <Compile Include="Services\IQuestionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Filters\" />

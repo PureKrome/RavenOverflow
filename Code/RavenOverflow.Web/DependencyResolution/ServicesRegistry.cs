@@ -1,4 +1,4 @@
-﻿using RavenOverflow.Core.Services;
+﻿using CuttingEdge.Conditions;
 using RavenOverflow.Services;
 using StructureMap.Configuration.DSL;
 
@@ -6,10 +6,11 @@ namespace RavenOverflow.Web.DependencyResolution
 {
     public class ServicesRegistry : Registry
     {
-        public ServicesRegistry()
+        public ServicesRegistry(string facebookAppId, string facebookAppSecret)
         {
-            For<IUserService>().Use<UserService>().Named("User Service.");
-            For<IQuestionService>().Use<QuestionService>().Named("Question Service.");
+            Condition.Requires(facebookAppId).IsNullOrEmpty();
+            Condition.Requires(facebookAppSecret).IsNotNullOrEmpty();
+
         }
     }
 }
