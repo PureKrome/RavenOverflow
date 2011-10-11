@@ -1,5 +1,7 @@
 ﻿using Raven.Client;
 using Raven.Client.Document;
+using Raven.Client.Indexes;
+using RavenOverflow.Web.Indexes;
 using StructureMap.Configuration.DSL;
 
 namespace RavenOverflow.Web.DependencyResolution
@@ -18,7 +20,8 @@ namespace RavenOverflow.Web.DependencyResolution
                                              };
                              store.Initialize();
 
-                             // TODO: Any Indexes go here.
+                             // Index initialisation.
+                             IndexCreation.CreateIndexes(typeof(RecentTags).Assembly, store);
 
                              return store;
                          }

@@ -45,6 +45,7 @@
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\OAuthProvider.cs" />
     <Compile Include="Entities\Post.cs" />
+    <Compile Include="Entities\Tag.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\Answer.cs" />
     <Compile Include="Entities\Question.cs" />

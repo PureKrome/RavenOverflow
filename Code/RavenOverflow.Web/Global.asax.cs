@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.MvcIntegration;
 using RavenOverflow.Core.Entities;
@@ -54,6 +55,9 @@ namespace RavenOverflow.Web
             // Seed an demo data.
             SeedDocumentStore(ObjectFactory.GetInstance<IDocumentStore>());
 
+            // Create any Facets.
+            CreateFacets(ObjectFactory.GetInstance<IDocumentStore>());
+
             // Wire up the RavenDb profiler.
             RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
         }
@@ -62,6 +66,13 @@ namespace RavenOverflow.Web
         {
             using (var session = documentStore.OpenSession())
             {
+                // Don't add any seed data, if we already have some data in the system.
+                var user = session.Query<User>().Take(1).ToList();
+                if (user.Any())
+                {
+                    return;
+                }
+
                 var users = FakeUsers.CreateFakeUsers();
 
                 StoreEntites(session, users);
@@ -87,6 +98,26 @@ namespace RavenOverflow.Web
             foreach (var entity in entities)
             {
                 session.Store(entity);
+            }
+        }
+
+        private static void CreateFacets(IDocumentStore documentStore)
+        {
+            using (var session = documentStore.OpenSession())
+            {
+                session.Store(new FacetSetup
+                                  {
+                                      Id = "Raven/Facets/Tags",
+                                      Facets = new List<Facet>
+                                                   {
+                                                       new Facet
+                                                           {
+                                                               Mode = FacetMode.Default,
+                                                               Name = "Tag"
+                                                           }
+                                                   }
+                                  });
+                session.SaveChanges();
             }
         }
     }

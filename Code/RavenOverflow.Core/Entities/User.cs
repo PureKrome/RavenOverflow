@@ -8,5 +8,6 @@ namespace RavenOverflow.Core.Entities
         public string Email { get; set; }
         public string FullName { get; set; }
         public IList<OAuthData> OAuthData { get; set; }
+        public IList<string> FavTags { get; set; }
     }
 }
