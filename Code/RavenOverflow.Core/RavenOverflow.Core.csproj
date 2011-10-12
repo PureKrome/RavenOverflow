@@ -51,6 +51,7 @@
     <Compile Include="Entities\Question.cs" />
     <Compile Include="Entities\RootAggregate.cs" />
     <Compile Include="Entities\Vote.cs" />
+    <Compile Include="Extensions\Common.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

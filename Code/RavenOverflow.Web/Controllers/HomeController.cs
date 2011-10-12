@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
+using RavenOverflow.Core.Extensions;
 using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Views.Home;
@@ -20,30 +22,106 @@ namespace RavenOverflow.Web.Controllers
         [RavenActionFilter]
         public ActionResult Index(string displayName)
         {
-            User user = DocumentSession.Query<User>()
-                            .SingleOrDefault(x => x.DisplayName == displayName) ?? new User();
+            // 1. All the questions, ordered by most recent.
+            var questionsQuery = DocumentSession.Query<Question>()
+                .OrderByDescending(x => x.CreatedOn)
+                .Take(20);
+
+            // 2. Popular Tags for a time period.
+            // StackOverflow calls it 'recent tags'.
+            var popularTagsThisMonthQuery =
+                DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+                    .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
+                    .Take(20);
+
+            // 3. Log in user information.
+            //AuthenticationViewModel = AuthenticationViewModel
+            var userQuery = DocumentSession.Query<User>()
+                .Where(x => x.DisplayName == displayName);
 
             var viewModel = new IndexViewModel
                                 {
-                                    // 1. All the questions, ordered by most recent.
-                                    Questions = DocumentSession.Query<Question>()
-                                        .OrderByDescending(x => x.CreatedOn)
-                                        .Take(20)
-                                        .ToList(),
-                                    // 2. Popular Tags for a time period.
-                                    // StackOverflow calls it 'recent tags'.
-                                    PopularTagsThisMonth = DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
-                                        .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1))
-                                        .Take(20)
-                                        .ToList(),
-                                    UserTags = user.FavTags,
-                                    // 3. Log in user information.
-                                    //AuthenticationViewModel = AuthenticationViewModel
+                                    Questions = questionsQuery.ToList(),
+                                    PopularTagsThisMonth = popularTagsThisMonthQuery.ToList(),
+                                    UserTags = (userQuery.SingleOrDefault() ?? new User()).FavTags
                                 };
 
             ViewBag.UserDetails = AuthenticationViewModel;
 
             return View(viewModel);
+        }
+
+        [RavenActionFilter]
+        public ActionResult BatchedIndex(string displayName)
+        {
+            // 1. All the questions, ordered by most recent.
+            Lazy<IEnumerable<Question>> questionsQuery = DocumentSession.Query<Question>()
+                .OrderByDescending(x => x.CreatedOn)
+                .Take(20)
+                .Lazily();
+
+            // 2. Popular Tags for a time period.
+            // StackOverflow calls it 'recent tags'.
+            Lazy<IEnumerable<RecentTags.ReduceResult>> popularTagsThisMonthQuery =
+                DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+                    .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
+                    .Take(20)
+                    .Lazily();
+
+            // 3. Log in user information.
+            //AuthenticationViewModel = AuthenticationViewModel
+            Lazy<IEnumerable<User>> userQuery = DocumentSession.Query<User>()
+                .Where(x => x.DisplayName == displayName)
+                .Lazily();
+
+            var viewModel = new IndexViewModel
+            {
+                Questions = questionsQuery.Value.ToList(),
+                PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
+                UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
+            };
+
+            ViewBag.UserDetails = AuthenticationViewModel;
+
+            return View("Index", viewModel);
+        }
+
+        [RavenActionFilter]
+        public ActionResult AggressiveIndex(string displayName)
+        {
+            using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
+            {
+                // 1. All the questions, ordered by most recent.
+                Lazy<IEnumerable<Question>> questionsQuery = DocumentSession.Query<Question>()
+                    .OrderByDescending(x => x.CreatedOn)
+                    .Take(20)
+                    .Lazily();
+
+                // 2. Popular Tags for a time period.
+                // StackOverflow calls it 'recent tags'.
+                Lazy<IEnumerable<RecentTags.ReduceResult>> popularTagsThisMonthQuery =
+                    DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+                        .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
+                        .Take(20)
+                        .Lazily();
+
+                // 3. Log in user information.
+                //AuthenticationViewModel = AuthenticationViewModel
+                Lazy<IEnumerable<User>> userQuery = DocumentSession.Query<User>()
+                    .Where(x => x.DisplayName == displayName)
+                    .Lazily();
+
+                var viewModel = new IndexViewModel
+                                    {
+                                        Questions = questionsQuery.Value.ToList(),
+                                        PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
+                                        UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
+                                    };
+
+                ViewBag.UserDetails = AuthenticationViewModel;
+
+                return View("Index", viewModel);
+            }
         }
 
         [RavenActionFilter]
@@ -68,8 +146,9 @@ namespace RavenOverflow.Web.Controllers
         [RavenActionFilter]
         public ActionResult Facets(string id)
         {
-            var facets = DocumentSession.Query<RecentTagsMapOnly.ReduceResult, RecentTagsMapOnly>()
-                .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1))
+            IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
+                <RecentTagsMapOnly.ReduceResult, RecentTagsMapOnly>()
+                .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                 .ToFacets("Raven/Facets/Tags");
 
             return Json(facets, JsonRequestBehavior.AllowGet);
@@ -78,11 +157,11 @@ namespace RavenOverflow.Web.Controllers
         [RavenActionFilter]
         public ActionResult TagStats(string id)
         {
-            var query = DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+            IRavenQueryable<RecentTags.ReduceResult> query = DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
                 .Where(x => x.Tag == id);
 
             // Does this tag exist?
-            var tag = query.FirstOrDefault();
+            RecentTags.ReduceResult tag = query.FirstOrDefault();
 
             if (tag != null)
             {
@@ -90,7 +169,7 @@ namespace RavenOverflow.Web.Controllers
             }
 
             // No exact match .. so lets use Suggest.
-            var suggestedTags = query.Suggest();
+            SuggestionQueryResult suggestedTags = query.Suggest();
             if (suggestedTags.Suggestions.Length == 1)
             {
                 // We have 1 suggestion, so don't suggest .. just go there :)
