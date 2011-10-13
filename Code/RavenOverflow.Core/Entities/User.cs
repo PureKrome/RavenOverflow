@@ -7,6 +7,7 @@ namespace RavenOverflow.Core.Entities
         public string DisplayName { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }
+        public int Score { get; set; }
         public IList<OAuthData> OAuthData { get; set; }
         public IList<string> FavTags { get; set; }
     }

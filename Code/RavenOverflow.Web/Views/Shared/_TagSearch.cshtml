@@ -1,0 +1,24 @@
+﻿
+<div id="hsearch">
+    <input type="text" name="tagSearch" id="tagSearch" />
+
+</div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#tagSearch").autocomplete({
+                source: '/home/search',
+                minLength: 2,
+                select: function (event, ui) {
+                    if (ui.item) {
+                        $(location).attr('href', "/?tag=" + ui.item.value);
+                    }
+                }
+            });
+        });
+    </script> 
+
+@section JavaScript
+{
+
+}

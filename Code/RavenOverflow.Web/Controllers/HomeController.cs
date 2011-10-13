@@ -20,27 +20,38 @@ namespace RavenOverflow.Web.Controllers
         }
 
         [RavenActionFilter]
-        public ActionResult Index(string displayName)
+        public ActionResult Index(string displayName, string tag)
         {
+            string header = "Top Questions";
+
             // 1. All the questions, ordered by most recent.
-            var questionsQuery = DocumentSession.Query<Question>()
+            IQueryable<Question> questionsQuery = DocumentSession.Query<Question>()
                 .OrderByDescending(x => x.CreatedOn)
                 .Take(20);
 
+            // Filter by Tags?
+            if (!string.IsNullOrEmpty(tag))
+            {
+                header = "Tagged Questions";
+                questionsQuery = questionsQuery
+                    .Where(x => x.Tags.Any(y => y == tag));
+            }
+
             // 2. Popular Tags for a time period.
             // StackOverflow calls it 'recent tags'.
-            var popularTagsThisMonthQuery =
+            IQueryable<RecentTags.ReduceResult> popularTagsThisMonthQuery =
                 DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
                     .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                     .Take(20);
 
             // 3. Log in user information.
             //AuthenticationViewModel = AuthenticationViewModel
-            var userQuery = DocumentSession.Query<User>()
+            IRavenQueryable<User> userQuery = DocumentSession.Query<User>()
                 .Where(x => x.DisplayName == displayName);
 
             var viewModel = new IndexViewModel
                                 {
+                                    Header = header,
                                     Questions = questionsQuery.ToList(),
                                     PopularTagsThisMonth = popularTagsThisMonthQuery.ToList(),
                                     UserTags = (userQuery.SingleOrDefault() ?? new User()).FavTags
@@ -75,11 +86,12 @@ namespace RavenOverflow.Web.Controllers
                 .Lazily();
 
             var viewModel = new IndexViewModel
-            {
-                Questions = questionsQuery.Value.ToList(),
-                PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
-                UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
-            };
+                                {
+                                    Header = "Top Questions",
+                                    Questions = questionsQuery.Value.ToList(),
+                                    PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
+                                    UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
+                                };
 
             ViewBag.UserDetails = AuthenticationViewModel;
 
@@ -113,6 +125,7 @@ namespace RavenOverflow.Web.Controllers
 
                 var viewModel = new IndexViewModel
                                     {
+                                        Header = "Top Questions",
                                         Questions = questionsQuery.Value.ToList(),
                                         PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
                                         UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
@@ -155,36 +168,38 @@ namespace RavenOverflow.Web.Controllers
         }
 
         [RavenActionFilter]
-        public ActionResult TagStats(string id)
+        public ActionResult Search(string term)
         {
-            IRavenQueryable<RecentTags.ReduceResult> query = DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
-                .Where(x => x.Tag == id);
+            IRavenQueryable<RecentTags.ReduceResult> query = DocumentSession
+                .Query<RecentTags.ReduceResult, RecentTags>()
+                .Where(x => x.Tag == term);
 
             // Does this tag exist?
             RecentTags.ReduceResult tag = query.FirstOrDefault();
 
+            var results = new List<string>();
+
             if (tag != null)
             {
-                return Json(tag, JsonRequestBehavior.AllowGet);
+                results.Add(tag.Tag);
             }
-
-            // No exact match .. so lets use Suggest.
-            SuggestionQueryResult suggestedTags = query.Suggest();
-            if (suggestedTags.Suggestions.Length == 1)
+            else
             {
-                // We have 1 suggestion, so don't suggest .. just go there :)
-                return RedirectToActionPermanent("TagsStats", suggestedTags.Suggestions.First());
+                // No exact match .. so lets use Suggest.
+                SuggestionQueryResult suggestedTags = query.Suggest();
+                if (suggestedTags.Suggestions.Length == 1)
+                {
+                    // We have 1 suggestion, so don't suggest .. just go there :)
+                    results.Add(suggestedTags.Suggestions.First());
+                }
+                else
+                {
+                    // We have zero or more than 2+ suggestions...
+                    results.AddRange(suggestedTags.Suggestions);
+                }
             }
 
-            // We have zero or more than 2+ suggestions...
-            return Json(new
-                            {
-                                Error = "Not Found",
-                                Message = suggestedTags.Suggestions.Length <= 0
-                                              ? "No suggestions found :~("
-                                              : "Did you mean?",
-                                suggestedTags.Suggestions
-                            }, JsonRequestBehavior.AllowGet);
+            return Json(results, JsonRequestBehavior.AllowGet);
         }
     }
 }

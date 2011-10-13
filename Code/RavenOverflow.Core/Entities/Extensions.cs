@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace RavenOverflow.Core.Entities
 {
@@ -14,8 +15,14 @@ namespace RavenOverflow.Core.Entities
 
             IList<T> results = new List<T>();
 
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] rndBytes = new byte[4];
+            rng.GetBytes(rndBytes);
+            int randomNumber = BitConverter.ToInt32(rndBytes, 0);
+            
+
             // Based upon: http://stackoverflow.com/questions/48087/select-a-random-n-elements-from-listt-in-c
-            var rand = new Random();
+            var rand = new Random(randomNumber);
             double needed = numberOfItems;
             int available = source.Count;
 

@@ -1,11 +1,8 @@
-﻿@model RavenOverflow.Web.Views.Home.IndexViewModel
+﻿@using RavenOverflow.Web.Views.Home
+@model TaggedQuestionsViewModel
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@section Header 
-{
-    @Model.Header
 }
 
 @if (Model == null)

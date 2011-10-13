@@ -25,7 +25,7 @@ namespace RavenOverflow.Web.Indexes
                                            {
                                                Tag = g.Key,
                                                Count = g.Sum(x => x.Count),
-                                               LastSeen = g.Max(x => x.LastSeen)
+                                               LastSeen = g.Max(x => (DateTimeOffset)x.LastSeen)
                                            };
         }
 

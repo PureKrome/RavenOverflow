@@ -21,7 +21,7 @@ else
         {
             @:&nbsp;
         }
-    <a href="#" class="post-tag" title="show questions tagged '@tag'" rel="tag">@tag</a>
+        @Html.ActionLink(tag, "Index", "Home", new  { tag }, new  {@class="post-tag", title="show questions tagged " + tag, rel="tag"})
     }
     </div>  
 }

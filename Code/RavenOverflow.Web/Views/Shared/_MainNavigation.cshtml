@@ -1,0 +1,16 @@
+﻿@using RavenOverflow.Web.Views.Shared
+<div id="topbar">
+    <h3>@Html.ActionLink("Index - 3 DB roundtrips","Index", "Home") ||
+        @Html.ActionLink("BatchedIndex - 1 DB roundtrip", "BatchedIndex", "Home") ||
+        @Html.ActionLink("AggressiveIndex - 1 DB roundtrip + Clientside Caching", "AggressiveIndex", "Home")
+    </h3>
+    <hr/>
+    <div id="hlinks">
+        @Html.Partial("_Authentication", ViewBag.UserDetails == null ? null : (AuthenticationViewModel)ViewBag.UserDetails)
+        @*<span class="profile-triangle">&#9662;</span>
+        <a href="/users/30674/pure-krome" class="profile-link">Pure.Krome</a>&nbsp;*@
+    </div>
+    <div id="hsearch">
+        @Html.Partial("_TagSearch")
+    </div>
+</div>
