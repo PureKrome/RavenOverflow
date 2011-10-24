@@ -30,3 +30,4 @@ _ReSharper*/
 *.resharper*
 AppData/
 *.log.*
+[Ll]ogs
