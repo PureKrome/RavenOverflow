@@ -9,6 +9,7 @@ using Raven.Client.MvcIntegration;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using System.Collections.Generic;
+using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models.Authentication;
 using StructureMap;
 
@@ -59,7 +60,7 @@ namespace RavenOverflow.Web
             SeedDocumentStore(ObjectFactory.GetInstance<IDocumentStore>());
 
             // Create any Facets.
-            CreateFacets(ObjectFactory.GetInstance<IDocumentStore>());
+            RavenFacetTags.CreateFacets(ObjectFactory.GetInstance<IDocumentStore>());
 
             // Wire up the RavenDb profiler.
             RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
@@ -111,24 +112,6 @@ namespace RavenOverflow.Web
             }
         }
 
-        private static void CreateFacets(IDocumentStore documentStore)
-        {
-            using (var session = documentStore.OpenSession())
-            {
-                session.Store(new FacetSetup
-                                  {
-                                      Id = "Raven/Facets/Tags",
-                                      Facets = new List<Facet>
-                                                   {
-                                                       new Facet
-                                                           {
-                                                               Mode = FacetMode.Default,
-                                                               Name = "Tag"
-                                                           }
-                                                   }
-                                  });
-                session.SaveChanges();
-            }
-        }
+        
     }
 }

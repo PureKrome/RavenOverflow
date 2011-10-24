@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CuttingEdge.Conditions;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using RavenOverflow.Core.Entities;
@@ -33,15 +34,28 @@ namespace RavenOverflow.FakeData
 
         public static ICollection<Question> CreateFakeQuestions(IList<string> userIds)
         {
-            if (userIds == null || userIds.Count <= 0)
+            return CreateFakeQuestions(userIds, GetRandom.Int(20, 100));
+        }
+
+        public static ICollection<Question> CreateFakeQuestions(IList<string> userIds, int numberOfFakeQuestions)
+        {
+            Condition.Requires(numberOfFakeQuestions).IsGreaterOrEqual(5); // First 5 questions are fixed.
+
+            // If we don't have any fake userId's, then just create some fake users now.
+            // Basically, we don't care what these values are.
+            if (userIds == null)
             {
-                throw new ArgumentNullException("userIds");
+                userIds = FakeUsers.CreateFakeUsers(50).Select(x => x.Id).ToList();
             }
 
             if (_fakeQuestions == null)
             {
                 var fakeQuestions = new List<Question>();
-                for (int i = 0; i < GetRandom.Int(20, 100); i++)
+
+                // Add our fake questions.
+                fakeQuestions.AddRange(CreateFixedFakeQuestions(userIds));
+
+                for (int i = 0; i < numberOfFakeQuestions; i++)
                 {
                     fakeQuestions.Add(CreateAFakeQuestion(userIds.ToRandomList(1).Single(), userIds));
                 }
@@ -126,8 +140,128 @@ namespace RavenOverflow.FakeData
                 .And(y => y.DownVoteCount = GetRandom.PositiveInt(3))
                 .And(y => y.FavoriteCount = GetRandom.PositiveInt(10))
                 .Build();
-
         }
 
+        private static IEnumerable<Question> CreateFixedFakeQuestions(IList<string> userIds)
+        {
+            Condition.Requires(userIds).IsNotNull().IsLongerOrEqual(1);
+
+            return new List<Question>
+                       {
+                           new Question
+                               {
+                                   Subject = "How to query nested information in RavenDB?",
+                                   Content =
+                                       "I have the following document called Reservation: { \"CustomerId\": 1, \"Items\": [ { \"EmployeeId\": \"employees/1\", \"StartTime\": ...",
+                                   CreatedOn = DateTime.UtcNow.AddMinutes(5),
+                                   Tags = new List<string> {"ravendb", ".net", "c#"},
+                                   CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                   NumberOfViews = 50,
+                                   Vote = new Vote {DownVoteCount = 5, UpVoteCount = 10, FavoriteCount = 6},
+                                   Comments = new List<Comment>
+                                                  {
+                                                      new Comment
+                                                          {
+                                                              Content = "Some comment 1",
+                                                              CreatedByUserId =
+                                                                  userIds.ToRandomList(1).Single(),
+                                                              CreatedOn = DateTime.UtcNow.AddMinutes(2),
+                                                              UpVoteCount = 2
+                                                          },
+                                                      new Comment
+                                                          {
+                                                              Content = "Some comment 2",
+                                                              CreatedByUserId =
+                                                                  userIds.ToRandomList(1).Single(),
+                                                              CreatedOn = DateTime.UtcNow.AddMinutes(1),
+                                                          }
+                                                  },
+                                   Answers = new List<Answer>
+                                                 {
+                                                     new Answer
+                                                         {
+                                                             Content = "Answer 1 - blah blah blah",
+                                                             CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                                             CreatedOn = DateTime.UtcNow.AddMinutes(3),
+                                                             Vote = new Vote
+                                                                        {
+                                                                            DownVoteCount = 5,
+                                                                            UpVoteCount = 10,
+                                                                            FavoriteCount = 6
+                                                                        }
+                                                         },
+                                                     new Answer
+                                                         {
+                                                             Content = "Answer 2 - blah blah blah",
+                                                             CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                                             CreatedOn = DateTime.UtcNow.AddMinutes(2),
+                                                             Vote = new Vote
+                                                                        {
+                                                                            DownVoteCount = 4,
+                                                                            UpVoteCount = 8,
+                                                                            FavoriteCount = 5
+                                                                        }
+                                                         },
+                                                     new Answer
+                                                         {
+                                                             Content = "Answer 3 - blah blah blah",
+                                                             CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                                             CreatedOn = DateTime.UtcNow.AddMinutes(1),
+                                                             Vote = new Vote
+                                                                        {
+                                                                            DownVoteCount = 3,
+                                                                            UpVoteCount = 6,
+                                                                            FavoriteCount = 4
+                                                                        }
+                                                         }
+                                                 }
+                               },
+                           new Question
+                               {
+                                   Subject = "RavenDb MapReduce over subset of Data",
+                                   Content =
+                                       "Say I have the given document structure in RavenDb public class Car { public string Manufacturer {get;set;} public int BuildYear {get;set;} public string Colour {get;set;} public",
+                                   CreatedOn = DateTime.UtcNow.AddMinutes(4),
+                                   Tags = new List<string> {"ravendb", ".net", "c#"},
+                                   CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                   NumberOfViews = 44,
+                                   Vote = new Vote {DownVoteCount = 4, UpVoteCount = 8, FavoriteCount = 5}
+                               },
+                           new Question
+                               {
+                                   Subject = "RavenDB - retrieving part of document",
+                                   Content =
+                                       "I am playing with Raven DB for few days and I would like to use it as a storage for my Web chat application. I have document which contains some user data and chat history - which is big collection",
+                                   CreatedOn = DateTime.UtcNow.AddMinutes(3),
+                                   Tags = new List<string> {"ravendb", ".net", "c#"},
+                                   CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                   NumberOfViews = 33,
+                                   Vote = new Vote {DownVoteCount = 3, UpVoteCount = 6, FavoriteCount = 4}
+                               },
+                           new Question
+                               {
+                                   Subject = "RavenDB Index on SubClasses",
+                                   Content =
+                                       "I am trying to create an indexes for ProviderProfileId, Email, and Address1 I have created queries that work, but not indexes. I know the inheriting from List for the collections might be part of",
+                                   CreatedOn = DateTime.UtcNow.AddMinutes(2),
+                                   Tags = new List<string> {"ravendb", ".net", "c#"},
+                                   CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                   NumberOfViews = 22,
+                                   Vote = new Vote {DownVoteCount = 2, UpVoteCount = 4, FavoriteCount = 3}
+                               },
+                           new Question
+                               {
+                                   Subject =
+                                       "given a list of objects using C# push them to ravendb without knowing which ones already exist",
+                                   Content =
+                                       "Given 1000 documents with a complex data structure. for e.g. a Car class that has three properties, Make and Model and one Id property. What is the most efficient way in C# to push these documents to",
+                                   CreatedOn = DateTime.UtcNow.AddMinutes(1),
+                                   Tags = new List<string> {"ravendb", ".net", "c#"},
+                                   CreatedByUserId = userIds.ToRandomList(1).Single(),
+                                   NumberOfViews = 11,
+                                   Vote = new Vote {DownVoteCount = 1, UpVoteCount = 2, FavoriteCount = 2}
+                               }
+                       };
+        }
     }
 }

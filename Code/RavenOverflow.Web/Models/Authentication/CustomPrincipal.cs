@@ -10,6 +10,6 @@ namespace RavenOverflow.Web.Models.Authentication
             Identity = identity;
         }
 
-        public new ICustomIdentity Identity { get; private set; }
+        public new virtual ICustomIdentity Identity { get; private set; }
     }
 }

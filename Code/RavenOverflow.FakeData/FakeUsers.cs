@@ -26,10 +26,15 @@ namespace RavenOverflow.FakeData
 
         public static ICollection<User> CreateFakeUsers()
         {
+            return CreateFakeUsers(GetRandom.Int(20, 100));
+        }
+
+        public static ICollection<User> CreateFakeUsers(int numberOfFakeUsers)
+        {
             if (_fakeUsers == null)
             {
                 var fakeUsers = new List<User>();
-                for (int i = 0; i < GetRandom.Int(20, 100); i++)
+                for (int i = 0; i < numberOfFakeUsers; i++)
                 {
                     fakeUsers.Add(CreateAFakeUser());
                 }

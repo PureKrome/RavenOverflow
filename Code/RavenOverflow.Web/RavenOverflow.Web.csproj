@@ -105,6 +105,7 @@
     <Compile Include="Areas\User\Controllers\UsersController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="DependencyResolution\AuthenticationRegistry.cs" />
+    <Compile Include="Indexes\RavenFacetTags.cs" />
     <Compile Include="Models\Authentication\IOAuthAuthentication.cs" />
     <Compile Include="Models\Authentication\OAuthAuthentication.cs" />
     <Compile Include="Models\_LayoutViewModel.cs" />

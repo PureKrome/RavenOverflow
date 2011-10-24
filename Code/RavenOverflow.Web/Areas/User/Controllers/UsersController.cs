@@ -20,10 +20,10 @@ namespace RavenOverflow.Web.Areas.User.Controllers
         private readonly string _facebookSecret;
         private readonly ICustomFormsAuthentication _customFormsAuthentication;
         
-        public UsersController(IDocumentStore documentStore,
+        public UsersController(IDocumentSession documentSession,
                                ICustomFormsAuthentication customCustomFormsAuthentication,
                                IOAuthAuthentication oAuthAuthentication)
-            : base(documentStore)
+            : base(documentSession)
         {
             Condition.Requires(customCustomFormsAuthentication).IsNotNull();
             Condition.Requires(oAuthAuthentication).IsNotNull();

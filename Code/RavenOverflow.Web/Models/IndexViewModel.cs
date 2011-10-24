@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Views.Shared;
 
-namespace RavenOverflow.Web.Areas.Home.Models
+namespace RavenOverflow.Web.Models
 {
     public class IndexViewModel : _LayoutViewModel
     {

@@ -7,7 +7,6 @@ using Raven.Client;
 using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
-using RavenOverflow.Web.Areas.Home.Models;
 using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
 
@@ -15,11 +14,11 @@ namespace RavenOverflow.Web.Controllers
 {
     public class HomeController : AbstractController
     {
-        public HomeController(IDocumentStore documentStore) : base(documentStore)
+        public HomeController(IDocumentSession documentSession): base(documentSession)
         {
         }
 
-        [HttpGet, RavenActionFilter]
+        //[HttpGet, RavenActionFilter]
         public ActionResult Index(string displayName, string tag)
         {
             string header = "Top Questions";
@@ -45,9 +44,9 @@ namespace RavenOverflow.Web.Controllers
                     .Take(20);
 
             // 3. Log in user information.
-            //AuthenticationViewData = AuthenticationViewData
+            var name = displayName ?? User.Identity.Name;
             IRavenQueryable<User> userQuery = DocumentSession.Query<User>()
-                .Where(x => x.DisplayName == displayName);
+                .Where(x => x.DisplayName == (name));
 
             var viewModel = new IndexViewModel(User.Identity)
                                 {
@@ -60,7 +59,7 @@ namespace RavenOverflow.Web.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, RavenActionFilter]
+        //[HttpGet, RavenActionFilter]
         public ActionResult BatchedIndex(string displayName)
         {
             // 1. All the questions, ordered by most recent.
@@ -94,7 +93,7 @@ namespace RavenOverflow.Web.Controllers
             return View("Index", viewModel);
         }
 
-        [HttpGet, RavenActionFilter]
+        //[HttpGet, RavenActionFilter]
         public ActionResult AggressiveIndex(string displayName)
         {
             using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
@@ -131,7 +130,7 @@ namespace RavenOverflow.Web.Controllers
             }
         }
 
-        [RavenActionFilter]
+        //[RavenActionFilter]
         public ActionResult Tag(string id)
         {
             RavenQueryStatistics stats;
@@ -150,7 +149,7 @@ namespace RavenOverflow.Web.Controllers
                             }, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenActionFilter]
+        //[RavenActionFilter]
         public ActionResult Facets(string id)
         {
             IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
@@ -161,7 +160,7 @@ namespace RavenOverflow.Web.Controllers
             return Json(facets, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenActionFilter]
+        //[RavenActionFilter]
         public ActionResult Search(string term)
         {
             IRavenQueryable<RecentTags.ReduceResult> query = DocumentSession
