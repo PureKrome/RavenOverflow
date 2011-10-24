@@ -1,4 +1,6 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+﻿@using RavenOverflow.Web.Models
+@model _LayoutViewModel
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
     <title>Raven Overflow</title>
@@ -18,7 +20,7 @@
 
     <noscript><div id="noscript-padding"></div></noscript>
 
-    @Html.Partial("_MainNavigation")
+    @Html.Partial("_MainNavigation", new _MainNavigationViewModel { CustomIdentity = Model.CustomIdentity })
 
     <div id="notify-container"></div>
     <div id="overlay-header"></div>
@@ -26,6 +28,14 @@
     <div class="container">
         <div id="header">
             
+            <div id="hlinks">
+                @Html.Partial("_Authentication", Model.CustomIdentity)
+                @*<span class="profile-triangle">&#9662;</span>
+                <a href="/users/30674/pure-krome" class="profile-link">Pure.Krome</a>&nbsp;*@
+            </div>
+            <div id="hsearch">
+                @Html.Partial("_TagSearch")
+            </div>
 
             <br class="cbt">
 

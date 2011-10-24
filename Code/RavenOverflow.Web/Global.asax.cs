@@ -9,6 +9,7 @@ using Raven.Client.MvcIntegration;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using System.Collections.Generic;
+using RavenOverflow.Web.Models.Authentication;
 using StructureMap;
 
 namespace RavenOverflow.Web
@@ -31,7 +32,7 @@ namespace RavenOverflow.Web
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new {controller = "Home", action = "Index", id = UrlParameter.Optional} // Parameter defaults
+                new {controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
                 );
         }
 
@@ -48,6 +49,8 @@ namespace RavenOverflow.Web
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
+
+            ViewEngines.Engines.Clear();
             RegisterRazorViewEngine();
 
             RegisterRoutes(RouteTable.Routes);
@@ -60,6 +63,13 @@ namespace RavenOverflow.Web
 
             // Wire up the RavenDb profiler.
             RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
+        }
+
+        // ReSharper disable InconsistentNaming
+        protected void Application_AuthenticateRequest()
+        // ReSharper restore InconsistentNaming
+        {
+            CustomFormsAuthentication.AuthenticateRequestDecryptCustomFormsAuthenticationTicket(Context);
         }
 
         private static void SeedDocumentStore(IDocumentStore documentStore)

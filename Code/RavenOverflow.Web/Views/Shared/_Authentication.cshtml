@@ -1,18 +1,19 @@
-﻿@model RavenOverflow.Web.Views.Shared.AuthenticationViewModel
+﻿@using RavenOverflow.Web.Models.Authentication
+@model ICustomIdentity
 <span id="hlinks-user">
-    @if(Model != null && !string.IsNullOrEmpty(Model.DisplayName))
+    @if(Model != null && !string.IsNullOrEmpty(Model.Name))
     {
-        @:Welcome <strong>@Model.DisplayName</strong>!
+        @:Welcome <strong>@Model.Name</strong>!
         <ul>
             <li>Settings</li>
-            <li>@Html.ActionLink("LogOff", "LogOffIndex", "Account")</li>
+            <li>@Html.ActionLink("LogOff", "SignOut", "Users")</li>
         </ul>
     }
     else
     {
         <ul>
-            <li>@Html.ActionLink("Register", "Authenticate", "Account")</li>
-            <li>@Html.ActionLink("Log On", "LogOn", new { controller = "Account", returnUrl = HttpContext.Current.Request.RawUrl })</li>
+            <li>@Html.ActionLink("Register", "Authenticate", "Users")</li>
+            <li>@Html.ActionLink("Log On", "Authenticate", new { controller = "Users", returnUrl = HttpContext.Current.Request.RawUrl })</li>
         </ul>
     }
 </span>

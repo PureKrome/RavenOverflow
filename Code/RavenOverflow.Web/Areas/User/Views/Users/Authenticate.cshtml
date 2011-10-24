@@ -1,0 +1,20 @@
+﻿@using RavenOverflow.Web.Models
+@model _LayoutViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Header 
+{
+    @Model.Header
+}
+
+
+<div id="register-wrap">
+        <p>Sign in using one of the providers below.</p>
+        <div id="register-providers">
+            <ul>
+                <li>@Html.ActionLink("Facebook", "AuthenticateWithFacebook", "Users")</li>
+            </ul>
+        </div>
+</div>

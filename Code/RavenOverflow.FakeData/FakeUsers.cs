@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using RavenOverflow.Core.Entities;
@@ -17,7 +18,9 @@ namespace RavenOverflow.FakeData
                 .And(x => x.DisplayName = x.FullName.Replace(' ', '.'))
                 .And(x => x.Id = string.Format("Users/{0}", x.DisplayName))
                 .And(x => x.Email = GetRandom.Email())
+                .And(x => x.CreatedOn = GetRandom.DateTime(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow))
                 .And(x => x.Score = GetRandom.PositiveInt(50000))
+                .And(x => x.IsActive = GetRandom.Boolean())
                 .Build();
         }
 

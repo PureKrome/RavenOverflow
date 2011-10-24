@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
+using RavenOverflow.Core.Services;
 
 namespace RavenOverflow.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IDocumentSession _documentSession;
 
@@ -16,52 +18,54 @@ namespace RavenOverflow.Services
 
         public User CreateOrUpdate(OAuthData oAuthData, string userName, string fullName, string email)
         {
-            // First, lets see if we have a user with this id, for this provider.
-            User existingUser = _documentSession.Query<User>()
-                .Where(
-                    x =>
-                    x.OAuthData.Any(y => y.Id == oAuthData.Id && y.OAuthProvider == oAuthData.OAuthProvider))
-                .SingleOrDefault();
+            // Lets find an existing user for the provider OR the email address if the provider doesn't exist.
+            User user = _documentSession.Query<User>()
+                            .Where(
+                                x =>
+                                x.OAuthData.Any(y => y.Id == oAuthData.Id && y.OAuthProvider == oAuthData.OAuthProvider))
+                            .SingleOrDefault() ?? _documentSession.Query<User>()
+                                                      .Where(x => x.Email == email)
+                                                      .SingleOrDefault();
 
-            if (existingUser != null)
+            if (user != null)
             {
-                // User exist. All is good :)
-                return existingUser;
-            }
-
-            // No user exists for the OAuth provider and Id. So lets try their email address.
-            existingUser = _documentSession.Query<User>()
-                .Where(x => x.Email == email)
-                .SingleOrDefault();
-
-            if (existingUser != null)
-            {
-                // User exist, but isn't associated to this OAuthProvider. So lets do that!
-                if (existingUser.OAuthData == null)
+                // User exists, so lets update the OAuth data, for this user.
+                if (user.OAuthData != null)
                 {
-                    existingUser.OAuthData = new List<OAuthData>();
+                    OAuthData existingProvider =
+                        user.OAuthData.SingleOrDefault(x => x.OAuthProvider == oAuthData.OAuthProvider);
+                    if (existingProvider != null)
+                    {
+                        user.OAuthData.Remove(existingProvider);
+                    }
                 }
-                existingUser.OAuthData.Add(oAuthData);
-                _documentSession.Store(existingUser);
-                _documentSession.SaveChanges();
-                return existingUser;
+                else
+                {
+                    user.OAuthData = new List<OAuthData>();
+                }
+
+                user.OAuthData.Add(oAuthData);
+            }
+            else
+            {
+                // Ok. No user at all. We create one and store it.
+                user = new User
+                           {
+                               DisplayName = userName,
+                               Email = email,
+                               Id = null,
+                               FullName = fullName,
+                               CreatedOn = DateTime.UtcNow,
+                               IsActive = true,
+                               OAuthData = new List<OAuthData>()
+                           };
+                user.OAuthData.Add(oAuthData);
             }
 
-            // Ok. No user at all. We create one and store it.
-            var newUser = new User
-                              {
-                                  DisplayName = userName,
-                                  Email = email,
-                                  Id = null,
-                                  FullName = fullName,
-                                  OAuthData = new List<OAuthData>()
-                              };
-            newUser.OAuthData.Add(oAuthData);
-
-            _documentSession.Store(newUser);
+            _documentSession.Store(user);
             _documentSession.SaveChanges();
 
-            return newUser;
+            return user;
         }
     }
 }

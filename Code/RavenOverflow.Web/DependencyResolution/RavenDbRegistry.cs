@@ -27,15 +27,6 @@ namespace RavenOverflow.Web.DependencyResolution
                          }
                 )
                 .Named("RavenDB Document Store.");
-
-            For<IDocumentSession>()
-                .AlwaysUnique()
-                .Use(x =>
-                         {
-                             var store = x.GetInstance<IDocumentStore>();
-                             return store.OpenSession();
-                         })
-                .Named("RavenDB Session (aka. Unit of Work).");
         }
     }
 }

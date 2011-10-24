@@ -6,29 +6,31 @@ using StructureMap;
 
 namespace RavenOverflow.Web.DependencyResolution
 {
-    public class SmDependencyResolver : IDependencyResolver {
-
+    public class SmDependencyResolver : IDependencyResolver
+    {
         private readonly IContainer _container;
 
-        public SmDependencyResolver(IContainer container) {
+        public SmDependencyResolver(IContainer container)
+        {
             _container = container;
         }
 
-        public object GetService(Type serviceType) {
-            if (serviceType == null) return null;
-            try {
-                  return serviceType.IsAbstract || serviceType.IsInterface
-                           ? _container.TryGetInstance(serviceType)
-                           : _container.GetInstance(serviceType);
-            }
-            catch {
+        #region IDependencyResolver Members
 
-                return null;
-            }
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == null) return null;
+
+            return serviceType.IsAbstract || serviceType.IsInterface
+                       ? _container.TryGetInstance(serviceType)
+                       : _container.GetInstance(serviceType);
         }
 
-        public IEnumerable<object> GetServices(Type serviceType) {
+        public IEnumerable<object> GetServices(Type serviceType)
+        {
             return _container.GetAllInstances(serviceType).Cast<object>();
         }
+
+        #endregion
     }
 }

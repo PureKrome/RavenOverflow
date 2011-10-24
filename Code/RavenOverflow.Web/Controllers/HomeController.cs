@@ -7,9 +7,9 @@ using Raven.Client;
 using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
+using RavenOverflow.Web.Areas.Home.Models;
 using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
-using RavenOverflow.Web.Views.Home;
 
 namespace RavenOverflow.Web.Controllers
 {
@@ -19,7 +19,7 @@ namespace RavenOverflow.Web.Controllers
         {
         }
 
-        [RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult Index(string displayName, string tag)
         {
             string header = "Top Questions";
@@ -45,11 +45,11 @@ namespace RavenOverflow.Web.Controllers
                     .Take(20);
 
             // 3. Log in user information.
-            //AuthenticationViewModel = AuthenticationViewModel
+            //AuthenticationViewData = AuthenticationViewData
             IRavenQueryable<User> userQuery = DocumentSession.Query<User>()
                 .Where(x => x.DisplayName == displayName);
 
-            var viewModel = new IndexViewModel
+            var viewModel = new IndexViewModel(User.Identity)
                                 {
                                     Header = header,
                                     Questions = questionsQuery.ToList(),
@@ -57,12 +57,10 @@ namespace RavenOverflow.Web.Controllers
                                     UserTags = (userQuery.SingleOrDefault() ?? new User()).FavTags
                                 };
 
-            ViewBag.UserDetails = AuthenticationViewModel;
-
             return View(viewModel);
         }
 
-        [RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult BatchedIndex(string displayName)
         {
             // 1. All the questions, ordered by most recent.
@@ -80,12 +78,12 @@ namespace RavenOverflow.Web.Controllers
                     .Lazily();
 
             // 3. Log in user information.
-            //AuthenticationViewModel = AuthenticationViewModel
+            //AuthenticationViewData = AuthenticationViewData
             Lazy<IEnumerable<User>> userQuery = DocumentSession.Query<User>()
                 .Where(x => x.DisplayName == displayName)
                 .Lazily();
 
-            var viewModel = new IndexViewModel
+            var viewModel = new IndexViewModel(User.Identity)
                                 {
                                     Header = "Top Questions",
                                     Questions = questionsQuery.Value.ToList(),
@@ -93,12 +91,10 @@ namespace RavenOverflow.Web.Controllers
                                     UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
                                 };
 
-            ViewBag.UserDetails = AuthenticationViewModel;
-
             return View("Index", viewModel);
         }
 
-        [RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult AggressiveIndex(string displayName)
         {
             using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
@@ -118,20 +114,18 @@ namespace RavenOverflow.Web.Controllers
                         .Lazily();
 
                 // 3. Log in user information.
-                //AuthenticationViewModel = AuthenticationViewModel
+                //AuthenticationViewData = AuthenticationViewData
                 Lazy<IEnumerable<User>> userQuery = DocumentSession.Query<User>()
                     .Where(x => x.DisplayName == displayName)
                     .Lazily();
 
-                var viewModel = new IndexViewModel
+                var viewModel = new IndexViewModel(User.Identity)
                                     {
                                         Header = "Top Questions",
                                         Questions = questionsQuery.Value.ToList(),
                                         PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
                                         UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
                                     };
-
-                ViewBag.UserDetails = AuthenticationViewModel;
 
                 return View("Index", viewModel);
             }

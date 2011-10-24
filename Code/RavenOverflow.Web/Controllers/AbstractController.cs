@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Raven.Client;
+using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Views.Shared;
 
 namespace RavenOverflow.Web.Controllers
@@ -13,17 +14,13 @@ namespace RavenOverflow.Web.Controllers
 
         public IDocumentStore DocumentStore { get; private set; }
         public IDocumentSession DocumentSession { get; set; }
-        protected AuthenticationViewModel AuthenticationViewModel { get; set; }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        /// <summary>
+        /// Override the custom User property with our own -custom- Principal/Identity implimentation.
+        /// </summary>
+        public new CustomPrincipal User
         {
-            AuthenticationViewModel = new AuthenticationViewModel
-                                          {
-                                              DisplayName =
-                                                  string.IsNullOrEmpty(User.Identity.Name) ? null : User.Identity.Name
-                                          };
-            
-            base.OnActionExecuting(filterContext);
+            get { return base.User as CustomPrincipal; }
         }
     }
 }

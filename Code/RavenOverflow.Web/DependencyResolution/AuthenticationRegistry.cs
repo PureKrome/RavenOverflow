@@ -1,21 +1,22 @@
-﻿using DotNetOpenAuth.OAuth.ChannelElements;
-using RavenOverflow.Web.Models.OAuth;
+﻿using CuttingEdge.Conditions;
+using RavenOverflow.Web.Models.Authentication;
 using StructureMap.Configuration.DSL;
 
 namespace RavenOverflow.Web.DependencyResolution
 {
     public class AuthenticationRegistry : Registry
     {
-        public AuthenticationRegistry(string twitterConsumerKey, string twitterConsumerSecret)
+        public AuthenticationRegistry(string facebookId, string facebookSecret)
         {
-            For<IConsumerTokenManager>()
-                .Use<RavenDbConsumerTokenManager>()
-                .Ctor<string>("consumerKey").Is(twitterConsumerKey)
-                .Ctor<string>("consumerSecret").Is(twitterConsumerSecret)
-                .Named("RavenDb OAuth Consumer Token Manager.");
+            Condition.Requires(facebookId).IsNotNullOrEmpty();
+            Condition.Requires(facebookSecret).IsNotNullOrEmpty();
 
-            
-
+            For<ICustomFormsAuthentication>().Use<CustomFormsAuthentication>()
+                .Named("Custom Forms Authentication instance.");
+            For<IOAuthAuthentication>().Use<OAuthAuthentication>()
+                .Ctor<string>("facebookAppId").Is(facebookId)
+                .Ctor<string>("facebookSecret").Is(facebookSecret)
+                .Named("OAuth Authentication instance.");
         }
     }
 }
