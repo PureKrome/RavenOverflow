@@ -11,7 +11,7 @@ namespace RavenOverflow.Core.Entities
         public DateTime CreatedOn { get; set; }
         public int Score { get; set; }
         public IList<OAuthData> OAuthData { get; set; }
-        public IList<string> FavTags { get; set; }
+        public IList<string> FavoriteTags { get; set; }
         public bool IsActive { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace RavenOverflow.Web.Views.Shared
+﻿namespace RavenOverflow.Web.Models.ViewModels
 {
     public class AuthenticationViewModel
     {

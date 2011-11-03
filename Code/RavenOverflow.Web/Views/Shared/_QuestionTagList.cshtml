@@ -1,0 +1,24 @@
+﻿@using System.Text
+@using RavenOverflow.Web.Models.ViewModels
+@model IList<string>
+
+@if (Model == null || Model.Count <= 0)
+{
+    <p>No tags</p>
+}
+else
+{
+    var tags = new StringBuilder();
+    foreach (string tag in Model)
+    {
+        tags.AppendFormat("{0}{1}{2}", tags.Length > 0 ? " " : string.Empty, "t-", tag);
+    }
+
+    <div class="tags @tags.ToString()">
+        @Html.Partial("_TagList", new TagListViewModel
+                                    {
+                                        IsUserTags = false,
+                                        Tags = Model
+                                    });
+    </div>
+}

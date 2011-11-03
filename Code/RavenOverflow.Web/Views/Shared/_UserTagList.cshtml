@@ -1,0 +1,26 @@
+﻿@using RavenOverflow.Web.Models.ViewModels
+@model UserTagListViewModel
+
+@if (Model == null)
+{
+    return;
+}
+@{
+    <div class="module" id="@Model.DivId1">
+        <h4 id="h-@Model.DivId1">@Model.Header</h4>
+        <div id="@Model.DivId1">
+            @if (Model.Tags == null || Model.Tags.Count <= 0)
+            {
+                <p>No Tags</p>
+                return;
+            }
+            @{
+                Html.RenderPartial("_TagList", new TagListViewModel
+                                                   {
+                                                       IsUserTags = true,
+                                                       Tags = Model.Tags
+                                                   });
+            }
+        </div>
+    </div>
+}

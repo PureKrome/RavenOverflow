@@ -1,7 +1,7 @@
 ﻿@using RavenOverflow.Web.Models.Authentication
 @model ICustomIdentity
 <span id="hlinks-user">
-    @if(Model != null && !string.IsNullOrEmpty(Model.Name))
+    @if (Model != null && !string.IsNullOrEmpty(Model.Name))
     {
         @:Welcome <strong>@Model.Name</strong>!
         <ul>
@@ -13,7 +13,7 @@
     {
         <ul>
             <li>@Html.ActionLink("Register", "Authenticate", "Users")</li>
-            <li>@Html.ActionLink("Log On", "Authenticate", new { controller = "Users", returnUrl = HttpContext.Current.Request.RawUrl })</li>
+            <li>@Html.ActionLink("Log On", "Authenticate", new {controller = "Users", returnUrl = HttpContext.Current.Request.RawUrl})</li>
         </ul>
     }
 </span>

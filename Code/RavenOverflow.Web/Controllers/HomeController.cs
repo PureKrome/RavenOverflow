@@ -8,14 +8,13 @@ using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
 using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.ViewModels;
 
 namespace RavenOverflow.Web.Controllers
 {
     public class HomeController : AbstractController
     {
-        public HomeController(IDocumentSession documentSession): base(documentSession)
+        public HomeController(IDocumentSession documentSession) : base(documentSession)
         {
         }
 
@@ -45,7 +44,7 @@ namespace RavenOverflow.Web.Controllers
                     .Take(20);
 
             // 3. Log in user information.
-            var name = displayName ?? User.Identity.Name;
+            string name = displayName ?? User.Identity.Name;
             IRavenQueryable<User> userQuery = DocumentSession.Query<User>()
                 .Where(x => x.DisplayName == (name));
 
@@ -54,7 +53,22 @@ namespace RavenOverflow.Web.Controllers
                                     Header = header,
                                     Questions = questionsQuery.ToList(),
                                     RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserTags = (userQuery.SingleOrDefault() ?? new User()).FavTags
+                                    UserFavoriteTagList = new UserTagListViewModel
+                                                              {
+                                                                  Header = "Favorite Tags",
+                                                                  DivId1 = "interesting-tags",
+                                                                  DivId2 = "interestingtags",
+                                                                  Tags =
+                                                                      (userQuery.SingleOrDefault() ?? new User()).
+                                                                      FavoriteTags
+                                                              },
+                                    UserIgnoredTagList = new UserTagListViewModel
+                                                             {
+                                                                 Header = "Ignored Tags",
+                                                                 DivId1 = "ignored-tags",
+                                                                 DivId2 = "ignoredtags",
+                                                                 Tags = null
+                                                             }
                                 };
 
             return View(viewModel);
@@ -88,7 +102,22 @@ namespace RavenOverflow.Web.Controllers
                                     Header = "Top Questions",
                                     Questions = questionsQuery.Value.ToList(),
                                     RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
+                                    UserFavoriteTagList = new UserTagListViewModel
+                                                              {
+                                                                  Header = "Favorite Tags",
+                                                                  DivId1 = "interesting-tags",
+                                                                  DivId2 = "interestingtags",
+                                                                  Tags =
+                                                                      (userQuery.Value.SingleOrDefault() ?? new User()).
+                                                                      FavoriteTags
+                                                              },
+                                    UserIgnoredTagList = new UserTagListViewModel
+                                                             {
+                                                                 Header = "Ignored Tags",
+                                                                 DivId1 = "ignored-tags",
+                                                                 DivId2 = "ignoredtags",
+                                                                 Tags = null
+                                                             }
                                 };
 
             return View("Index", viewModel);
@@ -123,8 +152,25 @@ namespace RavenOverflow.Web.Controllers
                                     {
                                         Header = "Top Questions",
                                         Questions = questionsQuery.Value.ToList(),
-                                        RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                        UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
+                                        RecentPopularTags =
+                                            recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
+                                        UserFavoriteTagList = new UserTagListViewModel
+                                                                  {
+                                                                      Header = "Favorite Tags",
+                                                                      DivId1 = "interesting-tags",
+                                                                      DivId2 = "interestingtags",
+                                                                      Tags =
+                                                                          (userQuery.Value.SingleOrDefault() ??
+                                                                           new User()).
+                                                                          FavoriteTags
+                                                                  },
+                                        UserIgnoredTagList = new UserTagListViewModel
+                                                                 {
+                                                                     Header = "Ignored Tags",
+                                                                     DivId1 = "ignored-tags",
+                                                                     DivId2 = "ignoredtags",
+                                                                     Tags = null
+                                                                 }
                                     };
 
                 return View("Index", viewModel);
