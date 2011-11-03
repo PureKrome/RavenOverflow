@@ -1,4 +1,4 @@
-﻿@using RavenOverflow.Web.Models
+﻿@using RavenOverflow.Web.Models.ViewModels
 @model IndexViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,4 +16,5 @@
 else
 {
     Html.RenderPartial("_QuestionList", Model.Questions);
+    Html.RenderPartial("_TagListVertical", Model.RecentPopularTags);
 }

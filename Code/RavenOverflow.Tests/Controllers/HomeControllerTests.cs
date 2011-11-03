@@ -11,6 +11,7 @@ using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
+using RavenOverflow.Web.Models.ViewModels;
 
 namespace RavenOverflow.Tests.Controllers
 {
@@ -19,7 +20,7 @@ namespace RavenOverflow.Tests.Controllers
         [Test]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
-            // ReSharper restore InconsistentNaming
+        // ReSharper restore InconsistentNaming
         {
             // Arrange.
             using (IDocumentStore documentStore = DocumentStore)

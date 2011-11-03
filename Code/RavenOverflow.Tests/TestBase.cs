@@ -24,7 +24,7 @@ namespace RavenOverflow.Tests
                 _documentStore.Initialize();
 
                 // Index initialisation.
-                IndexCreation.CreateIndexes(typeof (RecentTags).Assembly, _documentStore);
+                IndexCreation.CreateIndexes(typeof (RecentPopularTags).Assembly, _documentStore);
 
                 // Create any Facets.
                 RavenFacetTags.CreateFacets(_documentStore);

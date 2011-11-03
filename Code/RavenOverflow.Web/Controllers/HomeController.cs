@@ -9,6 +9,7 @@ using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
 using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
+using RavenOverflow.Web.Models.ViewModels;
 
 namespace RavenOverflow.Web.Controllers
 {
@@ -28,7 +29,7 @@ namespace RavenOverflow.Web.Controllers
                 .OrderByDescending(x => x.CreatedOn)
                 .Take(20);
 
-            // Filter by Tags?
+            // Filter Questions by Tags?
             if (!string.IsNullOrEmpty(tag))
             {
                 header = "Tagged Questions";
@@ -38,8 +39,8 @@ namespace RavenOverflow.Web.Controllers
 
             // 2. Popular Tags for a time period.
             // StackOverflow calls it 'recent tags'.
-            IQueryable<RecentTags.ReduceResult> popularTagsThisMonthQuery =
-                DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+            IQueryable<RecentPopularTags.ReduceResult> recentPopularTags =
+                DocumentSession.Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                     .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                     .Take(20);
 
@@ -52,7 +53,7 @@ namespace RavenOverflow.Web.Controllers
                                 {
                                     Header = header,
                                     Questions = questionsQuery.ToList(),
-                                    PopularTagsThisMonth = popularTagsThisMonthQuery.ToList(),
+                                    RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
                                     UserTags = (userQuery.SingleOrDefault() ?? new User()).FavTags
                                 };
 
@@ -70,8 +71,8 @@ namespace RavenOverflow.Web.Controllers
 
             // 2. Popular Tags for a time period.
             // StackOverflow calls it 'recent tags'.
-            Lazy<IEnumerable<RecentTags.ReduceResult>> popularTagsThisMonthQuery =
-                DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+            Lazy<IEnumerable<RecentPopularTags.ReduceResult>> recentPopularTags =
+                DocumentSession.Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                     .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                     .Take(20)
                     .Lazily();
@@ -86,7 +87,7 @@ namespace RavenOverflow.Web.Controllers
                                 {
                                     Header = "Top Questions",
                                     Questions = questionsQuery.Value.ToList(),
-                                    PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
+                                    RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
                                     UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
                                 };
 
@@ -106,8 +107,8 @@ namespace RavenOverflow.Web.Controllers
 
                 // 2. Popular Tags for a time period.
                 // StackOverflow calls it 'recent tags'.
-                Lazy<IEnumerable<RecentTags.ReduceResult>> popularTagsThisMonthQuery =
-                    DocumentSession.Query<RecentTags.ReduceResult, RecentTags>()
+                Lazy<IEnumerable<RecentPopularTags.ReduceResult>> recentPopularTags =
+                    DocumentSession.Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                         .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                         .Take(20)
                         .Lazily();
@@ -122,7 +123,7 @@ namespace RavenOverflow.Web.Controllers
                                     {
                                         Header = "Top Questions",
                                         Questions = questionsQuery.Value.ToList(),
-                                        PopularTagsThisMonth = popularTagsThisMonthQuery.Value.ToList(),
+                                        RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
                                         UserTags = (userQuery.Value.SingleOrDefault() ?? new User()).FavTags
                                     };
 
@@ -153,7 +154,7 @@ namespace RavenOverflow.Web.Controllers
         public ActionResult Facets(string id)
         {
             IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
-                <RecentTagsMapOnly.ReduceResult, RecentTagsMapOnly>()
+                <RecentPopularTagsMapOnly.ReduceResult, RecentPopularTagsMapOnly>()
                 .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                 .ToFacets("Raven/Facets/Tags");
 
@@ -163,12 +164,12 @@ namespace RavenOverflow.Web.Controllers
         //[RavenActionFilter]
         public ActionResult Search(string term)
         {
-            IRavenQueryable<RecentTags.ReduceResult> query = DocumentSession
-                .Query<RecentTags.ReduceResult, RecentTags>()
+            IRavenQueryable<RecentPopularTags.ReduceResult> query = DocumentSession
+                .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                 .Where(x => x.Tag == term);
 
             // Does this tag exist?
-            RecentTags.ReduceResult tag = query.FirstOrDefault();
+            RecentPopularTags.ReduceResult tag = query.FirstOrDefault();
 
             var results = new List<string>();
 

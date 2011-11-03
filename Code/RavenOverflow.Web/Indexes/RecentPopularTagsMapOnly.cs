@@ -5,9 +5,9 @@ using RavenOverflow.Core.Entities;
 
 namespace RavenOverflow.Web.Indexes
 {
-    public class RecentTagsMapOnly : AbstractIndexCreationTask<Question, RecentTagsMapOnly.ReduceResult>
+    public class RecentPopularTagsMapOnly : AbstractIndexCreationTask<Question, RecentPopularTagsMapOnly.ReduceResult>
     {
-        public RecentTagsMapOnly()
+        public RecentPopularTagsMapOnly()
         {
             Map = questions => from question in questions
                                from tag in question.Tags

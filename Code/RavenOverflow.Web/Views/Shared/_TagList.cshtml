@@ -1,27 +1,30 @@
 ﻿@using System.Text
 @model IList<string>
 
-@if (Model == null | Model.Count <= 0)
-{ 
+@if (Model == null || Model.Count <= 0)
+{
     <p>No tags</p>
 }
 else
 {
-    StringBuilder tags = new StringBuilder();
-    foreach (var tag in Model)
+    var tags = new StringBuilder();
+    foreach (string tag in Model)
     {
         tags.AppendFormat("{0}{1}{2}", tags.Length > 0 ? " " : string.Empty, "t-", tag);
     }
-    
+
     <div class="tags @tags.ToString()">
-    @{ bool isFirstTag = true; }
-    @foreach (var tag in Model)
-    {
-        if (!isFirstTag)
-        {
-            @:&nbsp;
+        @{
+            bool isFirstTag = true;
+            foreach (string tag in Model)
+            {
+                if (!isFirstTag)
+                {
+                    @:&nbsp;
+                }
+                isFirstTag = false;
+                @Html.ActionLink(tag, "Index", "Home", new {tag}, new {@class = "post-tag", title = "show questions tagged " + tag, rel = "tag"})
+            }
         }
-        @Html.ActionLink(tag, "Index", "Home", new  { tag }, new  {@class="post-tag", title="show questions tagged " + tag, rel="tag"})
-    }
-    </div>  
+    </div>
 }

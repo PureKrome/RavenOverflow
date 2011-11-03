@@ -21,7 +21,7 @@ namespace RavenOverflow.Web.DependencyResolution
                              store.Initialize();
 
                              // Index initialisation.
-                             IndexCreation.CreateIndexes(typeof(RecentTags).Assembly, store);
+                             IndexCreation.CreateIndexes(typeof(RecentPopularTags).Assembly, store);
 
                              return store;
                          }
