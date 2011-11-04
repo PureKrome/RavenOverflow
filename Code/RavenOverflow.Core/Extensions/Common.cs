@@ -6,8 +6,7 @@ namespace RavenOverflow.Core.Extensions
     {
         public static DateTime ToUtcToday(this DateTime dateTime)
         {
-            DateTime utcNow = DateTime.UtcNow;
-            return new DateTime(utcNow.Year, utcNow.Month, utcNow.Day);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         }
     }
 }

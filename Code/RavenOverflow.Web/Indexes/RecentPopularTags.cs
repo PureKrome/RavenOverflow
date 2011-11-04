@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Raven.Client.Indexes;
+using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
+using RavenOverflow.Core.Extensions;
 
 namespace RavenOverflow.Web.Indexes
 {
@@ -40,4 +42,23 @@ namespace RavenOverflow.Web.Indexes
 
         #endregion
     }
+
+    #region Extensions
+
+    public static class Extensions
+    {
+        public static IRavenQueryable<RecentPopularTags.ReduceResult> WithinTheLastMonth(
+            this IRavenQueryable<RecentPopularTags.ReduceResult> query, int numberOfMonths)
+        {
+            return query.Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(numberOfMonths*(-1)).ToUtcToday());
+        }
+
+        public static IRavenQueryable<RecentPopularTags.ReduceResult> OrderByLastSeenDescending(
+            this IRavenQueryable<RecentPopularTags.ReduceResult> query)
+        {
+            return query.OrderByDescending(x => x.LastSeen);
+        }
+    }
+
+    #endregion
 }

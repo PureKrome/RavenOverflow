@@ -49,6 +49,8 @@
     <Compile Include="Entities\RootAggregate.cs" />
     <Compile Include="Entities\Vote.cs" />
     <Compile Include="Extensions\Common.cs" />
+    <Compile Include="Extensions\User.cs" />
+    <Compile Include="Extensions\Questions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>

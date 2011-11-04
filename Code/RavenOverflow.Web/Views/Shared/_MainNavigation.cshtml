@@ -1,9 +1,12 @@
 ﻿@using RavenOverflow.Web.Models
 @model _MainNavigationViewModel
 <div id="topbar">
-    <h3>@Html.ActionLink("Index - 3 DB roundtrips", "Index", "Home", new { Area = "" }, new { }) ||
-        @Html.ActionLink("BatchedIndex - 1 DB roundtrip", "BatchedIndex", "Home", new { Area = "" }, new { }) ||
-        @Html.ActionLink("AggressiveIndex - 1 DB roundtrip + Clientside Caching", "AggressiveIndex", "Home", new { Area = "" }, new { })
+    @{
+        int number = Model.CustomIdentity != null && Model.CustomIdentity.IsAuthenticated ? 3 : 2;
+    }
+    <h3>@Html.ActionLink("Index - " + number + " DB roundtrips", "Index", "Home", new {Area = ""}, new {}) ||
+        @Html.ActionLink("BatchedIndex - 1 DB roundtrip", "BatchedIndex", "Home", new {Area = ""}, new {}) ||
+        @Html.ActionLink("AggressiveIndex - 1 DB roundtrip + Clientside Caching", "AggressiveIndex", "Home", new {Area = ""}, new {})
     </h3>
     <hr/>
     
