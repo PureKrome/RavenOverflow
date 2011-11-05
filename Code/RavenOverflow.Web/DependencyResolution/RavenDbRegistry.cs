@@ -29,7 +29,7 @@ namespace RavenOverflow.Web.DependencyResolution
                 .Named("RavenDB Document Store.");
 
             For<IDocumentSession>()
-                .AlwaysUnique()
+                .HybridHttpOrThreadLocalScoped()
                 .Use(x =>
                 {
                     var store = x.GetInstance<IDocumentStore>();
