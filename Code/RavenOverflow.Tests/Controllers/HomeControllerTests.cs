@@ -71,58 +71,47 @@ namespace RavenOverflow.Tests.Controllers
             }
         }
 
-        //[Test]
-        //// ReSharper disable InconsistentNaming
-        //public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
-        //// ReSharper restore InconsistentNaming
-        //{
-        //    // Arrange.
-        //    using (IDocumentStore documentStore = DocumentStore)
-        //    {
-        //        using (IDocumentSession documentSession = documentStore.OpenSession())
-        //        {
-        //            HomeController homeController = HomeController(documentSession);
+        [Test]
+        // ReSharper disable InconsistentNaming
+        public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
+        // ReSharper restore InconsistentNaming
+        {
+            // Arrange.
+            using (IDocumentStore documentStore = DocumentStore)
+            {
+                using (IDocumentSession documentSession = documentStore.OpenSession())
+                {
+                    HomeController homeController = HomeController(documentSession);
 
-        //            // Act.
-        //            var result = homeController.Index(null, null) as ViewResult;
+                    // Act.
+                    var result = homeController.Index(null, null) as ViewResult;
 
-        //            // Assert.
-        //            Assert.IsNotNull(result);
+                    // Assert.
+                    Assert.IsNotNull(result);
 
-        //            var model = result.Model as IndexViewModel;
-        //            Assert.IsNotNull(model);
+                    var model = result.Model as IndexViewModel;
+                    Assert.IsNotNull(model);
 
-        //            CollectionAssert.AllItemsAreNotNull(model.RecentPopularTags);
+                    Assert.IsNotNull(model.RecentPopularTags);
+                    Assert.IsTrue(model.RecentPopularTags.Count > 0);
+                    CollectionAssert.AllItemsAreNotNull(model.RecentPopularTags);
 
-        //            // Make sure all the items are ordered correctly.
-        //            DateTime? previousQuestion = null;
-        //            foreach (Question question in model.RecentPopularTags)
-        //            {
-        //                if (previousQuestion.HasValue)
-        //                {
-        //                    Assert.IsTrue(previousQuestion.Value >= question.CreatedOn);
-        //                }
+                    // Make sure all the items are ordered correctly.
+                    int? previousCount = null;
+                    foreach (var keyValuePair in model.RecentPopularTags)
+                    {
+                        if (previousCount.HasValue)
+                        {
+                            Assert.IsTrue(previousCount.Value >= keyValuePair.Value);
+                        }
 
-        //                previousQuestion = question.CreatedOn;
-        //            }
+                        previousCount = keyValuePair.Value;
+                    }
 
-        //            // Now lets test that our fixed questions come back correctly.
-        //            List<Question> fixedQuestions = FakeQuestions.CreateFakeQuestions(null, 5).ToList();
-        //            for (int i = 0; i < 5; i++)
-        //            {
-        //                // Can Assert anything but the CreatedByUserId.
-        //                Assert.AreEqual(fixedQuestions[i].Id, model.Questions[i].Id);
-        //                Assert.AreEqual(fixedQuestions[i].Subject, model.Questions[i].Subject);
-        //                Assert.AreEqual(fixedQuestions[i].Content, model.Questions[i].Content);
-        //                Assert.AreEqual(fixedQuestions[i].CreatedOn, model.Questions[i].CreatedOn);
-        //                Assert.AreEqual(fixedQuestions[i].NumberOfViews, model.Questions[i].NumberOfViews);
-        //                Assert.AreEqual(fixedQuestions[i].Vote.DownVoteCount, model.Questions[i].Vote.DownVoteCount);
-        //                Assert.AreEqual(fixedQuestions[i].Vote.FavoriteCount, model.Questions[i].Vote.FavoriteCount);
-        //                Assert.AreEqual(fixedQuestions[i].Vote.UpVoteCount, model.Questions[i].Vote.UpVoteCount);
-        //            }
-        //        }
-        //    }
-        //}
+                    // ToDo: test fixed tags.
+                }
+            }
+        }
 
         // Reference: http://nerddinnerbook.s3.amazonaws.com/Part12.htm
         //            Yes .. Nerd Dinner to the rescue! and we come full circle...

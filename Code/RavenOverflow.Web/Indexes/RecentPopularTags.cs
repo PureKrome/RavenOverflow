@@ -38,6 +38,11 @@ namespace RavenOverflow.Web.Indexes
             public string Tag { get; set; }
             public int Count { get; set; }
             public DateTimeOffset LastSeen { get; set; }
+
+            public override string ToString()
+            {
+                return string.Format("{0} : {1} : {2}", Tag, Count, LastSeen);
+            }
         }
 
         #endregion
@@ -53,10 +58,10 @@ namespace RavenOverflow.Web.Indexes
             return query.Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(numberOfMonths*(-1)).ToUtcToday());
         }
 
-        public static IRavenQueryable<RecentPopularTags.ReduceResult> OrderByLastSeenDescending(
+        public static IRavenQueryable<RecentPopularTags.ReduceResult> OrderByCountDescending(
             this IRavenQueryable<RecentPopularTags.ReduceResult> query)
         {
-            return query.OrderByDescending(x => x.LastSeen);
+            return query.OrderByDescending(x => x.Count);
         }
     }
 

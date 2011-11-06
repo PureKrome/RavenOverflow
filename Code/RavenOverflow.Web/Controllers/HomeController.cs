@@ -55,6 +55,8 @@ namespace RavenOverflow.Web.Controllers
                                                              }
                                 };
 
+            var xxx = RecentPopularTagsQuery().ToList().OrderByDescending(x => x.Count);
+
             return View(viewModel);
         }
 
@@ -232,9 +234,8 @@ namespace RavenOverflow.Web.Controllers
         {
             IQueryable<RecentPopularTags.ReduceResult> recentPopularTags =
                 DocumentSession.Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
-                    //.WithinTheLastMonth(1)
-                    //.OrderByLastSeenDescending()
-                    .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
+                    .WithinTheLastMonth(1)
+                    .OrderByCountDescending()
                     .Take(20);
 
             return recentPopularTags;
