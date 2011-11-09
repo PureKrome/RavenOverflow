@@ -34,6 +34,7 @@ namespace RavenOverflow.FakeData
             if (_fakeUsers == null)
             {
                 var fakeUsers = new List<User>();
+                fakeUsers.AddRange(CreateFixedFakeUsers());
                 for (int i = 0; i < numberOfFakeUsers; i++)
                 {
                     fakeUsers.Add(CreateAFakeUser());
@@ -44,5 +45,23 @@ namespace RavenOverflow.FakeData
 
             return _fakeUsers;
         }
+
+        private static IEnumerable<User> CreateFixedFakeUsers()
+        {
+            return new List<User>
+                       {
+                           new User
+                               {
+                                   FullName = "Pure Krome",
+                                   DisplayName = "Pure.Krome",
+                                   Email = "pure.krome@pewpew.xxx",
+                                   CreatedOn = new DateTime(2010, 5, 23, 13, 05, 00),
+                                   Score = 69,
+                                   IsActive = true,
+                                   FavoriteTags = new List<string> {"ravendb", "c#", "asp.net-mvc3"}
+                               }
+                       };
+        }
+
     }
 }

@@ -22,11 +22,11 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
         // ReSharper restore InconsistentNaming
         {
-            // Arrange.
             using (IDocumentStore documentStore = DocumentStore)
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
+                    // Arrange.
                     HomeController homeController = HomeController(documentSession);
 
                     // Act.
@@ -76,11 +76,11 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
         // ReSharper restore InconsistentNaming
         {
-            // Arrange.
             using (IDocumentStore documentStore = DocumentStore)
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
+                    // Arrange.
                     HomeController homeController = HomeController(documentSession);
 
                     // Act.
@@ -109,6 +109,102 @@ namespace RavenOverflow.Tests.Controllers
                     }
 
                     // ToDo: test fixed tags.
+                }
+            }
+        }
+
+        [Test]
+        // ReSharper disable InconsistentNaming
+        public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
+        // ReSharper restore InconsistentNaming
+        {
+            using (IDocumentStore documentStore = DocumentStore)
+            {
+                using (IDocumentSession documentSession = documentStore.OpenSession())
+                {
+                    // Arrange.
+                    // Note: we're faking that a user has authenticated.
+                    HomeController homeController = HomeController(documentSession, displayName:"Pure.Krome");
+
+                    // Act.
+                    var result = homeController.Index(null, null) as ViewResult;
+
+                    // Assert.
+                    Assert.IsNotNull(result);
+
+                    var model = result.Model as IndexViewModel;
+                    Assert.IsNotNull(model);
+
+                    var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
+                    Assert.IsNotNull(userFavoriteTagListViewModel);
+
+                    Assert.AreEqual("Favorite Tags", userFavoriteTagListViewModel.Header);
+                    Assert.AreEqual("interesting-tags", userFavoriteTagListViewModel.DivId1);
+                    Assert.AreEqual("interestingtags", userFavoriteTagListViewModel.DivId2);
+                    Assert.IsNotNull(userFavoriteTagListViewModel.Tags);
+                    Assert.AreEqual(3, userFavoriteTagListViewModel.Tags.Count);
+                    CollectionAssert.AllItemsAreNotNull(userFavoriteTagListViewModel.Tags);
+                }
+            }
+        }
+
+        [Test]
+        // ReSharper disable InconsistentNaming
+        public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
+        // ReSharper restore InconsistentNaming
+        {
+            using (IDocumentStore documentStore = DocumentStore)
+            {
+                using (IDocumentSession documentSession = documentStore.OpenSession())
+                {
+                    // Arrange.
+                    // Note: we're faking that no user has been authenticated.
+                    HomeController homeController = HomeController(documentSession);
+
+                    // Act.
+                    var result = homeController.Index(null, null) as ViewResult;
+
+                    // Assert.
+                    Assert.IsNotNull(result);
+
+                    var model = result.Model as IndexViewModel;
+                    Assert.IsNotNull(model);
+
+                    var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
+                    Assert.IsNotNull(userFavoriteTagListViewModel);
+
+                    Assert.AreEqual("Favorite Tags", userFavoriteTagListViewModel.Header);
+                    Assert.AreEqual("interesting-tags", userFavoriteTagListViewModel.DivId1);
+                    Assert.AreEqual("interestingtags", userFavoriteTagListViewModel.DivId2);
+                    Assert.IsNull(userFavoriteTagListViewModel.Tags);
+                }
+            }
+        }
+
+        [Test]
+        public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
+        {
+            using (IDocumentStore documentStore = DocumentStore)
+            {
+                using (IDocumentSession documentSession = documentStore.OpenSession())
+                {
+                    // Arrange.
+                    const string tag = "ravendb";
+                    HomeController homeController = HomeController(documentSession);
+
+                    // Act.
+                    var result = homeController.Tag(tag) as JsonResult;
+
+                    // Assert.
+                    Assert.IsNotNull(result);
+
+                    dynamic model = result.Data;
+                    Assert.IsNotNull(model);
+
+                    // At least 5 questions are hardcoded to include the RavenDb tag.
+                    Assert.IsNotNull(model.Questions);
+                    Assert.IsTrue(model.Questions.Count >= 5);
+                    Assert.IsTrue(model.TotalResults >= 5);
                 }
             }
         }

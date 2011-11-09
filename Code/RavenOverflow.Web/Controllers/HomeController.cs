@@ -38,7 +38,7 @@ namespace RavenOverflow.Web.Controllers
                                     Header = header,
                                     Questions = questionsQuery.ToList(),
                                     RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserFavoriteTagList = new UserTagListViewModel
+                                    UserFavoriteTagListViewModel = new UserTagListViewModel
                                                               {
                                                                   Header = "Favorite Tags",
                                                                   DivId1 = "interesting-tags",
@@ -79,7 +79,7 @@ namespace RavenOverflow.Web.Controllers
                                     Header = header,
                                     Questions = questionsQuery.Value.ToList(),
                                     RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserFavoriteTagList = new UserTagListViewModel
+                                    UserFavoriteTagListViewModel = new UserTagListViewModel
                                                               {
                                                                   Header = "Favorite Tags",
                                                                   DivId1 = "interesting-tags",
@@ -123,7 +123,7 @@ namespace RavenOverflow.Web.Controllers
                                         Questions = questionsQuery.Value.ToList(),
                                         RecentPopularTags =
                                             recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                        UserFavoriteTagList = new UserTagListViewModel
+                                        UserFavoriteTagListViewModel = new UserTagListViewModel
                                                                   {
                                                                       Header = "Favorite Tags",
                                                                       DivId1 = "interesting-tags",
@@ -158,8 +158,7 @@ namespace RavenOverflow.Web.Controllers
             return Json(new
                             {
                                 Questions = questions,
-                                stats.TotalResults,
-                                Tag = DocumentSession.Load<Tag>("tags/" + id)
+                                stats.TotalResults
                             }, JsonRequestBehavior.AllowGet);
         }
 
