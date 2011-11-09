@@ -182,7 +182,9 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Test]
+        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
+        // ReSharper restore InconsistentNaming
         {
             using (IDocumentStore documentStore = DocumentStore)
             {
@@ -207,6 +209,67 @@ namespace RavenOverflow.Tests.Controllers
                     Assert.IsTrue(model.TotalResults >= 5);
                 }
             }
+        }
+
+        [Test]
+        // ReSharper disable InconsistentNaming
+        public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
+        // ReSharper restore InconsistentNaming
+        {
+            using (IDocumentStore documentStore = DocumentStore)
+            {
+                using (IDocumentSession documentSession = documentStore.OpenSession())
+                {
+                    // Arrange.
+                    const string tag = "ravendb";
+                    HomeController homeController = HomeController(documentSession);
+
+                    // Act.
+                    var result = homeController.Search(tag) as JsonResult;
+
+                    // Assert.
+                    Assert.IsNotNull(result);
+
+                    dynamic model = result.Data;
+                    Assert.IsNotNull(model);
+
+                    // At least 5 questions are hardcoded to include the RavenDb tag.
+                    Assert.IsNotNull(model.Questions);
+                    Assert.AreEqual(1, model.Questions.Count);
+                }
+            }
+        }
+
+        [Test]
+        // ReSharper disable InconsistentNaming
+        public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
+        // ReSharper restore InconsistentNaming
+        {
+            throw new NotImplementedException();
+
+            //using (IDocumentStore documentStore = DocumentStore)
+            //{
+            //    using (IDocumentSession documentSession = documentStore.OpenSession())
+            //    {
+            //        // Arrange.
+            //        const string tag = "rav";
+            //        HomeController homeController = HomeController(documentSession);
+
+            //        // Act.
+            //        var result = homeController.Search(tag) as JsonResult;
+
+            //        // Assert.
+            //        Assert.IsNotNull(result);
+
+            //        dynamic model = result.Data;
+            //        Assert.IsNotNull(model);
+
+            //        // At least 5 questions are hardcoded to include the RavenDb tag.
+            //        Assert.IsNotNull(model.Questions);
+            //        Assert.IsTrue(model.Questions.Count >= 5);
+            //        Assert.IsTrue(model.TotalResults >= 5);
+            //    }
+            //}
         }
 
         // Reference: http://nerddinnerbook.s3.amazonaws.com/Part12.htm
