@@ -14,9 +14,9 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### What it Uses
 
-* RavenDb
+* RavenDb (v499 as the time of the last push)
 * ASP.NET MVC3 
-* Structure for IoC
+* StructureMap for IoC
 * NBuilder for fake data
 * An attempt to simulate a production solution layout (eg. n-Tier, IoC, etc)
 
