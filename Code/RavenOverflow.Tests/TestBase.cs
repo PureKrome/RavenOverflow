@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CuttingEdge.Conditions;
 using Raven.Client;
+using Raven.Client.Document;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
 using RavenOverflow.Core.Entities;
@@ -21,6 +22,7 @@ namespace RavenOverflow.Tests
             {
                 // Initialise the Store.
                 _documentStore = new EmbeddableDocumentStore {RunInMemory = true};
+				_documentStore.Conventions.DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites;
                 _documentStore.Initialize();
 
                 // Index initialisation.

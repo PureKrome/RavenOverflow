@@ -55,8 +55,6 @@ namespace RavenOverflow.Web.Controllers
                                                              }
                                 };
 
-            var xxx = RecentPopularTagsQuery().ToList().OrderByDescending(x => x.Count);
-
             return View(viewModel);
         }
 
