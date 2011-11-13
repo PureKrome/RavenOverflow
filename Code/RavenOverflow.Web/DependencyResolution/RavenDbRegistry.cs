@@ -14,10 +14,7 @@ namespace RavenOverflow.Web.DependencyResolution
                 .Singleton()
                 .Use(x =>
                          {
-                             var store = new DocumentStore
-                                             {
-                                                 ConnectionStringName = connectionStringName,
-                                             };
+                             var store = new DocumentStore{ConnectionStringName = connectionStringName};
                              store.Initialize();
 
                              // Index initialisation.

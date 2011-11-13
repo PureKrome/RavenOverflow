@@ -8,6 +8,7 @@ using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
 using RavenOverflow.Web.Indexes;
+using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.ViewModels;
 
 namespace RavenOverflow.Web.Controllers
@@ -18,7 +19,7 @@ namespace RavenOverflow.Web.Controllers
         {
         }
 
-        //[HttpGet, RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult Index(string displayName, string tag)
         {
             string header;
@@ -58,7 +59,7 @@ namespace RavenOverflow.Web.Controllers
             return View(viewModel);
         }
 
-        //[HttpGet, RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult BatchedIndex(string displayName, string tag)
         {
             string header;
@@ -99,7 +100,7 @@ namespace RavenOverflow.Web.Controllers
             return View("Index", viewModel);
         }
 
-        //[HttpGet, RavenActionFilter]
+        [HttpGet, RavenActionFilter]
         public ActionResult AggressiveIndex(string displayName, string tag)
         {
             using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
@@ -144,7 +145,7 @@ namespace RavenOverflow.Web.Controllers
             }
         }
 
-        //[RavenActionFilter]
+        [RavenActionFilter]
         public ActionResult Tag(string id)
         {
             RavenQueryStatistics stats;
@@ -162,7 +163,7 @@ namespace RavenOverflow.Web.Controllers
                             }, JsonRequestBehavior.AllowGet);
         }
 
-        //[RavenActionFilter]
+        [RavenActionFilter]
         public ActionResult Facets(string id)
         {
             IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
@@ -173,9 +174,13 @@ namespace RavenOverflow.Web.Controllers
             return Json(facets, JsonRequestBehavior.AllowGet);
         }
 
-        //[RavenActionFilter]
+        [RavenActionFilter]
         public ActionResult Search(string term)
         {
+            //var pewpew = DocumentSession
+            //    .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
+            //    .ToList();
+
             IRavenQueryable<RecentPopularTags.ReduceResult> query = DocumentSession
                 .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                 .Where(x => x.Tag == term);
@@ -193,14 +198,8 @@ namespace RavenOverflow.Web.Controllers
             {
                 // No exact match .. so lets use Suggest.
                 SuggestionQueryResult suggestedTags = query.Suggest();
-                if (suggestedTags.Suggestions.Length == 1)
+                if (suggestedTags.Suggestions.Length > 0)
                 {
-                    // We have 1 suggestion, so don't suggest .. just go there :)
-                    results.Add(suggestedTags.Suggestions.First());
-                }
-                else
-                {
-                    // We have zero or more than 2+ suggestions...
                     results.AddRange(suggestedTags.Suggestions);
                 }
             }
