@@ -22,7 +22,7 @@ namespace RavenOverflow.Tests
             {
                 // Initialise the Store.
                 _documentStore = new EmbeddableDocumentStore {RunInMemory = true};
-				_documentStore.Conventions.DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites;
+                _documentStore.Conventions.DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites;
                 _documentStore.Initialize();
 
                 // Index initialisation.

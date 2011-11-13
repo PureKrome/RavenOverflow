@@ -177,10 +177,6 @@ namespace RavenOverflow.Web.Controllers
         [RavenActionFilter]
         public ActionResult Search(string term)
         {
-            //var pewpew = DocumentSession
-            //    .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
-            //    .ToList();
-
             IRavenQueryable<RecentPopularTags.ReduceResult> query = DocumentSession
                 .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                 .Where(x => x.Tag == term);
