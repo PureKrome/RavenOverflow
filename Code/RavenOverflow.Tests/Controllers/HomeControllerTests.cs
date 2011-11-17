@@ -191,12 +191,6 @@ namespace RavenOverflow.Tests.Controllers
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
-                    // Force the Index to complete.
-                    var meh = documentSession
-                        .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
-                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
-                        .ToList();
-
                     // Arrange.
                     const string tag = "ravendb";
                     HomeController homeController = HomeController(documentSession);
@@ -245,6 +239,7 @@ namespace RavenOverflow.Tests.Controllers
                     dynamic model = result.Data;
                     Assert.IsNotNull(model);
                     Assert.AreEqual(1, model.Count);
+                    Assert.AreEqual("ravendb", model[0]);
                 }
             }
         }
@@ -258,6 +253,12 @@ namespace RavenOverflow.Tests.Controllers
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
+                    // Force the Index to complete.
+                    var meh = documentSession
+                        .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
+                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                        .ToList();
+
                     // Arrange.
                     const string tag = "ravne"; // Hardcoded Typo.
                     HomeController homeController = HomeController(documentSession);
@@ -271,6 +272,7 @@ namespace RavenOverflow.Tests.Controllers
                     dynamic model = result.Data;
                     Assert.IsNotNull(model);
                     Assert.AreEqual(1, model.Count);
+                    Assert.AreEqual("ravendb", model[0]);
                 }
             }
         }
