@@ -9,6 +9,7 @@ using Raven.Client;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
+using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Models.ViewModels;
@@ -190,6 +191,12 @@ namespace RavenOverflow.Tests.Controllers
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
+                    // Force the Index to complete.
+                    var meh = documentSession
+                        .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
+                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                        .ToList();
+
                     // Arrange.
                     const string tag = "ravendb";
                     HomeController homeController = HomeController(documentSession);
@@ -220,6 +227,12 @@ namespace RavenOverflow.Tests.Controllers
             {
                 using (IDocumentSession documentSession = documentStore.OpenSession())
                 {
+                    // Force the Index to complete.
+                    var meh = documentSession
+                        .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
+                        .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                        .ToList();
+
                     // Arrange.
                     const string tag = "ravendb";
                     HomeController homeController = HomeController(documentSession);
