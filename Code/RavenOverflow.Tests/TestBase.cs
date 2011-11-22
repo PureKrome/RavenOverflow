@@ -12,7 +12,7 @@ using RavenOverflow.Web.Indexes;
 
 namespace RavenOverflow.Tests
 {
-    public abstract class TestBase
+    public abstract class TestBase : IDisposable
     {
         private IDocumentStore _documentStore;
 
@@ -70,6 +70,14 @@ namespace RavenOverflow.Tests
             foreach (RootAggregate entity in entities)
             {
                 session.Store(entity);
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_documentStore != null)
+            {
+                _documentStore.Dispose();
             }
         }
     }

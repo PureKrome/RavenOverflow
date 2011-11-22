@@ -9,6 +9,16 @@
     @Model.Header
 }
 
+@section SideBar
+{
+    @if (Model != null)
+    {
+        Html.RenderPartial("_UserTagList", Model.UserFavoriteTagListViewModel);
+        Html.RenderPartial("_UserTagList", Model.UserIgnoredTagList);
+        Html.RenderPartial("_TagListVertical", Model.RecentPopularTags);
+    }
+}
+
 @if (Model == null)
 {
     <p>No questions have been asked.</p>
@@ -16,7 +26,4 @@
 else
 {
     Html.RenderPartial("_QuestionList", Model.Questions);
-    Html.RenderPartial("_UserTagList", Model.UserFavoriteTagListViewModel);
-    Html.RenderPartial("_UserTagList", Model.UserIgnoredTagList);
-    Html.RenderPartial("_TagListVertical", Model.RecentPopularTags);
 }

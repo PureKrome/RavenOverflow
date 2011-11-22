@@ -57,7 +57,8 @@ namespace RavenOverflow.Services
                                FullName = fullName,
                                CreatedOn = DateTime.UtcNow,
                                IsActive = true,
-                               OAuthData = new List<OAuthData>()
+                               OAuthData = new List<OAuthData>(),
+                               FavoriteTags = new List<string> { "ravendb", "c#", "asp.net-mvc3" }
                            };
                 user.OAuthData.Add(oAuthData);
             }

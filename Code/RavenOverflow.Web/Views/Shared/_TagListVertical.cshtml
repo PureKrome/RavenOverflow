@@ -1,34 +1,36 @@
 ﻿@using System.Text
 @model IDictionary<string, short>
-
-<h2>Recent Tags</h2>
-@if (Model == null || Model.Count <= 0)
-{
-    <p>No tags</p>
-}
-else
-{
-    var tags = new StringBuilder();
-    foreach (string tag in Model.Keys)
+           
+<div class="module">
+    <h2>Recent Tags</h2>
+    @if (Model == null || Model.Count <= 0)
     {
-        tags.AppendFormat("{0}{1}{2}", tags.Length > 0 ? " " : string.Empty, "t-", tag);
+        <p>No tags</p>
     }
-
-    <div id="recent-tags-list">
-    @{
-        bool isFirstTag = true;
+    else
+    {
+        var tags = new StringBuilder();
         foreach (string tag in Model.Keys)
         {
-            if (!isFirstTag)
-            {
-                <br />
-            }
-            isFirstTag = false;
-            var title = string.Format("show questions tagged '{0}'", tag);
-            @Html.ActionLink(tag, "Index", "Home", new {tag}, new {@class = "post-tag", title = title, rel = "tag"})
-            <span class="item-multiplier">x @Model[tag]</span>
+            tags.AppendFormat("{0}{1}{2}", tags.Length > 0 ? " " : string.Empty, "t-", tag);
         }
-    }
+
+        <div id="recent-tags-list">
+            @{
+                bool isFirstTag = true;
+                foreach (string tag in Model.Keys)
+                {
+                    if (!isFirstTag)
+                    {
+                        <br />
+                    }
+                    isFirstTag = false;
+                    string title = string.Format("show questions tagged '{0}'", tag);
+                    @Html.ActionLink(tag, "Index", "Home", new {tag}, new {@class = "post-tag", title, rel = "tag"})
+                    <span class="item-multiplier">x @Model[tag]</span>
+                }
+            }
     
-    </div>
-}
+        </div>
+    }
+</div>

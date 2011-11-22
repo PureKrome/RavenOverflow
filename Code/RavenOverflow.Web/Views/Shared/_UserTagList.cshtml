@@ -12,9 +12,9 @@
             @if (Model.Tags == null || Model.Tags.Count <= 0)
             {
                 <p>No Tags</p>
-                return;
             }
-            @{
+            else
+            {
                 Html.RenderPartial("_TagList", new TagListViewModel
                                                    {
                                                        IsUserTags = true,

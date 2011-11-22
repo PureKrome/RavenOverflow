@@ -4,9 +4,9 @@
 @if (Model == null || Model.Tags == null || Model.Tags.Count <= 0)
 {
     <p>No tags</p>
-    return;
 }
-@{
+else
+{
     bool isFirstTag = true;
     foreach (string tag in Model.Tags)
     {
@@ -15,7 +15,7 @@
             @:&nbsp;
         }
         isFirstTag = false;
-        var classText = String.Format("post-tag{0}", Model.IsUserTags ? " user-tag" : string.Empty);
-        @Html.ActionLink(tag, "Index", "Home", new { tag }, new { @class = classText, title = "show questions tagged " + tag, rel = "tag" })
+        string classText = String.Format("post-tag{0}", Model.IsUserTags ? " user-tag" : string.Empty);
+        @Html.ActionLink(tag, "Index", "Home", new {tag}, new {@class = classText, title = "show questions tagged " + tag, rel = "tag"})
     }
 }

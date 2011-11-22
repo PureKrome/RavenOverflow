@@ -30,8 +30,6 @@
             
             <div id="hlinks">
                 @Html.Partial("_Authentication", Model.CustomIdentity)
-                @*<span class="profile-triangle">&#9662;</span>
-                <a href="/users/30674/pure-krome" class="profile-link">Pure.Krome</a>&nbsp;*@
             </div>
             <div id="hsearch">
                 @Html.Partial("_TagSearch")
@@ -64,11 +62,6 @@
         
             <div id="sidebar">
                 @RenderSection("SideBar", false)
-                @*<div class="module" id="recent-tags">
-                    <h4 id="h-recent-tags">Recent Tags</h4>
-                    <div id="recent-tags-list">
-                    </div>
-                </div>*@
             </div>
         </div>
     </div>
