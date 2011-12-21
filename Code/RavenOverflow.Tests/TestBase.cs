@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using CuttingEdge.Conditions;
+using NUnit.Framework;
 using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
+using Raven.Client.Listeners;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Indexes;
@@ -14,28 +16,38 @@ namespace RavenOverflow.Tests
 {
     public abstract class TestBase : IDisposable
     {
-        private IDocumentStore _documentStore;
+        protected IDocumentStore DocumentStore { get; private set; }
 
-        protected IDocumentStore DocumentStore
+        [SetUp]
+        public void InitaliseDocumentStore()
         {
-            get
-            {
-                // Initialise the Store.
-                _documentStore = new EmbeddableDocumentStore {RunInMemory = true};
-                _documentStore.Conventions.DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites;
-                _documentStore.Initialize();
+            // Initialise the Store.
+            var documentStore = new EmbeddableDocumentStore
+                                {
+                                    RunInMemory = true,
+                                    Conventions = {DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites}
+                                };
+            documentStore.Initialize();
 
-                // Index initialisation.
-                IndexCreation.CreateIndexes(typeof (RecentPopularTags).Assembly, _documentStore);
+            // Force query's to wait for index's to catch up. Unit Testing only :P
+            documentStore.RegisterListener(new NoStaleQueriesListener());
 
-                // Create any Facets.
-                RavenFacetTags.CreateFacets(_documentStore);
+            // Index initialisation.
+            IndexCreation.CreateIndexes(typeof(RecentPopularTags).Assembly, documentStore);
 
-                // Create our Seed Data.
-                CreateSeedData(_documentStore);
+            // Create any Facets.
+            RavenFacetTags.CreateFacets(documentStore);
 
-                return _documentStore;
-            }
+            // Create our Seed Data.
+            CreateSeedData(documentStore);
+
+            DocumentStore = documentStore;
+        }
+
+        [TearDown]
+        public void DisposeDocumentStore()
+        {
+            Dispose();
         }
 
         private static void CreateSeedData(IDocumentStore documentStore)
@@ -73,12 +85,32 @@ namespace RavenOverflow.Tests
             }
         }
 
+        #region Nested type: NoStaleQueriesListener
+
+        public class NoStaleQueriesListener : IDocumentQueryListener
+        {
+            #region Implementation of IDocumentQueryListener
+
+            public void BeforeQueryExecuted(IDocumentQueryCustomization queryCustomization)
+            {
+                queryCustomization.WaitForNonStaleResults();
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Implementation of IDisposable
+
         public void Dispose()
         {
-            if (_documentStore != null)
+            if (DocumentStore != null)
             {
-                _documentStore.Dispose();
+                DocumentStore.Dispose();
             }
         }
+
+        #endregion
     }
 }

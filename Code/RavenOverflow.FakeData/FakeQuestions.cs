@@ -10,8 +10,6 @@ namespace RavenOverflow.FakeData
 {
     public static class FakeQuestions
     {
-        private static IList<Question> _fakeQuestions;
-
         private static readonly IList<string> FakeTags = new List<string>
                                                              {
                                                                  "ravendb",
@@ -48,22 +46,18 @@ namespace RavenOverflow.FakeData
                 userIds = FakeUsers.CreateFakeUsers(50).Select(x => x.Id).ToList();
             }
 
-            if (_fakeQuestions == null)
+            var fakeQuestions = new List<Question>();
+
+            IList<Question> fixedQuestion = CreateFixedFakeQuestions(userIds);
+            Condition.Requires(numberOfFakeQuestions).IsNotLessThan(fixedQuestion.Count);
+
+            fakeQuestions.AddRange(fixedQuestion);
+            for (int i = 0; i < numberOfFakeQuestions - fixedQuestion.Count; i++)
             {
-                var fakeQuestions = new List<Question>();
-
-                // Add our fake questions.
-                fakeQuestions.AddRange(CreateFixedFakeQuestions(userIds));
-
-                for (int i = 0; i < numberOfFakeQuestions; i++)
-                {
-                    fakeQuestions.Add(CreateAFakeQuestion(userIds.ToRandomList(1).Single(), userIds));
-                }
-
-                _fakeQuestions = fakeQuestions;
+                fakeQuestions.Add(CreateAFakeQuestion(userIds.ToRandomList(1).Single(), userIds));
             }
 
-            return _fakeQuestions;
+            return fakeQuestions;
         }
 
         public static Question CreateAFakeQuestion(string userId, IList<string> answerUserIds)
@@ -142,7 +136,7 @@ namespace RavenOverflow.FakeData
                 .Build();
         }
 
-        private static IEnumerable<Question> CreateFixedFakeQuestions(IList<string> userIds)
+        private static IList<Question> CreateFixedFakeQuestions(IList<string> userIds)
         {
             Condition.Requires(userIds).IsNotNull().IsLongerOrEqual(1);
 

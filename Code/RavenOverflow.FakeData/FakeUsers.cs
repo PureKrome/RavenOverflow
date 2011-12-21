@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CuttingEdge.Conditions;
 using FizzWare.NBuilder;
 using FizzWare.NBuilder.Generators;
 using RavenOverflow.Core.Entities;
@@ -8,8 +9,6 @@ namespace RavenOverflow.FakeData
 {
     public static class FakeUsers
     {
-        private static IList<User> _fakeUsers;
-
         public static User CreateAFakeUser()
         {
             return Builder<User>
@@ -31,22 +30,20 @@ namespace RavenOverflow.FakeData
 
         public static ICollection<User> CreateFakeUsers(int numberOfFakeUsers)
         {
-            if (_fakeUsers == null)
+            var fixedUsers = CreateFixedFakeUsers();
+            Condition.Requires(numberOfFakeUsers).IsNotLessThan(fixedUsers.Count);
+            
+            var fakeUsers = new List<User>();
+            fakeUsers.AddRange(fixedUsers);
+            for (int i = 0; i < numberOfFakeUsers - fixedUsers.Count; i++)
             {
-                var fakeUsers = new List<User>();
-                fakeUsers.AddRange(CreateFixedFakeUsers());
-                for (int i = 0; i < numberOfFakeUsers; i++)
-                {
-                    fakeUsers.Add(CreateAFakeUser());
-                }
-
-                _fakeUsers = fakeUsers;
+                fakeUsers.Add(CreateAFakeUser());
             }
 
-            return _fakeUsers;
+            return fakeUsers;
         }
 
-        private static IEnumerable<User> CreateFixedFakeUsers()
+        private static List<User> CreateFixedFakeUsers()
         {
             return new List<User>
                        {
@@ -62,6 +59,5 @@ namespace RavenOverflow.FakeData
                                }
                        };
         }
-
     }
 }

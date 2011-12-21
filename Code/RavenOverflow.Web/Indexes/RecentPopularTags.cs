@@ -33,7 +33,7 @@ namespace RavenOverflow.Web.Indexes
 
             Index(x => x.Tag, FieldIndexing.Analyzed);
 
-            SortOptions.Add(x => x.Count, Raven.Abstractions.Indexing.SortOptions.Short);
+            Sort(x => x.Count, Raven.Abstractions.Indexing.SortOptions.Short);
         }
 
         #region Nested type: ReduceResult
