@@ -13,9 +13,9 @@ namespace RavenOverflow.FakeData
         {
             return Builder<User>
                 .CreateNew()
-                .With(x => x.FullName = string.Format("{0} {1}", GetRandom.FirstName(), GetRandom.LastName()))
+                .With(x => x.Id = null)
+                .And(x => x.FullName = string.Format("{0} {1}", GetRandom.FirstName(), GetRandom.LastName()))
                 .And(x => x.DisplayName = x.FullName.Replace(' ', '.'))
-                .And(x => x.Id = string.Format("Users/{0}", x.DisplayName))
                 .And(x => x.Email = GetRandom.Email())
                 .And(x => x.CreatedOn = GetRandom.DateTime(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow))
                 .And(x => x.Score = GetRandom.PositiveInt(50000))
