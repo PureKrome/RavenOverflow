@@ -4,21 +4,20 @@ using System.Linq;
 using System.Web.Mvc;
 using CuttingEdge.Conditions;
 using Moq;
-using NUnit.Framework;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Models.ViewModels;
+using Xunit;
 
 namespace RavenOverflow.Tests.Controllers
 {
     public class HomeControllerTests : TestBase
     {
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
         // ReSharper restore InconsistentNaming
@@ -32,13 +31,12 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Index(null, null) as ViewResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 var model = result.Model as IndexViewModel;
-                Assert.IsNotNull(model);
-
-                CollectionAssert.AllItemsAreNotNull(model.Questions);
-                Assert.AreEqual(20, model.Questions.Count);
+                Assert.NotNull(model);
+                Assert.NotNull(model.Questions);
+                Assert.Equal(20, model.Questions.Count);
 
                 // Make sure all the items are ordered correctly.
                 DateTime? previousQuestion = null;
@@ -46,7 +44,7 @@ namespace RavenOverflow.Tests.Controllers
                 {
                     if (previousQuestion.HasValue)
                     {
-                        Assert.IsTrue(previousQuestion.Value >= question.CreatedOn);
+                        Assert.True(previousQuestion.Value >= question.CreatedOn);
                     }
 
                     previousQuestion = question.CreatedOn;
@@ -61,17 +59,17 @@ namespace RavenOverflow.Tests.Controllers
                     // * CreatedByUserId - this is randomized when fakes are created.
                     // * CreatedOn - these fakes were made AFTER the Stored data.
                     // ASSUMPTION: the first 5 fixed questions are the first 5 documents in the Document Store.
-                    Assert.AreEqual(fixedQuestions[i].Subject, model.Questions[i].Subject);
-                    Assert.AreEqual(fixedQuestions[i].Content, model.Questions[i].Content);
-                    Assert.AreEqual(fixedQuestions[i].NumberOfViews, model.Questions[i].NumberOfViews);
-                    Assert.AreEqual(fixedQuestions[i].Vote.DownVoteCount, model.Questions[i].Vote.DownVoteCount);
-                    Assert.AreEqual(fixedQuestions[i].Vote.FavoriteCount, model.Questions[i].Vote.FavoriteCount);
-                    Assert.AreEqual(fixedQuestions[i].Vote.UpVoteCount, model.Questions[i].Vote.UpVoteCount);
+                    Assert.Equal(fixedQuestions[i].Subject, model.Questions[i].Subject);
+                    Assert.Equal(fixedQuestions[i].Content, model.Questions[i].Content);
+                    Assert.Equal(fixedQuestions[i].NumberOfViews, model.Questions[i].NumberOfViews);
+                    Assert.Equal(fixedQuestions[i].Vote.DownVoteCount, model.Questions[i].Vote.DownVoteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.FavoriteCount, model.Questions[i].Vote.FavoriteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.UpVoteCount, model.Questions[i].Vote.UpVoteCount);
                 }
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
         // ReSharper restore InconsistentNaming
@@ -85,14 +83,13 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Index(null, null) as ViewResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 var model = result.Model as IndexViewModel;
-                Assert.IsNotNull(model);
+                Assert.NotNull(model);
 
-                Assert.IsNotNull(model.RecentPopularTags);
-                Assert.IsTrue(model.RecentPopularTags.Count > 0);
-                CollectionAssert.AllItemsAreNotNull(model.RecentPopularTags);
+                Assert.NotNull(model.RecentPopularTags);
+                Assert.True(model.RecentPopularTags.Count > 0);
 
                 // Make sure all the items are ordered correctly.
                 int? previousCount = null;
@@ -100,7 +97,7 @@ namespace RavenOverflow.Tests.Controllers
                 {
                     if (previousCount.HasValue)
                     {
-                        Assert.IsTrue(previousCount.Value >= keyValuePair.Value);
+                        Assert.True(previousCount.Value >= keyValuePair.Value);
                     }
 
                     previousCount = keyValuePair.Value;
@@ -110,7 +107,7 @@ namespace RavenOverflow.Tests.Controllers
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
         // ReSharper restore InconsistentNaming
@@ -125,24 +122,23 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Index(null, null) as ViewResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 var model = result.Model as IndexViewModel;
-                Assert.IsNotNull(model);
+                Assert.NotNull(model);
 
                 var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
-                Assert.IsNotNull(userFavoriteTagListViewModel);
+                Assert.NotNull(userFavoriteTagListViewModel);
 
-                Assert.AreEqual("Favorite Tags", userFavoriteTagListViewModel.Header);
-                Assert.AreEqual("interesting-tags", userFavoriteTagListViewModel.DivId1);
-                Assert.AreEqual("interestingtags", userFavoriteTagListViewModel.DivId2);
-                Assert.IsNotNull(userFavoriteTagListViewModel.Tags);
-                Assert.AreEqual(3, userFavoriteTagListViewModel.Tags.Count);
-                CollectionAssert.AllItemsAreNotNull(userFavoriteTagListViewModel.Tags);
+                Assert.Equal("Favorite Tags", userFavoriteTagListViewModel.Header);
+                Assert.Equal("interesting-tags", userFavoriteTagListViewModel.DivId1);
+                Assert.Equal("interestingtags", userFavoriteTagListViewModel.DivId2);
+                Assert.NotNull(userFavoriteTagListViewModel.Tags);
+                Assert.Equal(3, userFavoriteTagListViewModel.Tags.Count);
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
         // ReSharper restore InconsistentNaming
@@ -157,22 +153,22 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Index(null, null) as ViewResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 var model = result.Model as IndexViewModel;
-                Assert.IsNotNull(model);
+                Assert.NotNull(model);
 
                 var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
-                Assert.IsNotNull(userFavoriteTagListViewModel);
+                Assert.NotNull(userFavoriteTagListViewModel);
 
-                Assert.AreEqual("Favorite Tags", userFavoriteTagListViewModel.Header);
-                Assert.AreEqual("interesting-tags", userFavoriteTagListViewModel.DivId1);
-                Assert.AreEqual("interestingtags", userFavoriteTagListViewModel.DivId2);
-                Assert.IsNull(userFavoriteTagListViewModel.Tags);
+                Assert.Equal("Favorite Tags", userFavoriteTagListViewModel.Header);
+                Assert.Equal("interesting-tags", userFavoriteTagListViewModel.DivId1);
+                Assert.Equal("interestingtags", userFavoriteTagListViewModel.DivId2);
+                Assert.Null(userFavoriteTagListViewModel.Tags);
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
         // ReSharper restore InconsistentNaming
@@ -187,19 +183,19 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Tag(tag) as JsonResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 dynamic model = result.Data;
-                Assert.IsNotNull(model);
+                Assert.NotNull(model);
 
                 // At least 5 questions are hardcoded to include the RavenDb tag.
-                Assert.IsNotNull(model.Questions);
-                Assert.IsTrue(model.Questions.Count >= 5);
-                Assert.IsTrue(model.TotalResults >= 5);
+                Assert.NotNull(model.Questions);
+                Assert.True(model.Questions.Count >= 5);
+                Assert.True(model.TotalResults >= 5);
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
         // ReSharper restore InconsistentNaming
@@ -220,15 +216,15 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Search(tag) as JsonResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
                 dynamic model = result.Data;
-                Assert.IsNotNull(model);
-                Assert.AreEqual(1, model.Count);
-                Assert.AreEqual("ravendb", model[0]);
+                Assert.NotNull(model);
+                Assert.Equal(1, model.Count);
+                Assert.Equal("ravendb", model[0]);
             }
         }
 
-        [Test]
+        [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
         // ReSharper restore InconsistentNaming
@@ -249,12 +245,12 @@ namespace RavenOverflow.Tests.Controllers
                 var result = homeController.Search(tag) as JsonResult;
 
                 // Assert.
-                Assert.IsNotNull(result);
+                Assert.NotNull(result);
 
                 dynamic model = result.Data;
-                Assert.IsNotNull(model);
-                Assert.AreEqual(1, model.Count);
-                Assert.AreEqual("ravendb", model[0]);
+                Assert.NotNull(model);
+                Assert.Equal(1, model.Count);
+                Assert.Equal("ravendb", model[0]);
             }
         }
 

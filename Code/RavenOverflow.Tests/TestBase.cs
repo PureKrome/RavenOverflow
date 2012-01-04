@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CuttingEdge.Conditions;
-using NUnit.Framework;
 using Raven.Client;
-using Raven.Client.Document;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
 using Raven.Client.Listeners;
@@ -15,18 +13,21 @@ using RavenOverflow.Web.Indexes;
 
 namespace RavenOverflow.Tests
 {
-    public abstract class TestBase
+    public abstract class TestBase : IDisposable
     {
+        protected TestBase()
+        {
+            InitaliseDocumentStore();
+        }
+
         protected IDocumentStore DocumentStore { get; private set; }
 
-        [SetUp]
-        public void InitaliseDocumentStore()
+        private void InitaliseDocumentStore()
         {
             // Initialise the Store.
             var documentStore = new EmbeddableDocumentStore
                                 {
-                                    RunInMemory = true,
-                                    Conventions = {DefaultQueryingConsistency = ConsistencyOptions.QueryYourWrites}
+                                    RunInMemory = true
                                 };
             documentStore.Initialize();
 
@@ -45,7 +46,6 @@ namespace RavenOverflow.Tests
             DocumentStore = documentStore;
         }
 
-        [TearDown]
         public void Dispose()
         {
             if (DocumentStore == null)
