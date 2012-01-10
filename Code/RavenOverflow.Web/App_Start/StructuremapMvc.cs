@@ -1,14 +1,22 @@
 using System.Web.Mvc;
+using RavenOverflow.Web.App_Start;
 using RavenOverflow.Web.DependencyResolution;
 using StructureMap;
+using WebActivator;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(RavenOverflow.Web.App_Start.StructuremapMvc), "Start")]
+[assembly: PreApplicationStartMethod(typeof (StructuremapMvc), "Start")]
 
-namespace RavenOverflow.Web.App_Start {
-    public static class StructuremapMvc {
-        public static void Start() {
-            var container = (IContainer) IoC.Initialize();
+namespace RavenOverflow.Web.App_Start
+{
+    public static class StructuremapMvc
+    {
+        public static void Start()
+        {
+            IContainer container = IoC.Initialize();
             DependencyResolver.SetResolver(new SmDependencyResolver(container));
+
+
+            RouteDebug.PreApplicationStart.Start();
         }
     }
 }

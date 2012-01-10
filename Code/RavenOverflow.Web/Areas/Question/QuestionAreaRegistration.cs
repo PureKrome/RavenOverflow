@@ -13,13 +13,13 @@ namespace RavenOverflow.Web.Areas.Question
         {
             context.MapRoute(
                 "Question - ask",
-                "Question/ask",
+                "questions/ask",
                 new { controller = "Questions", action = "Create" }
                 );
 
             context.MapRoute(
                 "Question_default",
-                "Question/{action}/{id}",
+                "questions/{action}/{id}",
                 new { controller = "Questions", action = "Index", id = UrlParameter.Optional }
                 );
         }

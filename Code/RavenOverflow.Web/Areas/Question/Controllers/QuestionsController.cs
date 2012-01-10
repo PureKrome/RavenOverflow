@@ -2,6 +2,7 @@
 using Raven.Client;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.Controllers;
+using RavenOverflow.Web.Models;
 
 namespace RavenOverflow.Web.Areas.Question.Controllers
 {
@@ -22,11 +23,11 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                                 {
                                     Header = "Ask a Question"
                                 };
-            return View();
+            return View(viewModel);
         }
 
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [HttpPost, RavenActionFilter]
+        public ActionResult Create(CreateViewModel viewModel)
         {
             try
             {
@@ -36,8 +37,9 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
             }
             catch
             {
-                return View();
+                return View(viewModel);
             }
         }
+
     }
 }

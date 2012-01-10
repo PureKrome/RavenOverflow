@@ -52,6 +52,7 @@ namespace RavenOverflow.Web
 
             RegisterRoutes(RouteTable.Routes);
 
+
             // Seed an demo data.
             SeedDocumentStore(ObjectFactory.GetInstance<IDocumentStore>());
 
