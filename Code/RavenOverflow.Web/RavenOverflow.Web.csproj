@@ -73,6 +73,9 @@
     <Reference Include="Raven.Client.MvcIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RavenDB.1.0.573\lib\net40\Raven.Client.MvcIntegration.dll</HintPath>
     </Reference>
+    <Reference Include="RouteDebugger">
+      <HintPath>..\..\packages\routedebugger.2.1.2\lib\net40\RouteDebugger.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
@@ -107,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Areas\Question\Controllers\QuestionsController.cs" />
+    <Compile Include="Areas\Question\Models\ViewModels\CreateViewModel.cs" />
+    <Compile Include="Areas\Question\QuestionAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UsersController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="DependencyResolution\AuthenticationRegistry.cs" />
@@ -154,6 +160,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Question\Views\Shared\" />
     <Folder Include="Areas\User\Models\" />
     <Folder Include="Areas\User\Views\Shared\" />
     <Folder Include="Scripts\" />
@@ -210,6 +217,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_QuestionTagList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Question\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Question\Views\Questions\Create.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
