@@ -1,7 +1,7 @@
 using System.Configuration;
 using StructureMap;
 
-namespace RavenOverflow.Web.DependencyResolution
+namespace RavenOverflow.Web.Models.DependencyResolution
 {
     public static class IoC
     {

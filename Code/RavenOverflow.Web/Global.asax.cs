@@ -9,7 +9,9 @@ using Raven.Client.MvcIntegration;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Indexes;
+using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
+using RavenOverflow.Web.Models.AutoMapping;
 using StructureMap;
 
 namespace RavenOverflow.Web
@@ -52,7 +54,6 @@ namespace RavenOverflow.Web
 
             RegisterRoutes(RouteTable.Routes);
 
-
             // Seed an demo data.
             SeedDocumentStore(ObjectFactory.GetInstance<IDocumentStore>());
 
@@ -61,6 +62,9 @@ namespace RavenOverflow.Web
 
             // Wire up the RavenDb profiler.
             RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
+
+            // Configure AutoMapper mappings.
+            AutoMapperBootstrapper.ConfigureMappings();
         }
 
         protected void Application_AuthenticateRequest()

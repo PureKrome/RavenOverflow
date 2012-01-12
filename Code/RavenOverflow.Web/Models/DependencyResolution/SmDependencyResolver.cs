@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using StructureMap;
 
-namespace RavenOverflow.Web.DependencyResolution
+namespace RavenOverflow.Web.Models.DependencyResolution
 {
     public class SmDependencyResolver : IDependencyResolver
     {

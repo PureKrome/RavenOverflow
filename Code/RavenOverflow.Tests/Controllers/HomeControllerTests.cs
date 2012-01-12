@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AutoMapper;
 using CuttingEdge.Conditions;
 using Moq;
 using Raven.Client;
@@ -9,7 +10,9 @@ using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Indexes;
+using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
+using RavenOverflow.Web.Models.AutoMapping;
 using RavenOverflow.Web.Models.ViewModels;
 using Xunit;
 
@@ -17,10 +20,17 @@ namespace RavenOverflow.Tests.Controllers
 {
     public class HomeControllerTests : TestBase
     {
+        public HomeControllerTests()
+        {
+            // WebSite requires AutoMapper mappings.
+            AutoMapperBootstrapper.ConfigureMappings();
+            Mapper.AssertConfigurationIsValid();
+        }
+
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -72,7 +82,7 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -110,13 +120,13 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
                 // Note: we're faking that a user has authenticated.
-                HomeController homeController = HomeController(documentSession, displayName:"Pure.Krome");
+                HomeController homeController = HomeController(documentSession, displayName: "Pure.Krome");
 
                 // Act.
                 var result = homeController.Index(null, null) as ViewResult;
@@ -127,7 +137,7 @@ namespace RavenOverflow.Tests.Controllers
                 var model = result.Model as IndexViewModel;
                 Assert.NotNull(model);
 
-                var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
+                UserTagListViewModel userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
                 Assert.NotNull(userFavoriteTagListViewModel);
 
                 Assert.Equal("Favorite Tags", userFavoriteTagListViewModel.Header);
@@ -141,7 +151,7 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -158,7 +168,7 @@ namespace RavenOverflow.Tests.Controllers
                 var model = result.Model as IndexViewModel;
                 Assert.NotNull(model);
 
-                var userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
+                UserTagListViewModel userFavoriteTagListViewModel = model.UserFavoriteTagListViewModel;
                 Assert.NotNull(userFavoriteTagListViewModel);
 
                 Assert.Equal("Favorite Tags", userFavoriteTagListViewModel.Header);
@@ -171,7 +181,7 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -198,12 +208,12 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Force the Index to complete.
-                var meh = documentSession
+                List<RecentPopularTags.ReduceResult> meh = documentSession
                     .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                     .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                     .ToList();
@@ -227,12 +237,12 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
-        // ReSharper restore InconsistentNaming
+            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Force the Index to complete.
-                var meh = documentSession
+                List<RecentPopularTags.ReduceResult> meh = documentSession
                     .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
                     .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                     .ToList();
@@ -252,6 +262,10 @@ namespace RavenOverflow.Tests.Controllers
                 Assert.Equal(1, model.Count);
                 Assert.Equal("ravendb", model[0]);
             }
+        }
+
+        public void GivenSomeQuestionsForAUserWithATag_Search_ReturnsSomeQuestions()
+        {
         }
 
         // Reference: http://nerddinnerbook.s3.amazonaws.com/Part12.htm

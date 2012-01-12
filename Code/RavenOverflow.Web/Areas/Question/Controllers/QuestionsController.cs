@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using AutoMapper;
 using Raven.Client;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.Controllers;
@@ -14,11 +13,6 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         {
         }
 
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         public ActionResult Create()
         {
             var viewModel = new CreateViewModel(User.Identity)
@@ -29,23 +23,21 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         }
 
         [HttpPost, RavenActionFilter]
-        public ActionResult Create(CreateViewModel viewModel)
+        public ActionResult Create(CreateInputModel inputModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    CreateViewModel viewModel = Mapper.Map(inputModel, new CreateViewModel(User.Identity)
+                                                                           {
+                                                                               Header = "Ask a Question"
+                                                                           });
                     return View(viewModel);
                 }
 
-                // We have a legit question, so lets save it.
-                string[] tags = viewModel.Tags.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                var question = new Core.Entities.Question
-                                   {
-                                       Subject = viewModel.Title,
-                                       Content = viewModel.Question,
-                                       Tags = new List<string>(tags)
-                                   };
+                Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
+
                 DocumentSession.Store(question);
                 DocumentSession.SaveChanges();
 
@@ -53,6 +45,10 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
             }
             catch
             {
+                CreateViewModel viewModel = Mapper.Map(inputModel, new CreateViewModel(User.Identity)
+                                                                       {
+                                                                           Header = "Ask a Question"
+                                                                       });
                 return View(viewModel);
             }
         }

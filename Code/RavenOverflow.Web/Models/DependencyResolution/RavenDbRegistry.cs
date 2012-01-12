@@ -4,7 +4,7 @@ using Raven.Client.Indexes;
 using RavenOverflow.Web.Indexes;
 using StructureMap.Configuration.DSL;
 
-namespace RavenOverflow.Web.DependencyResolution
+namespace RavenOverflow.Web.Models.DependencyResolution
 {
     public class RavenDbRegistry : Registry
     {
