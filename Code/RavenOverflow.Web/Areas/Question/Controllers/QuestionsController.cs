@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Mvc;
 using Raven.Client;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.Controllers;
@@ -11,7 +13,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         public QuestionsController(IDocumentSession documentSession) : base(documentSession)
         {
         }
-    
+
         public ActionResult Details(int id)
         {
             return View();
@@ -31,15 +33,28 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                if (!ModelState.IsValid)
+                {
+                    return View(viewModel);
+                }
 
-                return RedirectToAction("Index");
+                // We have a legit question, so lets save it.
+                string[] tags = viewModel.Tags.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var question = new Core.Entities.Question
+                                   {
+                                       Subject = viewModel.Title,
+                                       Content = viewModel.Question,
+                                       Tags = new List<string>(tags)
+                                   };
+                DocumentSession.Store(question);
+                DocumentSession.SaveChanges();
+
+                return RedirectToAction("Index", "Home");
             }
             catch
             {
                 return View(viewModel);
             }
         }
-
     }
 }
