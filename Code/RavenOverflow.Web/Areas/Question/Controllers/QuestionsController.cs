@@ -37,6 +37,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 }
 
                 Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
+                question.CreatedByUserId = User.Identity.IsAuthenticated ? "users/" + User.Identity.UserId : "0";
 
                 DocumentSession.Store(question);
                 DocumentSession.SaveChanges();
