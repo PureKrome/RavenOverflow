@@ -4,7 +4,7 @@ namespace RavenOverflow.Web.Models.Authentication
 {
     public class CustomIdentity : GenericIdentity, ICustomIdentity
     {
-        public CustomIdentity(int userId, string displayName)
+        public CustomIdentity(string userId, string displayName)
             : base(string.IsNullOrEmpty(displayName) ? string.Empty : displayName, "Forms")
         {
             UserId = userId;
@@ -12,7 +12,7 @@ namespace RavenOverflow.Web.Models.Authentication
 
         #region Implementation of CustomIdentity
 
-        public int UserId { get; private set; }
+        public string UserId { get; private set; }
 
         #endregion
     }

@@ -6,7 +6,7 @@ namespace RavenOverflow.Web.Models.Authentication
     {
         private const char Delimeter = ',';
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string DisplayName { get; set; }
 
         public override string ToString()
@@ -30,12 +30,9 @@ namespace RavenOverflow.Web.Models.Authentication
                 return false;
             }
 
-            int id;
-            int.TryParse(segments[0], out id);
-
             userData = new UserData
             {
-                Id = id,
+                Id = segments[0],
                 DisplayName = segments[1]
             };
 

@@ -10,7 +10,6 @@ using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Models.AutoMapping;
 using RavenOverflow.Web.Models.ViewModels;
@@ -50,7 +49,7 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Make sure all the items are ordered correctly.
                 DateTime? previousQuestion = null;
-                foreach (var question in model.QuestionListViewModel)
+                foreach (QuestionListViewModel question in model.QuestionListViewModel)
                 {
                     if (previousQuestion.HasValue)
                     {
@@ -258,8 +257,10 @@ namespace RavenOverflow.Tests.Controllers
 
         // Reference: http://nerddinnerbook.s3.amazonaws.com/Part12.htm
         //            Yes .. Nerd Dinner to the rescue! and we come full circle...
-        private static HomeController HomeController(IDocumentSession documentSession, int userId = 0,
-                                                     string displayName = null, string[] roles = null)
+        private static HomeController HomeController(IDocumentSession documentSession,
+                                                     string userId = null,
+                                                     string displayName = null,
+                                                     string[] roles = null)
         {
             Condition.Requires(documentSession);
 

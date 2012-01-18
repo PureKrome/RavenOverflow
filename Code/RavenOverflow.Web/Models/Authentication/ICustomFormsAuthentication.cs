@@ -4,7 +4,7 @@ namespace RavenOverflow.Web.Models.Authentication
 {
     public interface ICustomFormsAuthentication
     {
-        void SignIn(int id, string displayName, HttpResponseBase httpResponseBase);
+        void SignIn(string id, string displayName, HttpResponseBase httpResponseBase);
         void SignOut();
     }
 }

@@ -4,6 +4,6 @@ namespace RavenOverflow.Web.Models.Authentication
 {
     public interface ICustomIdentity : IIdentity
     {
-        int UserId { get; }
+        string UserId { get; }
     }
 }

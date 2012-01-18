@@ -108,7 +108,7 @@ namespace RavenOverflow.Web.Areas.User.Controllers
                 return Content("failed to authenticate - user is inactive.");
             }
 
-            _customFormsAuthentication.SignIn(user.IdAsANumber, user.DisplayName, Response);
+            _customFormsAuthentication.SignIn(user.Id, user.DisplayName, Response);
 
             return RedirectToAction("Index", "Home", new {area=""}); // If I don't provide the area .. I get boom-ski :~(
         }

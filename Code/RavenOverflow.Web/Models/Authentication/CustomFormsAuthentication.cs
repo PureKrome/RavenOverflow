@@ -9,7 +9,7 @@ namespace RavenOverflow.Web.Models.Authentication
     {
         #region IFormsAuthenticationService Members
 
-        public void SignIn(int id, string displayName, HttpResponseBase httpResponseBase)
+        public void SignIn(string id, string displayName, HttpResponseBase httpResponseBase)
         {
             var userData = new UserData
             {
