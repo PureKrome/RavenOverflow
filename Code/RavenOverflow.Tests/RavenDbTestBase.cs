@@ -13,9 +13,9 @@ using RavenOverflow.Web.Indexes;
 
 namespace RavenOverflow.Tests
 {
-    public abstract class TestBase : IDisposable
+    public abstract class RavenDbTestBase : IDisposable
     {
-        protected TestBase()
+        protected RavenDbTestBase()
         {
             InitaliseDocumentStore();
         }

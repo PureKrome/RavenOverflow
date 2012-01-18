@@ -78,15 +78,18 @@ namespace RavenOverflow.FakeData
                 .And(x => x.Vote = CreateAFakeVote())
                 .Build();
 
-            for (int i = 0; i < (GetRandom.Int(1, 20) <= 10 ? GetRandom.PositiveInt(6) : 0); i++)
+            if (answerUserIds != null)
             {
-                if (fakeQuestion.Answers == null)
+                for (int i = 0; i < (GetRandom.Int(1, 20) <= 10 ? GetRandom.PositiveInt(6) : 0); i++)
                 {
-                    fakeQuestion.Answers = new List<Answer>();
-                }
+                    if (fakeQuestion.Answers == null)
+                    {
+                        fakeQuestion.Answers = new List<Answer>();
+                    }
 
-                fakeQuestion.Answers.Add(CreateAFakeAnswer(fakeQuestion.CreatedOn,
-                                                           answerUserIds.ToRandomList(1).Single()));
+                    fakeQuestion.Answers.Add(CreateAFakeAnswer(fakeQuestion.CreatedOn,
+                                                               answerUserIds.ToRandomList(1).Single()));
+                }
             }
 
             return fakeQuestion;

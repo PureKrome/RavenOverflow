@@ -16,16 +16,16 @@ namespace RavenOverflow.Services
             _documentSession = documentSession;
         }
 
+        #region IUserService Members
+
         public User CreateOrUpdate(OAuthData oAuthData, string userName, string fullName, string email)
         {
             // Lets find an existing user for the provider OR the email address if the provider doesn't exist.
-            User user = _documentSession.Query<User>()
-                            .Where(
-                                x =>
-                                x.OAuthData.Any(y => y.Id == oAuthData.Id && y.OAuthProvider == oAuthData.OAuthProvider))
-                            .SingleOrDefault() ?? _documentSession.Query<User>()
-                                                      .Where(x => x.Email == email)
-                                                      .SingleOrDefault();
+            User user =
+                _documentSession.Query<User>()
+                    .SingleOrDefault(x => 
+                        x.OAuthData.Any(y => y.Id == oAuthData.Id && y.OAuthProvider == oAuthData.OAuthProvider)) ??
+                _documentSession.Query<User>().SingleOrDefault(x => x.Email == email);
 
             if (user != null)
             {
@@ -58,7 +58,7 @@ namespace RavenOverflow.Services
                                CreatedOn = DateTime.UtcNow,
                                IsActive = true,
                                OAuthData = new List<OAuthData>(),
-                               FavoriteTags = new List<string> { "ravendb", "c#", "asp.net-mvc3" }
+                               FavoriteTags = new List<string> {"ravendb", "c#", "asp.net-mvc3"}
                            };
                 user.OAuthData.Add(oAuthData);
             }
@@ -68,5 +68,7 @@ namespace RavenOverflow.Services
 
             return user;
         }
+
+        #endregion
     }
 }
