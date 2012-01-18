@@ -9,8 +9,8 @@ namespace RavenOverflow.Web.Areas.Question.Models.ViewModels
         {
         }
 
-        public string Title { get; set; }
-        public string Question { get; set; }
+        public string Subject { get; set; }
+        public string Content { get; set; }
         public string Tags { get; set; }
     }
 }

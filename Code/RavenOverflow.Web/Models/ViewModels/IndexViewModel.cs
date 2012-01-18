@@ -10,7 +10,7 @@ namespace RavenOverflow.Web.Models.ViewModels
         {
         }
 
-        public IList<Question> Questions { get; set; }
+        public IList<QuestionListViewModel> QuestionListViewModel { get; set; }
         public AuthenticationViewModel AuthenticationViewModel { get; set; }
         public IDictionary<string, short> RecentPopularTags { get; set; }
         public UserTagListViewModel UserFavoriteTagListViewModel { get; set; }

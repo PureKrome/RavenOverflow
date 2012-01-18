@@ -37,7 +37,7 @@ namespace RavenOverflow.Web.Controllers
             var viewModel = new IndexViewModel(User.Identity)
                                 {
                                     Header = header,
-                                    Questions = questionsQuery.ToList(),
+                                    QuestionListViewModel = questionsQuery.ToList(),
                                     RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
                                     UserFavoriteTagListViewModel = new UserTagListViewModel
                                                               {
@@ -78,7 +78,7 @@ namespace RavenOverflow.Web.Controllers
             var viewModel = new IndexViewModel(User.Identity)
                                 {
                                     Header = header,
-                                    Questions = questionsQuery.Value.ToList(),
+                                    QuestionListViewModel = questionsQuery.Value.ToList(),
                                     RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
                                     UserFavoriteTagListViewModel = new UserTagListViewModel
                                                               {
@@ -121,7 +121,7 @@ namespace RavenOverflow.Web.Controllers
                 var viewModel = new IndexViewModel(User.Identity)
                                     {
                                         Header = header,
-                                        Questions = questionsQuery.Value.ToList(),
+                                        QuestionListViewModel = questionsQuery.Value.ToList(),
                                         RecentPopularTags =
                                             recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
                                         UserFavoriteTagListViewModel = new UserTagListViewModel
@@ -203,11 +203,11 @@ namespace RavenOverflow.Web.Controllers
             return Json(results, JsonRequestBehavior.AllowGet);
         }
 
-        private IQueryable<Question> QuestionQuery(string tag, out string header)
+        private IQueryable<QuestionListViewModel> QuestionQuery(string tag, out string header)
         {
             header = "Top Questions";
 
-            IQueryable<Question> questionsQuery = DocumentSession.Query<Question>()
+            IQueryable<Question> questionsQuery = DocumentSession.Query<Question, Questions_ByCreatedOnAsProjection>()
                 .OrderByCreatedByDescending()
                 .Take(20);
 
@@ -219,7 +219,7 @@ namespace RavenOverflow.Web.Controllers
                     .WithAnyTag(tag);
             }
 
-            return questionsQuery;
+            return questionsQuery.As<QuestionListViewModel>();
         }
 
         private IQueryable<RecentPopularTags.ReduceResult> RecentPopularTagsQuery()

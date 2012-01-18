@@ -6,14 +6,14 @@
         @:Welcome <strong>@Model.Name</strong>!
         <ul>
             <li>Settings</li>
-            <li>@Html.ActionLink("LogOff", "SignOut", "Users")</li>
+            <li>@Html.ActionLink("LogOff", "SignOut", "Users", new { Area = "User"}, null)</li>
         </ul>
     }
     else
     {
         <ul>
-            <li>@Html.ActionLink("Register", "Authenticate", "Users")</li>
-            <li>@Html.ActionLink("Log On", "Authenticate", new {controller = "Users", returnUrl = HttpContext.Current.Request.RawUrl})</li>
+            <li>@Html.ActionLink("Register", "Authenticate", "Users", new { Area = "User"}, null)</li>
+            <li>@Html.ActionLink("Log On", "Authenticate",  "Users", new {Area = "User", returnUrl = HttpContext.Current.Request.RawUrl}, null)</li>
         </ul>
     }
 </span>

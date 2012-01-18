@@ -1,6 +1,6 @@
-﻿@using RavenOverflow.Core.Entities
+﻿@using RavenOverflow.Web.Models.ViewModels
 @using RavenOverflow.Web.Models
-@model IList<Question>
+@model IList<QuestionListViewModel>
            
 @if (Model == null || Model.Count <= 0)
 {
@@ -35,7 +35,7 @@ else
 
                 <div class="started">
                     <span title="@question.CreatedOn" class="relativetime">@question.CreatedOn.ToShortDateString()&nbsp;@question.CreatedOn.ToShortTimeString()</span>
-                    <a href="#">@question.CreatedByUserId</a>
+                    <a href="#">@question.DisplayName</a>
                     <span class="reputation-score" title="reputation score">??</span>
                 </div>
             </div>

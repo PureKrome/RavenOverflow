@@ -18,9 +18,11 @@ using Xunit;
 
 namespace RavenOverflow.Tests.Controllers
 {
-    public class HomeControllerTests : TestBase
+    // ReSharper disable InconsistentNaming
+
+    public class HomeControllerFacts : TestBase
     {
-        public HomeControllerTests()
+        public HomeControllerFacts()
         {
             // WebSite requires AutoMapper mappings.
             AutoMapperBootstrapper.ConfigureMappings();
@@ -28,9 +30,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -45,12 +45,12 @@ namespace RavenOverflow.Tests.Controllers
 
                 var model = result.Model as IndexViewModel;
                 Assert.NotNull(model);
-                Assert.NotNull(model.Questions);
-                Assert.Equal(20, model.Questions.Count);
+                Assert.NotNull(model.QuestionListViewModel);
+                Assert.Equal(20, model.QuestionListViewModel.Count);
 
                 // Make sure all the items are ordered correctly.
                 DateTime? previousQuestion = null;
-                foreach (Question question in model.Questions)
+                foreach (var question in model.QuestionListViewModel)
                 {
                     if (previousQuestion.HasValue)
                     {
@@ -69,20 +69,18 @@ namespace RavenOverflow.Tests.Controllers
                     // * CreatedByUserId - this is randomized when fakes are created.
                     // * CreatedOn - these fakes were made AFTER the Stored data.
                     // ASSUMPTION: the first 5 fixed questions are the first 5 documents in the Document Store.
-                    Assert.Equal(fixedQuestions[i].Subject, model.Questions[i].Subject);
-                    Assert.Equal(fixedQuestions[i].Content, model.Questions[i].Content);
-                    Assert.Equal(fixedQuestions[i].NumberOfViews, model.Questions[i].NumberOfViews);
-                    Assert.Equal(fixedQuestions[i].Vote.DownVoteCount, model.Questions[i].Vote.DownVoteCount);
-                    Assert.Equal(fixedQuestions[i].Vote.FavoriteCount, model.Questions[i].Vote.FavoriteCount);
-                    Assert.Equal(fixedQuestions[i].Vote.UpVoteCount, model.Questions[i].Vote.UpVoteCount);
+                    Assert.Equal(fixedQuestions[i].Subject, model.QuestionListViewModel[i].Subject);
+                    Assert.Equal(fixedQuestions[i].Content, model.QuestionListViewModel[i].Content);
+                    Assert.Equal(fixedQuestions[i].NumberOfViews, model.QuestionListViewModel[i].NumberOfViews);
+                    Assert.Equal(fixedQuestions[i].Vote.DownVoteCount, model.QuestionListViewModel[i].Vote.DownVoteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.FavoriteCount, model.QuestionListViewModel[i].Vote.FavoriteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.UpVoteCount, model.QuestionListViewModel[i].Vote.UpVoteCount);
                 }
             }
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -118,9 +116,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -149,9 +145,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -179,9 +173,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -206,9 +198,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -235,9 +225,7 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        // ReSharper disable InconsistentNaming
         public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
-            // ReSharper restore InconsistentNaming
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
@@ -287,4 +275,6 @@ namespace RavenOverflow.Tests.Controllers
             return homeController;
         }
     }
+
+    // ReSharper restore InconsistentNaming
 }
