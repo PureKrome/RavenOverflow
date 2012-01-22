@@ -1,9 +1,9 @@
-﻿using RavenOverflow.Core.Entities;
+﻿using System.Collections.Generic;
 
 namespace RavenOverflow.Web.Models.ViewModels
 {
-    public class QuestionListViewModel : Question
+    public class QuestionListViewModel
     {
-        public string DisplayName { get; set; }
+        public IList<QuestionWithDisplayName> Questions { get; set; }
     }
 }

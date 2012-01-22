@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Raven.Client;
+using Raven.Client.Document;
 using Raven.Client.MvcIntegration;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
@@ -78,8 +80,8 @@ namespace RavenOverflow.Web
             using (IDocumentSession session = documentStore.OpenSession())
             {
                 // Don't add any seed data, if we already have some data in the system.
-                List<User> user = session.Query<User>().Take(1).ToList();
-                if (user.Any())
+                var user = session.Load<User>("users/1");
+                if (user != null)
                 {
                     return;
                 }
@@ -91,6 +93,12 @@ namespace RavenOverflow.Web
                 StoreEntites(session, FakeQuestions.CreateFakeQuestions(users.Select(x => x.Id).ToList()));
 
                 session.SaveChanges();
+
+                // Wait for all stale indexes to complete.
+                while (documentStore.DatabaseCommands.GetStatistics().StaleIndexes.Any())
+                {
+                    Thread.Sleep(200);
+                }
             }
         }
 
@@ -115,3 +123,5 @@ namespace RavenOverflow.Web
 
     // ReSharper restore InconsistentNaming
 }
+
+

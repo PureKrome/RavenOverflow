@@ -16,6 +16,7 @@ namespace RavenOverflow.Web.Models.DependencyResolution
                                                      ConfigurationManager.AppSettings["FacebookAppId"],
                                                      ConfigurationManager.AppSettings["FacebookSecret"]
                                                      ));
+                                             x.AddRegistry(new ServiceRegistry());
                                          });
             return ObjectFactory.Container;
         }

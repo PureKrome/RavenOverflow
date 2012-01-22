@@ -34,7 +34,8 @@ namespace RavenOverflow.Tests.Controllers
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Index(null, null) as ViewResult;
@@ -45,11 +46,12 @@ namespace RavenOverflow.Tests.Controllers
                 var model = result.Model as IndexViewModel;
                 Assert.NotNull(model);
                 Assert.NotNull(model.QuestionListViewModel);
-                Assert.Equal(20, model.QuestionListViewModel.Count);
+                Assert.NotNull(model.QuestionListViewModel.Questions);
+                Assert.Equal(20, model.QuestionListViewModel.Questions.Count);
 
                 // Make sure all the items are ordered correctly.
                 DateTime? previousQuestion = null;
-                foreach (QuestionListViewModel question in model.QuestionListViewModel)
+                foreach (var question in model.QuestionListViewModel.Questions)
                 {
                     if (previousQuestion.HasValue)
                     {
@@ -68,12 +70,13 @@ namespace RavenOverflow.Tests.Controllers
                     // * CreatedByUserId - this is randomized when fakes are created.
                     // * CreatedOn - these fakes were made AFTER the Stored data.
                     // ASSUMPTION: the first 5 fixed questions are the first 5 documents in the Document Store.
-                    Assert.Equal(fixedQuestions[i].Subject, model.QuestionListViewModel[i].Subject);
-                    Assert.Equal(fixedQuestions[i].Content, model.QuestionListViewModel[i].Content);
-                    Assert.Equal(fixedQuestions[i].NumberOfViews, model.QuestionListViewModel[i].NumberOfViews);
-                    Assert.Equal(fixedQuestions[i].Vote.DownVoteCount, model.QuestionListViewModel[i].Vote.DownVoteCount);
-                    Assert.Equal(fixedQuestions[i].Vote.FavoriteCount, model.QuestionListViewModel[i].Vote.FavoriteCount);
-                    Assert.Equal(fixedQuestions[i].Vote.UpVoteCount, model.QuestionListViewModel[i].Vote.UpVoteCount);
+                    var question = model.QuestionListViewModel.Questions[i];
+                    Assert.Equal(fixedQuestions[i].Subject, question.Subject);
+                    Assert.Equal(fixedQuestions[i].Content, question.Content);
+                    Assert.Equal(fixedQuestions[i].NumberOfViews, question.NumberOfViews);
+                    Assert.Equal(fixedQuestions[i].Vote.DownVoteCount, question.Vote.DownVoteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.FavoriteCount, question.Vote.FavoriteCount);
+                    Assert.Equal(fixedQuestions[i].Vote.UpVoteCount, question.Vote.UpVoteCount);
                 }
             }
         }
@@ -84,7 +87,8 @@ namespace RavenOverflow.Tests.Controllers
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Index(null, null) as ViewResult;
@@ -121,7 +125,9 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 // Note: we're faking that a user has authenticated.
-                HomeController homeController = HomeController(documentSession, displayName: "Pure.Krome");
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController, displayName: "Pure.Krome");
+
 
                 // Act.
                 var result = homeController.Index(null, null) as ViewResult;
@@ -150,7 +156,8 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 // Note: we're faking that no user has been authenticated.
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Index(null, null) as ViewResult;
@@ -178,7 +185,8 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 const string tag = "ravendb";
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Tag(tag) as JsonResult;
@@ -209,7 +217,8 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Arrange.
                 const string tag = "ravendb";
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Search(tag) as JsonResult;
@@ -236,7 +245,8 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Arrange.
                 const string tag = "ravne"; // Hardcoded Typo.
-                HomeController homeController = HomeController(documentSession);
+                HomeController homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
                 var result = homeController.Search(tag) as JsonResult;
@@ -253,27 +263,6 @@ namespace RavenOverflow.Tests.Controllers
 
         public void GivenSomeQuestionsForAUserWithATag_Search_ReturnsSomeQuestions()
         {
-        }
-
-        // Reference: http://nerddinnerbook.s3.amazonaws.com/Part12.htm
-        //            Yes .. Nerd Dinner to the rescue! and we come full circle...
-        private static HomeController HomeController(IDocumentSession documentSession,
-                                                     string userId = null,
-                                                     string displayName = null,
-                                                     string[] roles = null)
-        {
-            Condition.Requires(documentSession);
-
-            // Some fake Authentication stuff.
-            var customIdentity = new CustomIdentity(userId, displayName);
-            var customPrincipal = new CustomPrincipal(customIdentity, roles);
-
-            var mockControllerContext = new Mock<ControllerContext>();
-            mockControllerContext.Setup(x => x.HttpContext.User).Returns(customPrincipal);
-
-            var homeController = new HomeController(documentSession) {ControllerContext = mockControllerContext.Object};
-
-            return homeController;
         }
     }
 

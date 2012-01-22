@@ -100,6 +100,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ControllerUtilities.cs" />
+    <Compile Include="Controllers\QuestionControllerFacts.cs" />
     <Compile Include="Controllers\UserControllerFacts.cs" />
     <Compile Include="Controllers\HomeControllerFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

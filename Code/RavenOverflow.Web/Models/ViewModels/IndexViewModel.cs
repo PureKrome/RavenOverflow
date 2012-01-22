@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using RavenOverflow.Core.Entities;
 using RavenOverflow.Web.Models.Authentication;
 
 namespace RavenOverflow.Web.Models.ViewModels
@@ -10,7 +9,7 @@ namespace RavenOverflow.Web.Models.ViewModels
         {
         }
 
-        public IList<QuestionListViewModel> QuestionListViewModel { get; set; }
+        public QuestionListViewModel QuestionListViewModel { get; set; }
         public AuthenticationViewModel AuthenticationViewModel { get; set; }
         public IDictionary<string, short> RecentPopularTags { get; set; }
         public UserTagListViewModel UserFavoriteTagListViewModel { get; set; }
