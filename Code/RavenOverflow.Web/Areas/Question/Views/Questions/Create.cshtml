@@ -24,22 +24,22 @@
                         <label for="title">Title</label>
                     </td>
                     <td class="ask-title-cell-value">
-                        <input type="text" maxlength="300" tabindex="100" class="actual-edit-overlay" value="" style="position: absolute; background-color: white; color: black; -webkit-text-fill-color: black; opacity: 1; width: 610px; height: 16px; line-height: normal; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; text-align: -webkit-auto; border-left-style: solid; border-right-style: solid; border-top-style: solid; border-bottom-style: solid; border-left-color: rgb(153, 153, 153); border-right-color: rgb(153, 153, 153); border-top-color: rgb(153, 153, 153); border-bottom-color: rgb(153, 153, 153); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; " disabled="disabled"><input id="title" name="title" type="text" maxlength="300" tabindex="100" class="ask-title-field edit-field-overlayed" value="" style="z-index: 1; position: relative; opacity: 0.4; ">                        
+                        @Html.EditorFor(x => x.Subject, new { @class = "ask-title-field edit-field-overlayed", maxlength = "300" })
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div id="question-suggestions">
-        </div>
     </div> 
-    <div id="post-editor" class="post-editor">  
-        <textarea id="question" name="question" class="wmd-input processed"  cols="92" rows="15" tabindex="101"></textarea>
+    <div id="post-editor" class="post-editor">
+        @Html.TextAreaFor(x => x.Content, new { @class = "wmd-input processed", cols = "92", rows = "15"  })  
     </div>
     <div class="form-item">
         <label>Tags</label>
-        <input id="tags" name="tags" type="text" size="60" value="">
+        @Html.EditorFor(x => x.Tags, new { maxlength = "300"})
     </div>
 
+    @Html.ValidationSummary("Oops! Your question couldn't be submitted because:", new { @class="form-error"})
+    
     <p>
         <input type="submit" value="Ask Question"/>
     </p>

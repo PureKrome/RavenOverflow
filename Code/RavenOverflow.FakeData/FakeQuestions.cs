@@ -131,12 +131,14 @@ namespace RavenOverflow.FakeData
 
         private static Vote CreateAFakeVote()
         {
-            return Builder<Vote>
-                .CreateNew()
-                .With(y => y.UpVoteCount = GetRandom.PositiveInt(20))
-                .And(y => y.DownVoteCount = GetRandom.PositiveInt(3))
-                .And(y => y.FavoriteCount = GetRandom.PositiveInt(10))
-                .Build();
+            return GetRandom.PositiveInt(5) == 1
+                       ? null
+                       : Builder<Vote>
+                             .CreateNew()
+                             .With(y => y.UpVoteCount = GetRandom.PositiveInt(20))
+                             .And(y => y.DownVoteCount = GetRandom.PositiveInt(3))
+                             .And(y => y.FavoriteCount = GetRandom.PositiveInt(10))
+                             .Build();
         }
 
         private static IList<Question> CreateFixedFakeQuestions(IList<string> userIds)

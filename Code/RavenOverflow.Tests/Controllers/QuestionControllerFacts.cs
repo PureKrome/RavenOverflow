@@ -33,6 +33,34 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
+        public void GivenAnInValidQuestion_Create_ReturnsAResultView()
+        {
+            using (IDocumentSession documentSession = DocumentStore.OpenSession())
+            {
+                // Arrange.
+                IQuestionService questionService = new QuestionService(documentSession);
+                QuestionsController questionsController = new QuestionsController(documentSession, questionService);
+                ControllerUtilities.SetUpControllerContext(questionsController);
+                CreateInputModel createInputModel = new CreateInputModel
+                {
+                    Content = "Some content",
+                    Subject = null, // RuRoh - dat ist missin'
+                    Tags = "tag1 tag2 tag3-3-3"
+                };
+
+                // Now pretend the model binding raised an error with the input model.
+                questionsController.ModelState.AddModelError("key", "error message");
+
+                // Act.
+                var result = questionsController.Create(createInputModel) as ViewResult;
+
+                // Assert.
+                Assert.NotNull(result);
+                Assert.Equal("Create", result.ViewName);
+            }
+        }
+
+        [Fact]
         public void GivenAValidQuestionAndNoOneIsLoggedIn_Create_ReturnsAResultView()
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
@@ -52,7 +80,7 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Assert.
                 Assert.NotNull(result);
-                //Assert.Equal("Create", result.ViewName);
+                Assert.Equal("Create", result.ViewName);
             }
         }
         

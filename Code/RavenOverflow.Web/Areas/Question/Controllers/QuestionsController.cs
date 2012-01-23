@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AutoMapper;
 using Raven.Client;
 using RavenOverflow.Core.Services;
@@ -24,10 +25,10 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                                 {
                                     Header = "Ask a Question"
                                 };
-            return View(viewModel);
+            return View("Create", viewModel);
         }
 
-        [HttpPost, RavenActionFilter]
+        [HttpPost, RavenActionFilter, Authorize]
         public ActionResult Create(CreateInputModel inputModel)
         {
             try
@@ -38,7 +39,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                                                                            {
                                                                                Header = "Ask a Question"
                                                                            });
-                    return View(viewModel);
+                    return View("Create", viewModel);
                 }
 
                 Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
@@ -48,13 +49,14 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
 
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
-            catch
+            catch(Exception exception)
             {
+                ModelState.AddModelError("RuRoh", exception.Message);
                 CreateViewModel viewModel = Mapper.Map(inputModel, new CreateViewModel(User.Identity)
                                                                        {
                                                                            Header = "Ask a Question"
                                                                        });
-                return View(viewModel);
+                return View("Create", viewModel);
             }
         }
     }

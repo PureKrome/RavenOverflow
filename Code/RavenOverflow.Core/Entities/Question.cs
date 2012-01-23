@@ -19,7 +19,7 @@ namespace RavenOverflow.Core.Entities
         public DateTime CreatedOn { get; set; } // This should always be Utc.
         [Required]
         public ICollection<string> Tags { get; set; }
-        [Required]
+        [Required(ErrorMessage = "You need to be logged in to ask a question.")]
         public string CreatedByUserId { get; set; }
         public ICollection<Answer> Answers { get; set; }
         public int NumberOfViews { get; set; }
