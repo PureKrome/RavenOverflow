@@ -1,4 +1,6 @@
-# RavenOverflow
+Start typing in the blue box...# RavenOverflow
+
+![PewPew!](http://static.ravendb.net/badges/standard/badge1.png)
 
 ### AIM OF THIS PROJECT
 
@@ -20,12 +22,12 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### What it Uses
 
-* RavenDb v573 / RavenDb Embedded v573
-* ASP.NET MVC3
-* StructureMap for IoC
-* NBuilder for fake data
-* xUnit for Unit Tests
-* An attempt to simulate a production solution layout (eg. n-Tier, IoC, etc)
+* [RavenDb](http://ravendb.net/) v606-Unstable / RavenDb Embedded v606-Unstable
+* [ASP.NET MVC3](http://asp.net/mvc/)
+* [StructureMap](http://structuremap.net/structuremap/) for IoC
+* [NBuilder](http://nbuilder.org/) for fake data
+* [xUnit](http://xunit.codeplex.com/) for Tests
+* An attempt to simulate a production solution layout (eg. n-Tier, IoC, InputModels/ViewModels)
 
 ### What it is NOT
 
@@ -33,5 +35,5 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### Support / Help
 
-* I'm usually idling on [JabbR](http://jabbr.net/#/rooms/RavenDB) RavenDB room. Please drop by! :)
+* I'm usually idling on [JabbR RavenDB room](http://jabbr.net/#/rooms/RavenDB). Please drop by! :)
 * I accept Pull Requests, btw (hint hint) :)

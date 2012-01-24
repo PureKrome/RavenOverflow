@@ -72,8 +72,6 @@ namespace RavenOverflow.Tests
         {
             Condition.Requires(documentStore).IsNotNull();
 
-            
-
             using (IDocumentSession documentSession = documentStore.OpenSession())
             {
                 // Users.
