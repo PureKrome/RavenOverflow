@@ -3,7 +3,7 @@ using RavenOverflow.Web.Controllers;
 
 namespace RavenOverflow.Web.Models
 {
-    public class RavenActionFilterAttribute : ActionFilterAttribute
+    public class RavenDb : ActionFilterAttribute
     {
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {

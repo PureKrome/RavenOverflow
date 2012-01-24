@@ -19,7 +19,7 @@ namespace RavenOverflow.Web.Controllers
         {
         }
 
-        [HttpGet, RavenActionFilter]
+        [HttpGet, RavenDb]
         public ActionResult Index(string displayName, string tag)
         {
             string header;
@@ -64,7 +64,7 @@ namespace RavenOverflow.Web.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, RavenActionFilter]
+        [HttpGet, RavenDb]
         public ActionResult BatchedIndex(string displayName, string tag)
         {
             string header;
@@ -111,7 +111,7 @@ namespace RavenOverflow.Web.Controllers
             return View("Index", viewModel);
         }
 
-        [HttpGet, RavenActionFilter]
+        [HttpGet, RavenDb]
         public ActionResult AggressiveIndex(string displayName, string tag)
         {
             using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
@@ -162,7 +162,7 @@ namespace RavenOverflow.Web.Controllers
             }
         }
 
-        [RavenActionFilter]
+        [RavenDb]
         public ActionResult Tag(string id)
         {
             RavenQueryStatistics stats;
@@ -180,7 +180,7 @@ namespace RavenOverflow.Web.Controllers
                             }, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenActionFilter]
+        [RavenDb]
         public ActionResult Facets(string id)
         {
             IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
@@ -191,7 +191,7 @@ namespace RavenOverflow.Web.Controllers
             return Json(facets, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenActionFilter]
+        [RavenDb]
         public ActionResult Search(string term)
         {
             IRavenQueryable<RecentPopularTags.ReduceResult> query = DocumentSession
@@ -218,6 +218,14 @@ namespace RavenOverflow.Web.Controllers
             }
 
             return Json(results, JsonRequestBehavior.AllowGet);
+        }
+
+        [RavenDb]
+        public JsonResult IndexJson(string displayName, string tag)
+        {
+            string header;
+            var questions = QuestionQuery(tag, out header).ToList();
+            return Json(questions.Count <= 0 ? null : questions);
         }
 
         private IQueryable<QuestionWithDisplayName> QuestionQuery(string tag, out string header)

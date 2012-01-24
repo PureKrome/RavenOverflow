@@ -72,15 +72,16 @@ namespace RavenOverflow.Tests
         {
             Condition.Requires(documentStore).IsNotNull();
 
-            // Users.
-            ICollection<User> users = FakeUsers.CreateFakeUsers(50);
-
-            // Questions.
-            ICollection<Question> questions = FakeQuestions.CreateFakeQuestions(users.Select(x => x.Id).ToList());
+            
 
             using (IDocumentSession documentSession = documentStore.OpenSession())
             {
+                // Users.
+                ICollection<User> users = FakeUsers.CreateFakeUsers(50);
                 StoreFakeEntities(users, documentSession);
+
+                // Questions.
+                ICollection<Question> questions = FakeQuestions.CreateFakeQuestions(users.Select(x => x.Id).ToList());
                 StoreFakeEntities(questions, documentSession);
 
                 documentSession.SaveChanges();

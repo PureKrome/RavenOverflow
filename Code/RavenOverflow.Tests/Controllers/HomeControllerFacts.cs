@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using AutoMapper;
-using CuttingEdge.Conditions;
-using Moq;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models.Authentication;
 using RavenOverflow.Web.Models.AutoMapping;
 using RavenOverflow.Web.Models.ViewModels;
 using Xunit;
@@ -34,7 +31,7 @@ namespace RavenOverflow.Tests.Controllers
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -51,7 +48,7 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Make sure all the items are ordered correctly.
                 DateTime? previousQuestion = null;
-                foreach (var question in model.QuestionListViewModel.Questions)
+                foreach (QuestionWithDisplayName question in model.QuestionListViewModel.Questions)
                 {
                     if (previousQuestion.HasValue)
                     {
@@ -70,7 +67,7 @@ namespace RavenOverflow.Tests.Controllers
                     // * CreatedByUserId - this is randomized when fakes are created.
                     // * CreatedOn - these fakes were made AFTER the Stored data.
                     // ASSUMPTION: the first 5 fixed questions are the first 5 documents in the Document Store.
-                    var question = model.QuestionListViewModel.Questions[i];
+                    QuestionWithDisplayName question = model.QuestionListViewModel.Questions[i];
                     Assert.Equal(fixedQuestions[i].Subject, question.Subject);
                     Assert.Equal(fixedQuestions[i].Content, question.Content);
                     Assert.Equal(fixedQuestions[i].NumberOfViews, question.NumberOfViews);
@@ -87,7 +84,7 @@ namespace RavenOverflow.Tests.Controllers
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -125,7 +122,7 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 // Note: we're faking that a user has authenticated.
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController, displayName: "Pure.Krome");
 
 
@@ -156,7 +153,7 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 // Note: we're faking that no user has been authenticated.
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -185,7 +182,7 @@ namespace RavenOverflow.Tests.Controllers
             {
                 // Arrange.
                 const string tag = "ravendb";
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -217,7 +214,7 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Arrange.
                 const string tag = "ravendb";
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -245,7 +242,7 @@ namespace RavenOverflow.Tests.Controllers
 
                 // Arrange.
                 const string tag = "ravne"; // Hardcoded Typo.
-                HomeController homeController = new HomeController(documentSession);
+                var homeController = new HomeController(documentSession);
                 ControllerUtilities.SetUpControllerContext(homeController);
 
                 // Act.
@@ -261,8 +258,42 @@ namespace RavenOverflow.Tests.Controllers
             }
         }
 
-        public void GivenSomeQuestionsForAUserWithATag_Search_ReturnsSomeQuestions()
+        [Fact]
+        public void GivenSomeQuestionsAndNoDisplayNameAndNoTags_Index_ReturnsAJsonViewOfMostRecentQuestions()
         {
+            using (IDocumentSession documentSession = DocumentStore.OpenSession())
+            {
+                // Arrange.
+                var homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
+
+                // Act.
+                // Note: this should return a list of the 20 most recent.
+                JsonResult result = homeController.IndexJson(null, null);
+
+                // Assert.
+                Assert.NotNull(result);
+                var questions = result.Data as IList<QuestionWithDisplayName>;
+                Assert.NotNull(questions);
+                Assert.Equal(20, questions.Count);
+
+                // Now lets Make sure each one is ok.
+                DateTime? previousDate = null;
+                foreach (var question in questions)
+                {
+                    if (previousDate.HasValue)
+                    {
+                        Assert.True(previousDate.Value > question.CreatedOn);
+                    }
+
+                    previousDate = question.CreatedOn;
+                    Assert.NotNull(question.DisplayName);
+                    Assert.NotNull(question.Id);
+                    Assert.NotNull(question.CreatedByUserId);
+                    Assert.NotNull(question.Subject);
+                    Assert.NotNull(question.Content);
+                }
+            }
         }
     }
 

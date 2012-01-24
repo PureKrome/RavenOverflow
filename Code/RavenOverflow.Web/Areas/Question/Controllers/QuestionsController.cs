@@ -28,7 +28,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
             return View("Create", viewModel);
         }
 
-        [HttpPost, RavenActionFilter, Authorize]
+        [HttpPost, RavenDb, Authorize]
         public ActionResult Create(CreateInputModel inputModel)
         {
             try
@@ -59,5 +59,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 return View("Create", viewModel);
             }
         }
+
+        
     }
 }

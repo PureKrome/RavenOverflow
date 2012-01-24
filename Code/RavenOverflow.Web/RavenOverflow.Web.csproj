@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AsyncCtpLibrary, Version=1.0.4107.18181, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.1.0.603-Unstable\lib\net40\AsyncCtpLibrary.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.1.0.606-Unstable\lib\net40\AsyncCtpLibrary.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper">
       <HintPath>..\..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
@@ -64,16 +64,16 @@
       <HintPath>..\..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.1.0.603-Unstable\lib\net40\Raven.Abstractions.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.1.0.606-Unstable\lib\net40\Raven.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Debug, Version=1.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.1.0.603-Unstable\lib\net40\Raven.Client.Debug.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.1.0.606-Unstable\lib\net40\Raven.Client.Debug.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight, Version=1.0.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.1.0.603-Unstable\lib\net40\Raven.Client.Lightweight.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.1.0.606-Unstable\lib\net40\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.MvcIntegration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RavenDB.1.0.603-Unstable\lib\net40\Raven.Client.MvcIntegration.dll</HintPath>
+      <HintPath>..\..\packages\RavenDB.1.0.606-Unstable\lib\net40\Raven.Client.MvcIntegration.dll</HintPath>
     </Reference>
     <Reference Include="RouteDebugger">
       <HintPath>..\..\packages\routedebugger.2.1.2\lib\net40\RouteDebugger.dll</HintPath>
@@ -148,7 +148,7 @@
     <Compile Include="Models\Authentication\ICustomIdentity.cs" />
     <Compile Include="Models\Authentication\UserData.cs" />
     <Compile Include="Models\HtmlExtensions.cs" />
-    <Compile Include="Models\RavenActionFilterAttribute.cs" />
+    <Compile Include="Models\RavenDb.cs" />
     <Compile Include="Models\_MainNavigationViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\ViewModels\AuthenticationViewModel.cs" />

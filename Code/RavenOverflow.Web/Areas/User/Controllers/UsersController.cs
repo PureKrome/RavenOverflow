@@ -82,7 +82,7 @@ namespace RavenOverflow.Web.Areas.User.Controllers
             return Redirect(facebookAuthenticationUri.ToString());
         }
 
-        [RavenActionFilter]
+        [RavenDb]
         public ActionResult FacebookAuthenticationCallback()
         {
             FacebookOAuthResult facebookOAuthResult;

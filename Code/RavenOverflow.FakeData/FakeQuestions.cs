@@ -62,17 +62,16 @@ namespace RavenOverflow.FakeData
 
         public static Question CreateAFakeQuestion(string userId, IList<string> answerUserIds)
         {
+            Condition.Requires(userId).IsNotNullOrEmpty();
+
             Question fakeQuestion = Builder<Question>
                 .CreateNew()
                 .With(x => x.Id = null)
                 .With(x => x.Subject = GetRandom.Phrase(GetRandom.Int(10, 50)))
                 .With(x => x.Content = GetRandom.Phrase(GetRandom.Int(30, 500)))
-                .And(
-                    x =>
-                    x.CreatedByUserId =
-                    string.IsNullOrEmpty(userId) ? null : userId)
-                .And(
-                    x => x.CreatedOn = GetRandom.DateTime(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow.AddMinutes(-5)))
+                .And(x => x.CreatedByUserId = userId)
+                .And(x => x.CreatedOn = GetRandom.DateTime(DateTime.UtcNow.AddMonths(-1), 
+                    DateTime.UtcNow.AddMinutes(-5)))
                 .And(x => x.NumberOfViews = GetRandom.PositiveInt(10000))
                 .And(x => x.Tags = FakeTags.ToRandomList(GetRandom.Int(1, 5)))
                 .And(x => x.Vote = CreateAFakeVote())
