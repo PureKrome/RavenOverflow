@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using CuttingEdge.Conditions;
 using Raven.Client;
 using Raven.Client.Embedded;
@@ -43,6 +44,8 @@ namespace RavenOverflow.Tests
             // Create our Seed Data.
             CreateSeedData(documentStore);
 
+            // Now make sure our 
+
             DocumentStore = documentStore;
         }
 
@@ -61,8 +64,9 @@ namespace RavenOverflow.Tests
                 foreach (var serverError in statistics.Errors)
                 {
                     Debug.WriteLine(serverError.Error);
-                    throw new InvalidOperationException("There were some errors with the Document Store.");
                 }
+
+                throw new InvalidOperationException("There were some errors with the Document Store.");
             }
 
             DocumentStore.Dispose();
