@@ -1,5 +1,3 @@
-Start typing in the blue box...# RavenOverflow
-
 ![PewPew!](http://static.ravendb.net/badges/standard/badge1.png)
 
 ### AIM OF THIS PROJECT

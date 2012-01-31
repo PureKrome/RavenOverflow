@@ -22,9 +22,9 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         public ActionResult Create()
         {
             var viewModel = new CreateViewModel(User.Identity)
-                                {
-                                    Header = "Ask a Question"
-                                };
+            {
+                Header = "Ask a Question"
+            };
             return View("Create", viewModel);
         }
 
@@ -33,33 +33,24 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    CreateViewModel viewModel = Mapper.Map(inputModel, new CreateViewModel(User.Identity)
-                                                                           {
-                                                                               Header = "Ask a Question"
-                                                                           });
-                    return View("Create", viewModel);
+                    Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
+                    question.CreatedByUserId = User.Identity.UserId;
+
+                    _questionService.Create(question);
+
+                    return RedirectToAction("Index", "Home", new { area = "" });
                 }
-
-                Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
-                question.CreatedByUserId = User.Identity.UserId;
-
-                _questionService.Create(question);
-
-                return RedirectToAction("Index", "Home", new { area = "" });
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 ModelState.AddModelError("RuRoh", exception.Message);
-                CreateViewModel viewModel = Mapper.Map(inputModel, new CreateViewModel(User.Identity)
-                                                                       {
-                                                                           Header = "Ask a Question"
-                                                                       });
-                return View("Create", viewModel);
             }
-        }
 
-        
+            CreateViewModel viewModel = Mapper.Map(inputModel,
+                                                   new CreateViewModel(User.Identity) { Header = "Ask a Question" });
+            return View("Create", viewModel);
+        }
     }
 }
