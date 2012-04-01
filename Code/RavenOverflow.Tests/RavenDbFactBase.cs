@@ -63,9 +63,6 @@ namespace RavenOverflow.Tests
                     CreateSeedData(documentStore);
                 }
 
-                // Make sure all our indexes are not stale.
-                documentStore.WaitForStaleIndexesToComplete();
-
                 // Now lets check to make sure the seeding didn't error.
                 documentStore.AssertDocumentStoreErrors();
 
@@ -108,6 +105,9 @@ namespace RavenOverflow.Tests
                 StoreFakeEntities(questions, documentSession);
 
                 documentSession.SaveChanges();
+
+                // Make sure all our indexes are not stale.
+                documentStore.WaitForStaleIndexesToComplete();
             }
         }
 

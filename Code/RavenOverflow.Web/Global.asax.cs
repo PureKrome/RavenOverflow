@@ -94,11 +94,8 @@ namespace RavenOverflow.Web
 
                 session.SaveChanges();
 
-                // Wait for all stale indexes to complete.
-                while (documentStore.DatabaseCommands.GetStatistics().StaleIndexes.Length > 0)
-                {
-                    Thread.Sleep(10);
-                }
+                // Make sure all our indexes are not stale.
+                documentStore.WaitForStaleIndexesToComplete();
             }
         }
 
