@@ -16,7 +16,7 @@ namespace RavenOverflow.Tests.Controllers
 {
     // ReSharper disable InconsistentNaming
 
-    public class HomeControllerFacts : RavenDbTestBase
+    public class HomeControllerFacts : RavenDbFactBase
     {
         public HomeControllerFacts()
         {
@@ -28,6 +28,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search), typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -81,6 +83,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search), typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -118,6 +122,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search), typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -149,6 +155,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search), typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -178,6 +186,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestionsAndNoDisplayNameAndNoTags_Index_ReturnsAJsonViewOfMostRecentQuestions()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -216,6 +226,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestionsAndATag_Index_ReturnsAViewResult()
         {
+            IndexesToExecute = new List<Type> { typeof(Questions_Search), typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -268,6 +280,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
         {
+            IndexesToExecute = new List<Type> { typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Arrange.
@@ -290,6 +304,8 @@ namespace RavenOverflow.Tests.Controllers
         [Fact]
         public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
         {
+            IndexesToExecute = new List<Type> { typeof(RecentPopularTags) };
+
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
                 // Force the Index to complete.
@@ -315,7 +331,6 @@ namespace RavenOverflow.Tests.Controllers
                 Assert.Equal("ravendb", model[0]);
             }
         }
-
     }
 
     // ReSharper restore InconsistentNaming

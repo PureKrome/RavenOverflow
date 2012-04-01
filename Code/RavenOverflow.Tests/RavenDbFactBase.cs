@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using CuttingEdge.Conditions;
 using Raven.Client;
@@ -13,14 +14,66 @@ using RavenOverflow.Web.Models;
 
 namespace RavenOverflow.Tests
 {
-    public abstract class RavenDbTestBase : IDisposable
+    public abstract class RavenDbFactBase : IDisposable
     {
-        protected RavenDbTestBase()
+        private IDocumentStore _documentStore;
+        private readonly bool _isSeedDataInitialized;
+
+        protected IList<Type> IndexesToExecute { get; set; }
+
+        protected RavenDbFactBase()
         {
-            InitaliseDocumentStore();
+            _isSeedDataInitialized = true;
         }
 
-        protected IDocumentStore DocumentStore { get; private set; }
+        protected IDocumentStore DocumentStore
+        {
+            get
+            {
+                if (_documentStore != null)
+                {
+                    return _documentStore;
+                }
+
+                var documentStore = new EmbeddableDocumentStore
+                                    {
+                                        RunInMemory = true
+                                    };
+                documentStore.Initialize();
+
+                // Force query's to wait for index's to catch up. Unit Testing only :P
+                documentStore.RegisterListener(new NoStaleQueriesListener());
+
+                // Index initialisation.
+                if (IndexesToExecute != null)
+                {
+                    var indexes = (from type in IndexesToExecute
+                                   where type.IsSubclassOf(typeof(AbstractIndexCreationTask))
+                                   select type).ToArray();
+
+                    IndexCreation.CreateIndexes(new CompositionContainer(new TypeCatalog(indexes)), documentStore);
+                }
+
+                // Create any Facets.
+                RavenFacetTags.CreateFacets(documentStore);
+
+                // Create our Seed Data.
+                if (_isSeedDataInitialized)
+                {
+                    CreateSeedData(documentStore);
+                }
+
+                // Make sure all our indexes are not stale.
+                documentStore.WaitForStaleIndexesToComplete();
+
+                // Now lets check to make sure the seeding didn't error.
+                documentStore.AssertDocumentStoreErrors();
+
+                _documentStore = documentStore;
+
+                return _documentStore;
+            }
+        }
 
         #region IDisposable Members
 
@@ -39,36 +92,6 @@ namespace RavenOverflow.Tests
         }
 
         #endregion
-
-        private void InitaliseDocumentStore()
-        {
-            // Initialise the Store.
-            var documentStore = new EmbeddableDocumentStore
-                                {
-                                    RunInMemory = true
-                                };
-            documentStore.Initialize();
-
-            // Force query's to wait for index's to catch up. Unit Testing only :P
-            documentStore.RegisterListener(new NoStaleQueriesListener());
-
-            // Index initialisation.
-            IndexCreation.CreateIndexes(typeof (RecentPopularTags).Assembly, documentStore);
-
-            // Create any Facets.
-            RavenFacetTags.CreateFacets(documentStore);
-
-            // Create our Seed Data.
-            CreateSeedData(documentStore);
-
-            // Make sure all our indexes are not stale.
-            documentStore.WaitForStaleIndexesToComplete();
-
-            // Now lets check to make sure the seeding didn't error.
-            documentStore.AssertDocumentStoreErrors();
-
-            DocumentStore = documentStore;
-        }
 
         private static void CreateSeedData(IDocumentStore documentStore)
         {
