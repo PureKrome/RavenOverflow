@@ -20,7 +20,7 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### What it Uses
 
-* [RavenDb](http://ravendb.net/) v606-Unstable / RavenDb Embedded v606-Unstable
+* [RavenDb](http://ravendb.net/) v701 / RavenDb Embedded v701
 * [ASP.NET MVC3](http://asp.net/mvc/)
 * [StructureMap](http://structuremap.net/structuremap/) for IoC
 * [NBuilder](http://nbuilder.org/) for fake data
@@ -30,6 +30,10 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 ### What it is NOT
 
 * A best practice application. I'm a noob, so this is a learning experience.
+
+### Can I see a demo of it running?
+
+* Sure can -> http://ravenoverflow.apphb.com/
 
 ### Support / Help
 
