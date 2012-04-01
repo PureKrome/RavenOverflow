@@ -14,7 +14,7 @@ namespace RavenOverflow.Tests.Services
     public class QuestionServiceFacts
     {
         [Fact]
-        public void GivenAnQuestionWithInvalidData_Create_StoresAQuestion()
+        public void GivenAnQuestionWithInvalidData_Create_ThrowsAnException()
         {
             // Arrange.
             Question question = FakeQuestions.CreateAFakeQuestion(null, null); // No user created this question.

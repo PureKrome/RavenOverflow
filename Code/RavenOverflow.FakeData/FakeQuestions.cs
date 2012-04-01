@@ -62,8 +62,6 @@ namespace RavenOverflow.FakeData
 
         public static Question CreateAFakeQuestion(string userId, IList<string> answerUserIds)
         {
-            Condition.Requires(userId).IsNotNullOrEmpty();
-
             Question fakeQuestion = Builder<Question>
                 .CreateNew()
                 .With(x => x.Id = null)
