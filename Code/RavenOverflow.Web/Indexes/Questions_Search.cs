@@ -4,12 +4,16 @@ using RavenOverflow.Core.Entities;
 
 namespace RavenOverflow.Web.Indexes
 {
-    public class Questions_ByCreatedOnAsProjection : AbstractIndexCreationTask<Question>
+    public class Questions_Search : AbstractIndexCreationTask<Question>
     {
-        public Questions_ByCreatedOnAsProjection()
+        public Questions_Search()
         {
             Map = questions => from q in questions
-                               select new { q.CreatedOn };
+                               select new
+                                      {
+                                          q.CreatedOn,
+                                          q.Tags
+                                      };
 
             TransformResults = (database, questions) => from q in questions
                                                         let user = database.Load<User>(q.CreatedByUserId)

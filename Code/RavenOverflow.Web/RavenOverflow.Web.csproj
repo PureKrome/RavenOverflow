@@ -122,7 +122,7 @@
     <Compile Include="Areas\User\Controllers\UsersController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Indexes\Questions_ByCreatedOnAsProjection.cs" />
+    <Compile Include="Indexes\Questions_Search.cs" />
     <Compile Include="Models\AutoMapping\TagsResolver.cs" />
     <Compile Include="Models\DependencyResolution\AuthenticationRegistry.cs" />
     <Compile Include="Indexes\RavenFacetTags.cs" />
@@ -130,6 +130,7 @@
     <Compile Include="Models\Authentication\OAuthAuthentication.cs" />
     <Compile Include="Models\AutoMapping\AutoMapperBootstrapper.cs" />
     <Compile Include="Models\DependencyResolution\ServiceRegistry.cs" />
+    <Compile Include="Models\DocumentStoreExtensions.cs" />
     <Compile Include="Models\ViewModels\QuestionListViewModel.cs" />
     <Compile Include="Models\ViewModels\QuestionWithDisplayName.cs" />
     <Compile Include="Models\ViewModels\TagListViewModel.cs" />
@@ -245,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Error\NotFound.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ErrorLayout.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

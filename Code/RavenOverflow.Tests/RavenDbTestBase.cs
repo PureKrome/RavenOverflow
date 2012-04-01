@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using CuttingEdge.Conditions;
 using Raven.Client;
 using Raven.Client.Embedded;
@@ -11,6 +9,7 @@ using Raven.Client.Listeners;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
 using RavenOverflow.Web.Indexes;
+using RavenOverflow.Web.Models;
 
 namespace RavenOverflow.Tests
 {
@@ -22,6 +21,24 @@ namespace RavenOverflow.Tests
         }
 
         protected IDocumentStore DocumentStore { get; private set; }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            if (DocumentStore == null || DocumentStore.WasDisposed)
+            {
+                return;
+            }
+
+            // Assert for any errors.
+            DocumentStore.AssertDocumentStoreErrors();
+
+            // Clean up.
+            DocumentStore.Dispose();
+        }
+
+        #endregion
 
         private void InitaliseDocumentStore()
         {
@@ -36,7 +53,7 @@ namespace RavenOverflow.Tests
             documentStore.RegisterListener(new NoStaleQueriesListener());
 
             // Index initialisation.
-            IndexCreation.CreateIndexes(typeof(RecentPopularTags).Assembly, documentStore);
+            IndexCreation.CreateIndexes(typeof (RecentPopularTags).Assembly, documentStore);
 
             // Create any Facets.
             RavenFacetTags.CreateFacets(documentStore);
@@ -44,32 +61,13 @@ namespace RavenOverflow.Tests
             // Create our Seed Data.
             CreateSeedData(documentStore);
 
-            // Now make sure our 
+            // Make sure all our indexes are not stale.
+            documentStore.WaitForStaleIndexesToComplete();
+
+            // Now lets check to make sure the seeding didn't error.
+            documentStore.AssertDocumentStoreErrors();
 
             DocumentStore = documentStore;
-        }
-
-        public void Dispose()
-        {
-            if (DocumentStore == null)
-            {
-                return;
-            }
-
-            // Check to see if we had any errors, like an index wasn't found or something.
-            var statistics = DocumentStore.DatabaseCommands.GetStatistics();
-            if (statistics.Errors != null && statistics.Errors.Length > 0)
-            {
-                // Lets write out each error to the unit test console.
-                foreach (var serverError in statistics.Errors)
-                {
-                    Debug.WriteLine(serverError.Error);
-                }
-
-                throw new InvalidOperationException("There were some errors with the Document Store.");
-            }
-
-            DocumentStore.Dispose();
         }
 
         private static void CreateSeedData(IDocumentStore documentStore)
@@ -110,7 +108,7 @@ namespace RavenOverflow.Tests
 
         public class NoStaleQueriesListener : IDocumentQueryListener
         {
-            #region Implementation of IDocumentQueryListener
+            #region IDocumentQueryListener Members
 
             public void BeforeQueryExecuted(IDocumentQueryCustomization queryCustomization)
             {

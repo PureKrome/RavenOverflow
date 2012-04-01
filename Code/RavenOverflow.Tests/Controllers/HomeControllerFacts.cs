@@ -176,6 +176,70 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
+        public void GivenSomeQuestionsAndNoDisplayNameAndNoTags_Index_ReturnsAJsonViewOfMostRecentQuestions()
+        {
+            using (IDocumentSession documentSession = DocumentStore.OpenSession())
+            {
+                // Arrange.
+                var homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
+
+                // Act.
+                // Note: this should return a list of the 20 most recent.
+                JsonResult result = homeController.IndexJson(null, null);
+
+                // Assert.
+                Assert.NotNull(result);
+                var questions = result.Data as IList<QuestionWithDisplayName>;
+                Assert.NotNull(questions);
+                Assert.Equal(20, questions.Count);
+
+                // Now lets Make sure each one is ok.
+                DateTime? previousDate = null;
+                foreach (var question in questions)
+                {
+                    if (previousDate.HasValue)
+                    {
+                        Assert.True(previousDate.Value > question.CreatedOn);
+                    }
+
+                    previousDate = question.CreatedOn;
+                    Assert.NotNull(question.DisplayName);
+                    Assert.NotNull(question.Id);
+                    Assert.NotNull(question.CreatedByUserId);
+                    Assert.NotNull(question.Subject);
+                    Assert.NotNull(question.Content);
+                }
+            }
+        }
+
+        [Fact]
+        public void GivenSomeQuestionsAndATag_Index_ReturnsAViewResult()
+        {
+            using (IDocumentSession documentSession = DocumentStore.OpenSession())
+            {
+                // Arrange.
+                const string tag = "ravendb";
+                var homeController = new HomeController(documentSession);
+                ControllerUtilities.SetUpControllerContext(homeController);
+
+                // Act.
+                var result = homeController.Index(null, tag) as ViewResult;
+
+                // Assert.
+                Assert.NotNull(result);
+
+                var model = result.Model as IndexViewModel;
+                Assert.NotNull(model);
+                Assert.NotNull(model.QuestionListViewModel);
+                Assert.NotNull(model.QuestionListViewModel.Questions);
+
+                // Make sure each question is tagged with the defined tag-value.
+                Assert.True(model.QuestionListViewModel.Questions.All(x => x.Tags.Contains(tag)));
+            }
+        }
+
+        [Fact]
         public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
@@ -206,12 +270,6 @@ namespace RavenOverflow.Tests.Controllers
         {
             using (IDocumentSession documentSession = DocumentStore.OpenSession())
             {
-                // Force the Index to complete.
-                List<RecentPopularTags.ReduceResult> meh = documentSession
-                    .Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
-                    .Customize(x => x.WaitForNonStaleResultsAsOfNow())
-                    .ToList();
-
                 // Arrange.
                 const string tag = "ravendb";
                 var homeController = new HomeController(documentSession);
@@ -258,43 +316,6 @@ namespace RavenOverflow.Tests.Controllers
             }
         }
 
-        [Fact]
-        public void GivenSomeQuestionsAndNoDisplayNameAndNoTags_Index_ReturnsAJsonViewOfMostRecentQuestions()
-        {
-            using (IDocumentSession documentSession = DocumentStore.OpenSession())
-            {
-                // Arrange.
-                var homeController = new HomeController(documentSession);
-                ControllerUtilities.SetUpControllerContext(homeController);
-
-                // Act.
-                // Note: this should return a list of the 20 most recent.
-                JsonResult result = homeController.IndexJson(null, null);
-
-                // Assert.
-                Assert.NotNull(result);
-                var questions = result.Data as IList<QuestionWithDisplayName>;
-                Assert.NotNull(questions);
-                Assert.Equal(20, questions.Count);
-
-                // Now lets Make sure each one is ok.
-                DateTime? previousDate = null;
-                foreach (var question in questions)
-                {
-                    if (previousDate.HasValue)
-                    {
-                        Assert.True(previousDate.Value > question.CreatedOn);
-                    }
-
-                    previousDate = question.CreatedOn;
-                    Assert.NotNull(question.DisplayName);
-                    Assert.NotNull(question.Id);
-                    Assert.NotNull(question.CreatedByUserId);
-                    Assert.NotNull(question.Subject);
-                    Assert.NotNull(question.Content);
-                }
-            }
-        }
     }
 
     // ReSharper restore InconsistentNaming

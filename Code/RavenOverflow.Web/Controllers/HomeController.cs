@@ -232,7 +232,7 @@ namespace RavenOverflow.Web.Controllers
         {
             header = "Top Questions";
 
-            IQueryable<Question> questionsQuery = DocumentSession.Query<Question, Questions_ByCreatedOnAsProjection>()
+            IQueryable<Question> questionsQuery = DocumentSession.Query<Question, Questions_Search>()
                 .OrderByCreatedByDescending()
                 .Take(20);
 
