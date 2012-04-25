@@ -14,16 +14,16 @@ using RavenOverflow.Web.Models.Authentication;
 
 namespace RavenOverflow.Web.Areas.User.Controllers
 {
-    public class UsersController : AbstractController
+    public class UsersController : RavenDbController
     {
         private readonly string _facebookAppId;
         private readonly string _facebookSecret;
         private readonly ICustomFormsAuthentication _customFormsAuthentication;
         
-        public UsersController(IDocumentSession documentSession,
+        public UsersController(IDocumentStore documentStore,
                                ICustomFormsAuthentication customCustomFormsAuthentication,
                                IOAuthAuthentication oAuthAuthentication)
-            : base(documentSession)
+            : base(documentStore)
         {
             Condition.Requires(customCustomFormsAuthentication).IsNotNull();
             Condition.Requires(oAuthAuthentication).IsNotNull();
@@ -82,7 +82,6 @@ namespace RavenOverflow.Web.Areas.User.Controllers
             return Redirect(facebookAuthenticationUri.ToString());
         }
 
-        [RavenDb]
         public ActionResult FacebookAuthenticationCallback()
         {
             FacebookOAuthResult facebookOAuthResult;

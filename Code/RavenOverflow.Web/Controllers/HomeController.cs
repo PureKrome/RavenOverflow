@@ -7,19 +7,18 @@ using Raven.Client;
 using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
-using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.ViewModels;
+using RavenOverflow.Web.RavenDb.Indexes;
 
 namespace RavenOverflow.Web.Controllers
 {
-    public class HomeController : AbstractController
+    public class HomeController : RavenDbController
     {
-        public HomeController(IDocumentSession documentSession) : base(documentSession)
+        public HomeController(IDocumentStore documentStore) : base(documentStore)
         {
         }
 
-        [HttpGet, RavenDb]
+        [HttpGet]
         public ActionResult Index(string displayName, string tag)
         {
             string header;
@@ -64,7 +63,7 @@ namespace RavenOverflow.Web.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, RavenDb]
+        [HttpGet]
         public ActionResult BatchedIndex(string displayName, string tag)
         {
             string header;
@@ -111,7 +110,7 @@ namespace RavenOverflow.Web.Controllers
             return View("Index", viewModel);
         }
 
-        [HttpGet, RavenDb]
+        [HttpGet]
         public ActionResult AggressiveIndex(string displayName, string tag)
         {
             using (DocumentSession.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(1)))
@@ -162,7 +161,6 @@ namespace RavenOverflow.Web.Controllers
             }
         }
 
-        [RavenDb]
         public ActionResult Tag(string id)
         {
             RavenQueryStatistics stats;
@@ -180,7 +178,6 @@ namespace RavenOverflow.Web.Controllers
                             }, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenDb]
         public ActionResult Facets(string id)
         {
             IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
@@ -191,7 +188,6 @@ namespace RavenOverflow.Web.Controllers
             return Json(facets, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenDb]
         public ActionResult Search(string term)
         {
             IRavenQueryable<RecentPopularTags.ReduceResult> query = DocumentSession
@@ -220,7 +216,6 @@ namespace RavenOverflow.Web.Controllers
             return Json(results, JsonRequestBehavior.AllowGet);
         }
 
-        [RavenDb]
         public JsonResult IndexJson(string displayName, string tag)
         {
             string header;

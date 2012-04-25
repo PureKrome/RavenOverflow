@@ -2,7 +2,7 @@
 using Raven.Client.Indexes;
 using RavenOverflow.Core.Entities;
 
-namespace RavenOverflow.Web.Indexes
+namespace RavenOverflow.Web.RavenDb.Indexes
 {
     public class Questions_Search : AbstractIndexCreationTask<Question>
     {

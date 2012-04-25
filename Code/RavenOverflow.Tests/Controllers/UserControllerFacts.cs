@@ -8,11 +8,10 @@ using Moq;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.FakeData;
+using RavenOverflow.Web.AutoMapper;
 using RavenOverflow.Web.Controllers;
-using RavenOverflow.Web.Indexes;
 using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
-using RavenOverflow.Web.Models.AutoMapping;
 using RavenOverflow.Web.Models.ViewModels;
 using Xunit;
 

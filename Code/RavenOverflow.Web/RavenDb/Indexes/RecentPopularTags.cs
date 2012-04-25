@@ -6,7 +6,7 @@ using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
 
-namespace RavenOverflow.Web.Indexes
+namespace RavenOverflow.Web.RavenDb.Indexes
 {
     public class RecentPopularTags : AbstractIndexCreationTask<Question, RecentPopularTags.ReduceResult>
     {

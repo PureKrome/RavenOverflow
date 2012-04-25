@@ -1,6 +1,6 @@
 using System.Web.Mvc;
 using RavenOverflow.Web.App_Start;
-using RavenOverflow.Web.Models.DependencyResolution;
+using RavenOverflow.Web.DependencyResolution;
 using StructureMap;
 using WebActivator;
 

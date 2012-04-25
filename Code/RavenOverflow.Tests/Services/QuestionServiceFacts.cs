@@ -18,8 +18,8 @@ namespace RavenOverflow.Tests.Services
         {
             // Arrange.
             Question question = FakeQuestions.CreateAFakeQuestion(null, null); // No user created this question.
-            var documentSession = new Mock<IDocumentSession>();
-            IQuestionService questionService = new QuestionService(documentSession.Object);
+            var documentStore = new Mock<IDocumentStore>();
+            IQuestionService questionService = new QuestionService(documentStore.Object);
 
             // Act & Assert.
             Assert.Throws<ValidationException>(() => questionService.Create(question));
@@ -31,7 +31,9 @@ namespace RavenOverflow.Tests.Services
             // Arrange.
             Question question = FakeQuestions.CreateAFakeQuestion("users/1", null);
             var documentSession = new Mock<IDocumentSession>();
-            IQuestionService questionService = new QuestionService(documentSession.Object);
+            var documentStore = new Mock<IDocumentStore>();
+            documentStore.Setup(x => x.OpenSession()).Returns(documentSession.Object);
+            IQuestionService questionService = new QuestionService(documentStore.Object);
 
             // Act.
             questionService.Create(question);

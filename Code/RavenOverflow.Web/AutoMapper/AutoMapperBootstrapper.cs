@@ -2,7 +2,7 @@
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 
-namespace RavenOverflow.Web.Models.AutoMapping
+namespace RavenOverflow.Web.AutoMapper
 {
     public static class AutoMapperBootstrapper
     {

@@ -2,7 +2,7 @@
 using Raven.Abstractions.Data;
 using Raven.Client;
 
-namespace RavenOverflow.Web.Indexes
+namespace RavenOverflow.Web.RavenDb.Indexes
 {
     public static class RavenFacetTags
     {

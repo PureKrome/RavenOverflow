@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 
-namespace RavenOverflow.Web.Models.AutoMapping
+namespace RavenOverflow.Web.AutoMapper
 {
     public class TagsResolver : ValueResolver<CreateInputModel, ICollection<string>>
     {

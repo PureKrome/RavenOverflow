@@ -8,11 +8,13 @@ namespace RavenOverflow.Services
 {
     public class QuestionService : IQuestionService
     {
-        private readonly IDocumentSession _documentSession;
+        private readonly IDocumentStore _documentStore;
 
-        public QuestionService(IDocumentSession documentSession)
+        public QuestionService(IDocumentStore documentStore)
         {
-            _documentSession = documentSession;
+            Condition.Requires(documentStore).IsNotNull();
+
+            _documentStore = documentStore;
         }
 
         #region IQuestionService Members
@@ -26,8 +28,11 @@ namespace RavenOverflow.Services
             Condition.Requires(question.Tags).IsNotNull().IsLongerThan(0);
 
             // Save.
-            _documentSession.Store(question);
-            _documentSession.SaveChanges();
+            using (var documentSession = _documentStore.OpenSession())
+            {
+                documentSession.Store(question);
+                documentSession.SaveChanges();
+            }
 
             return question;
         }

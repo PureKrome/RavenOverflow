@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Raven.Client;
-using Raven.Client.Document;
 using Raven.Client.MvcIntegration;
-using RavenOverflow.Core.Entities;
-using RavenOverflow.FakeData;
-using RavenOverflow.Web.Indexes;
-using RavenOverflow.Web.Models;
+using RavenOverflow.Web.AutoMapper;
 using RavenOverflow.Web.Models.Authentication;
-using RavenOverflow.Web.Models.AutoMapping;
 using StructureMap;
 
 namespace RavenOverflow.Web
@@ -56,15 +47,6 @@ namespace RavenOverflow.Web
 
             RegisterRoutes(RouteTable.Routes);
 
-            // Seed an demo data.
-            SeedDocumentStore(ObjectFactory.GetInstance<IDocumentStore>());
-
-            // Create any Facets.
-            RavenFacetTags.CreateFacets(ObjectFactory.GetInstance<IDocumentStore>());
-
-            // Wire up the RavenDb profiler.
-            RavenProfiler.InitializeFor(ObjectFactory.GetInstance<IDocumentStore>());
-
             // Configure AutoMapper mappings.
             AutoMapperBootstrapper.ConfigureMappings();
         }
@@ -74,51 +56,7 @@ namespace RavenOverflow.Web
         {
             CustomFormsAuthentication.AuthenticateRequestDecryptCustomFormsAuthenticationTicket(Context);
         }
-
-        private static void SeedDocumentStore(IDocumentStore documentStore)
-        {
-            using (IDocumentSession session = documentStore.OpenSession())
-            {
-                // Don't add any seed data, if we already have some data in the system.
-                var user = session.Load<User>("users/1");
-                if (user != null)
-                {
-                    return;
-                }
-
-                ICollection<User> users = FakeUsers.CreateFakeUsers();
-
-                StoreEntites(session, users);
-
-                StoreEntites(session, FakeQuestions.CreateFakeQuestions(users.Select(x => x.Id).ToList()));
-
-                session.SaveChanges();
-
-                // Make sure all our indexes are not stale.
-                documentStore.WaitForStaleIndexesToComplete();
-            }
-        }
-
-        private static void StoreEntites(IDocumentSession session, IEnumerable<RootAggregate> entities)
-        {
-            if (session == null)
-            {
-                throw new ArgumentNullException("session");
-            }
-
-            if (entities == null)
-            {
-                throw new ArgumentNullException("entities");
-            }
-
-            foreach (RootAggregate entity in entities)
-            {
-                session.Store(entity);
-            }
-        }
     }
 
     // ReSharper restore InconsistentNaming
 }
-
-

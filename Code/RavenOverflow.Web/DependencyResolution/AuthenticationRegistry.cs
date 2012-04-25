@@ -2,7 +2,7 @@
 using RavenOverflow.Web.Models.Authentication;
 using StructureMap.Configuration.DSL;
 
-namespace RavenOverflow.Web.Models.DependencyResolution
+namespace RavenOverflow.Web.DependencyResolution
 {
     public class AuthenticationRegistry : Registry
     {

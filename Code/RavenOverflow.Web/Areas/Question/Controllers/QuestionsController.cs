@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Web.Mvc;
 using AutoMapper;
+using CuttingEdge.Conditions;
 using Raven.Client;
 using RavenOverflow.Core.Services;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.Controllers;
-using RavenOverflow.Web.Models;
 
 namespace RavenOverflow.Web.Areas.Question.Controllers
 {
-    public class QuestionsController : AbstractController
+    public class QuestionsController : RavenDbController
     {
         private readonly IQuestionService _questionService;
 
-        public QuestionsController(IDocumentSession documentSession, IQuestionService questionService)
-            : base(documentSession)
+        public QuestionsController(IDocumentStore documentStore, IQuestionService questionService)
+            : base(documentStore)
         {
+            Condition.Requires(questionService).IsNotNull();
+
             _questionService = questionService;
         }
 
+        [HttpGet]
         public ActionResult Create()
         {
             var viewModel = new CreateViewModel(User.Identity)
@@ -28,7 +31,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
             return View("Create", viewModel);
         }
 
-        [HttpPost, RavenDb, Authorize]
+        [HttpPost, Authorize]
         public ActionResult Create(CreateInputModel inputModel)
         {
             try
