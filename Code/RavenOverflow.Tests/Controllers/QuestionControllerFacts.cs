@@ -24,7 +24,7 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenAnInValidQuestion_Create_ReturnsAResultView()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService(DocumentStore);
+            IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
             var createInputModel = new CreateInputModel
@@ -50,7 +50,7 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenAValidQuestionAndNoOneIsLoggedIn_Create_ReturnsAResultView()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService(DocumentStore);
+            IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
             var createInputModel = new CreateInputModel
@@ -71,7 +71,7 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenAValidQuestionAndALoggedInUser_Create_AddsTheQuestionAndRedicects()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService(DocumentStore);
+            IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController, "users/1");
             var createInputModel = new CreateInputModel

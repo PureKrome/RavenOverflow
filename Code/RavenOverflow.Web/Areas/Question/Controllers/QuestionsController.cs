@@ -41,7 +41,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                     Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
                     question.CreatedByUserId = User.Identity.UserId;
 
-                    _questionService.Create(question);
+                    _questionService.Create(question, DocumentSession);
 
                     return RedirectToAction("Index", "Home", new { area = "" });
                 }

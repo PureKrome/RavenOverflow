@@ -18,11 +18,12 @@ namespace RavenOverflow.Tests.Services
         {
             // Arrange.
             Question question = FakeQuestions.CreateAFakeQuestion(null, null); // No user created this question.
-            var documentStore = new Mock<IDocumentStore>();
-            IQuestionService questionService = new QuestionService(documentStore.Object);
+            var documentSession = new Mock<IDocumentSession>();
+            IQuestionService questionService = new QuestionService();
 
             // Act & Assert.
-            Assert.Throws<ValidationException>(() => questionService.Create(question));
+            Assert.Throws<ValidationException>(() => questionService.Create(question, documentSession.Object));
+            documentSession.Verify(x => x.Store(question), Times.Never());
         }
 
         [Fact]
@@ -31,16 +32,13 @@ namespace RavenOverflow.Tests.Services
             // Arrange.
             Question question = FakeQuestions.CreateAFakeQuestion("users/1", null);
             var documentSession = new Mock<IDocumentSession>();
-            var documentStore = new Mock<IDocumentStore>();
-            documentStore.Setup(x => x.OpenSession()).Returns(documentSession.Object);
-            IQuestionService questionService = new QuestionService(documentStore.Object);
+            IQuestionService questionService = new QuestionService();
 
             // Act.
-            questionService.Create(question);
+            questionService.Create(question, documentSession.Object);
 
             // Assert.
             documentSession.Verify(x => x.Store(question), Times.Once());
-            documentSession.Verify(x => x.SaveChanges(), Times.Once());
         }
 
         // ReSharper restore InconsistentNaming
