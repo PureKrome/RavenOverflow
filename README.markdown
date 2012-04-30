@@ -20,11 +20,11 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### What it Uses
 
-* [RavenDb](http://ravendb.net/) v701 / RavenDb Embedded v701
+* [RavenDb](http://ravendb.net/) v88 / RavenDb Embedded v888
+* [xUnit](http://xunit.codeplex.com/) for Tests
 * [ASP.NET MVC3](http://asp.net/mvc/)
 * [StructureMap](http://structuremap.net/structuremap/) for IoC
 * [NBuilder](http://nbuilder.org/) for fake data
-* [xUnit](http://xunit.codeplex.com/) for Tests
 * An attempt to simulate a production solution layout (eg. n-Tier, IoC, InputModels/ViewModels)
 
 ### What it is NOT
