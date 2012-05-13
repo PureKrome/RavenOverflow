@@ -16,6 +16,17 @@ namespace RavenOverflow.Web.RavenDb
 
             using (IDocumentSession documentSession = documentStore.OpenSession())
             {
+                // First, check to make sure we don't have any data.
+                var user = documentSession.Load<User>(1);
+                if (user != null)
+                {
+                    // ooOooo! we have a user, so it's assumed we actually have some seeded data.
+                    return;
+                }
+
+                // We have no users, so it's assumed we therefore have no data at all.
+                // So lets fake some up :)
+
                 // Users.
                 ICollection<User> users = FakeUsers.CreateFakeUsers(50);
                 StoreFakeEntities(users, documentSession);
