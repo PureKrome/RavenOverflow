@@ -2,7 +2,7 @@
 
 namespace RavenOverflow.Core.Extensions
 {
-    public static class Common
+    public static class CommonExtensions
     {
         public static DateTime ToUtcToday(this DateTime dateTime)
         {
