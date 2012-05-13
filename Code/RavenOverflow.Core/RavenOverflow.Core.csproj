@@ -62,15 +62,13 @@
     <Compile Include="Entities\RootAggregate.cs" />
     <Compile Include="Entities\Vote.cs" />
     <Compile Include="Extensions\CommonExtensions.cs" />
-    <Compile Include="Extensions\User.cs" />
-    <Compile Include="Extensions\Questions.cs" />
+    <Compile Include="Filters\UserFilters.cs" />
+    <Compile Include="Filters\QuestionFilters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IQuestionService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

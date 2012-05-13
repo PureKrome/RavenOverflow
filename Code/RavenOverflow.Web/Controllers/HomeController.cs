@@ -7,6 +7,7 @@ using Raven.Client;
 using Raven.Client.Linq;
 using RavenOverflow.Core.Entities;
 using RavenOverflow.Core.Extensions;
+using RavenOverflow.Core.Filters;
 using RavenOverflow.Web.Models.ViewModels;
 using RavenOverflow.Web.RavenDb.Indexes;
 

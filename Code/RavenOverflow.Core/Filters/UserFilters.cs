@@ -2,9 +2,9 @@
 using System.Linq;
 using RavenOverflow.Core.Entities;
 
-namespace RavenOverflow.Core.Extensions
+namespace RavenOverflow.Core.Filters
 {
-    public static class UserExtensions
+    public static class UserFilters
     {
         public static IQueryable<User> WithDisplayName(this IQueryable<User> query, string displayName)
         {

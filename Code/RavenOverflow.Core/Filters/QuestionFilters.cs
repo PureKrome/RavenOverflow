@@ -2,9 +2,9 @@
 using System.Linq;
 using RavenOverflow.Core.Entities;
 
-namespace RavenOverflow.Core.Extensions
+namespace RavenOverflow.Core.Filters
 {
-    public static class QuestionExtensions
+    public static class QuestionFilters
     {
         public static IQueryable<Question> OrderByCreatedByDescending(this IQueryable<Question> query)
         {
