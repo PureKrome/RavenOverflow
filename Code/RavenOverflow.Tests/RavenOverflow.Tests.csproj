@@ -46,6 +46,9 @@
     <Reference Include="Esent.Interop, Version=1.7.0.0, Culture=neutral, PublicKeyToken=8dd49bbdae3f61af, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RavenDB.Database.1.0.888\lib\net40\Esent.Interop.dll</HintPath>
     </Reference>
+    <Reference Include="FizzWare.NBuilder, Version=3.0.1.0, Culture=neutral, PublicKeyToken=5651b03e12e42c12, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NBuilder.3.0.1.1\lib\FizzWare.NBuilder.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.NRefactory, Version=3.0.0.3800, Culture=neutral, PublicKeyToken=efe927acf176eea2, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RavenDB.Database.1.0.888\lib\net40\ICSharpCode.NRefactory.dll</HintPath>
     </Reference>

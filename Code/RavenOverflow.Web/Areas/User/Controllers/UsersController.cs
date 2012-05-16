@@ -6,7 +6,6 @@ using Facebook;
 using Facebook.Web;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
-using RavenOverflow.Core.Services;
 using RavenOverflow.Services;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Models;

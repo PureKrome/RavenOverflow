@@ -1,5 +1,5 @@
-﻿using RavenOverflow.Core.Services;
-using RavenOverflow.Services;
+﻿using RavenOverflow.Services;
+using RavenOverflow.Services.Interfaces;
 using StructureMap.Configuration.DSL;
 
 namespace RavenOverflow.Web.DependencyResolution

@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RavenOverflow.Web.Areas.Question.Models.ViewModels
+namespace RavenOverflow.Services.Models
 {
-    public class CreateInputModel
+    public class QuestionInputModel
     {
+        public int QuestionId { get; set; }
+
         [Required(ErrorMessage = "A subject is missing.")]
         public string Subject { get; set; }
 
@@ -12,5 +14,8 @@ namespace RavenOverflow.Web.Areas.Question.Models.ViewModels
 
         [Required(ErrorMessage = "you need at least one valid tag.")]
         public string Tags { get; set; }
+
+        //[Required(ErrorMessage = "You need to be logged in to ask a question.")]
+        public string CreatedByUserId { get; set; }
     }
 }

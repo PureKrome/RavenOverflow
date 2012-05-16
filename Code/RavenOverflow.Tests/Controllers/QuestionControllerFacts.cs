@@ -1,7 +1,9 @@
 ﻿using System.Web.Mvc;
 using AutoMapper;
-using RavenOverflow.Core.Services;
+using FizzWare.NBuilder;
 using RavenOverflow.Services;
+using RavenOverflow.Services.Interfaces;
+using RavenOverflow.Services.Models;
 using RavenOverflow.Web.Areas.Question.Controllers;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.AutoMapper;
@@ -27,13 +29,7 @@ namespace RavenOverflow.Tests.Controllers
             IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = new CreateInputModel
-                                   {
-                                       Content = "Some content",
-                                       Subject = null,
-                                       // RuRoh - dat ist missin'
-                                       Tags = "tag1 tag2 tag3-3-3"
-                                   };
+            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
 
             // Now pretend the model binding raised an error with the input model.
             questionsController.ModelState.AddModelError("key", "error message");
@@ -53,12 +49,8 @@ namespace RavenOverflow.Tests.Controllers
             IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = new CreateInputModel
-                                   {
-                                       Content = "Some content",
-                                       Subject = "Subject",
-                                       Tags = "tag1 tag2 tag3-3-3"
-                                   };
+            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
+
             // Act.
             var result = questionsController.Create(createInputModel) as ViewResult;
 
@@ -74,12 +66,8 @@ namespace RavenOverflow.Tests.Controllers
             IQuestionService questionService = new QuestionService();
             var questionsController = new QuestionsController(DocumentStore, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController, "users/1");
-            var createInputModel = new CreateInputModel
-                                   {
-                                       Content = "Some content",
-                                       Subject = "Subject",
-                                       Tags = "tag1 tag2 tag3-3-3"
-                                   };
+            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
+
             // Act.
             var result = questionsController.Create(createInputModel) as RedirectToRouteResult;
 

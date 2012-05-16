@@ -86,7 +86,6 @@
     <Compile Include="App_Start\MagicalUnicornCustomErrorHandling.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Areas\Question\Controllers\QuestionsController.cs" />
-    <Compile Include="Areas\Question\Models\ViewModels\CreateInputModel.cs" />
     <Compile Include="Areas\Question\Models\ViewModels\CreateViewModel.cs" />
     <Compile Include="Areas\Question\QuestionAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UsersController.cs" />
@@ -96,7 +95,6 @@
     <Compile Include="DependencyResolution\IoC.cs" />
     <Compile Include="RavenDb\HelperUtilities.cs" />
     <Compile Include="RavenDb\Indexes\Questions_Search.cs" />
-    <Compile Include="AutoMapper\TagsResolver.cs" />
     <Compile Include="DependencyResolution\AuthenticationRegistry.cs" />
     <Compile Include="RavenDb\Indexes\RavenFacetTags.cs" />
     <Compile Include="Models\Authentication\IOAuthAuthentication.cs" />

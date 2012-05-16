@@ -1,6 +1,6 @@
 ﻿using RavenOverflow.Core.Entities;
 
-namespace RavenOverflow.Core.Services
+namespace RavenOverflow.Services.Interfaces
 {
     public interface IUserService
     {

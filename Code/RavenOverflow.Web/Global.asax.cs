@@ -1,11 +1,8 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Raven.Client;
-using Raven.Client.MvcIntegration;
 using RavenOverflow.Web.AutoMapper;
 using RavenOverflow.Web.Models.Authentication;
-using StructureMap;
 
 namespace RavenOverflow.Web
 {
@@ -49,6 +46,7 @@ namespace RavenOverflow.Web
 
             // Configure AutoMapper mappings.
             AutoMapperBootstrapper.ConfigureMappings();
+            Services.AutoMapper.AutoMapperBootstrapper.ConfigureMappings();
         }
 
         protected void Application_AuthenticateRequest()

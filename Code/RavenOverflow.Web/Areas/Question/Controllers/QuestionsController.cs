@@ -3,7 +3,8 @@ using System.Web.Mvc;
 using AutoMapper;
 using CuttingEdge.Conditions;
 using Raven.Client;
-using RavenOverflow.Core.Services;
+using RavenOverflow.Services.Interfaces;
+using RavenOverflow.Services.Models;
 using RavenOverflow.Web.Areas.Question.Models.ViewModels;
 using RavenOverflow.Web.Controllers;
 
@@ -32,16 +33,17 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         }
 
         [HttpPost, Authorize]
-        public ActionResult Create(CreateInputModel inputModel)
+        public ActionResult Create(QuestionInputModel inputModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    Core.Entities.Question question = Mapper.Map<CreateInputModel, Core.Entities.Question>(inputModel);
-                    question.CreatedByUserId = User.Identity.UserId;
+                    inputModel.CreatedByUserId = User.Identity.UserId;
+                    
+                    _questionService.Store(inputModel, DocumentSession);
 
-                    _questionService.Create(question, DocumentSession);
+                    DocumentSession.SaveChanges();
 
                     return RedirectToAction("Index", "Home", new { area = "" });
                 }

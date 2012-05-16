@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using RavenOverflow.Web.Areas.Question.Models.ViewModels;
+using RavenOverflow.Services.Models;
 
-namespace RavenOverflow.Web.AutoMapper
+namespace RavenOverflow.Services.AutoMapper
 {
-    public class TagsResolver : ValueResolver<CreateInputModel, ICollection<string>>
+    public class TagsResolver : ValueResolver<QuestionInputModel, ICollection<string>>
     {
-        protected override ICollection<string> ResolveCore(CreateInputModel createInputModel)
+        protected override ICollection<string> ResolveCore(QuestionInputModel createInputModel)
         {
             if (createInputModel == null || createInputModel.Tags == null)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
-using RavenOverflow.Core.Services;
+using RavenOverflow.Services.Interfaces;
 
 namespace RavenOverflow.Services
 {
