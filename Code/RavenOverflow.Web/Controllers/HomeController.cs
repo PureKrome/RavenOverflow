@@ -15,7 +15,7 @@ namespace RavenOverflow.Web.Controllers
 {
     public class HomeController : RavenDbController
     {
-        public HomeController(IDocumentStore documentStore) : base(documentStore)
+        public HomeController(IDocumentSession documentSession) : base(documentSession)
         {
         }
 

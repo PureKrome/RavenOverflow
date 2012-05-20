@@ -18,6 +18,7 @@ namespace RavenOverflow.Tests
     public abstract class RavenDbFactBase : IDisposable
     {
         private IDocumentStore _documentStore;
+        private IDocumentSession _documentSession;
 
         protected IList<Type> IndexesToExecute { get; set; }
 
@@ -28,7 +29,7 @@ namespace RavenOverflow.Tests
             IsDataToBeSeeded = true;
         }
 
-        protected IDocumentStore DocumentStore
+        private IDocumentStore DocumentStore
         {
             get
             {
@@ -52,11 +53,16 @@ namespace RavenOverflow.Tests
             }
         }
 
+        protected IDocumentSession DocumentSession
+        {
+            get { return _documentSession ?? (_documentSession = DocumentStore.OpenSession()); }
+        }
+
         #region IDisposable Members
 
         public void Dispose()
         {
-            if (DocumentStore == null || DocumentStore.WasDisposed)
+            if (DocumentStore.WasDisposed)
             {
                 return;
             }
@@ -65,6 +71,7 @@ namespace RavenOverflow.Tests
             DocumentStore.AssertDocumentStoreErrors();
 
             // Clean up.
+            DocumentSession.Dispose();
             DocumentStore.Dispose();
         }
 

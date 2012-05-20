@@ -1,11 +1,11 @@
 ﻿using RavenOverflow.Web.Models;
 using RavenOverflow.Web.Models.Authentication;
 
-namespace RavenOverflow.Web.Areas.Question.Models.ViewModels
+namespace RavenOverflow.Web.Areas.Question.Models
 {
-    public class CreateViewModel : _LayoutViewModel
+    public class QuestionInputModel : _LayoutViewModel
     {
-        public CreateViewModel(ICustomIdentity customIdentity) : base(customIdentity)
+        public QuestionInputModel(ICustomIdentity customIdentity) : base(customIdentity)
         {
         }
 

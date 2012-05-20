@@ -1,12 +1,12 @@
 ﻿using System.Web.Mvc;
 using AutoMapper;
 using FizzWare.NBuilder;
+using RavenOverflow.Core.Services;
 using RavenOverflow.Services;
-using RavenOverflow.Services.Interfaces;
-using RavenOverflow.Services.Models;
 using RavenOverflow.Web.Areas.Question.Controllers;
-using RavenOverflow.Web.Areas.Question.Models.ViewModels;
+using RavenOverflow.Web.Areas.Question.Models;
 using RavenOverflow.Web.AutoMapper;
+using RavenOverflow.Web.Models.Authentication;
 using Xunit;
 
 namespace RavenOverflow.Tests.Controllers
@@ -23,13 +23,13 @@ namespace RavenOverflow.Tests.Controllers
         }
 
         [Fact]
-        public void GivenAnInValidQuestion_Create_ReturnsAResultView()
+        public void GivenAnInvalidQuestion_Create_ReturnsAResultView()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService();
-            var questionsController = new QuestionsController(DocumentStore, questionService);
+            var questionService = new QuestionService(DocumentSession);
+            var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
+            var createInputModel = new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity);
 
             // Now pretend the model binding raised an error with the input model.
             questionsController.ModelState.AddModelError("key", "error message");
@@ -46,10 +46,10 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenAValidQuestionAndNoOneIsLoggedIn_Create_ReturnsAResultView()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService();
-            var questionsController = new QuestionsController(DocumentStore, questionService);
+            var questionService = new QuestionService(DocumentSession);
+            var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
+            var createInputModel = new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity);
 
             // Act.
             var result = questionsController.Create(createInputModel) as ViewResult;
@@ -63,10 +63,16 @@ namespace RavenOverflow.Tests.Controllers
         public void GivenAValidQuestionAndALoggedInUser_Create_AddsTheQuestionAndRedicects()
         {
             // Arrange.
-            IQuestionService questionService = new QuestionService();
-            var questionsController = new QuestionsController(DocumentStore, questionService);
+            var questionService = new QuestionService(DocumentSession);
+            var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController, "users/1");
-            var createInputModel = Builder<QuestionInputModel>.CreateNew().Build();
+            var createInputModel =
+                new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity)
+                {
+                    Subject = "aaaad fdds fsd ds",
+                    Content = "sdhfskfhksd sd",
+                    Tags = "ahdakjdh"
+                };
 
             // Act.
             var result = questionsController.Create(createInputModel) as RedirectToRouteResult;

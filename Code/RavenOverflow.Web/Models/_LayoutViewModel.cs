@@ -3,8 +3,8 @@
 namespace RavenOverflow.Web.Models
 {
     // ReSharper disable InconsistentNaming
+    
     public class _LayoutViewModel
-    // ReSharper restore InconsistentNaming
     {
         public _LayoutViewModel(ICustomIdentity customIdentity)
         {
@@ -18,4 +18,6 @@ namespace RavenOverflow.Web.Models
 
         #endregion
     }
+
+    // ReSharper restore InconsistentNaming
 }

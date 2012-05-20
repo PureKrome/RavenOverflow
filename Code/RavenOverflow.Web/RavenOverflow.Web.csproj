@@ -86,10 +86,11 @@
     <Compile Include="App_Start\MagicalUnicornCustomErrorHandling.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Areas\Question\Controllers\QuestionsController.cs" />
-    <Compile Include="Areas\Question\Models\ViewModels\CreateViewModel.cs" />
+    <Compile Include="Areas\Question\Models\QuestionInputModel.cs" />
     <Compile Include="Areas\Question\QuestionAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UsersController.cs" />
     <Compile Include="Areas\User\UserAreaRegistration.cs" />
+    <Compile Include="AutoMapper\TagsResolver.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />

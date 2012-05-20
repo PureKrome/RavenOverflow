@@ -3,9 +3,8 @@ using System.Web.Mvc;
 using AutoMapper;
 using CuttingEdge.Conditions;
 using Raven.Client;
-using RavenOverflow.Services.Interfaces;
-using RavenOverflow.Services.Models;
-using RavenOverflow.Web.Areas.Question.Models.ViewModels;
+using RavenOverflow.Core.Services;
+using RavenOverflow.Web.Areas.Question.Models;
 using RavenOverflow.Web.Controllers;
 
 namespace RavenOverflow.Web.Areas.Question.Controllers
@@ -14,8 +13,8 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
     {
         private readonly IQuestionService _questionService;
 
-        public QuestionsController(IDocumentStore documentStore, IQuestionService questionService)
-            : base(documentStore)
+        public QuestionsController(IDocumentSession documentSession, IQuestionService questionService)
+            : base(documentSession)
         {
             Condition.Requires(questionService).IsNotNull();
 
@@ -25,11 +24,11 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var viewModel = new CreateViewModel(User.Identity)
-            {
-                Header = "Ask a Question"
-            };
-            return View("Create", viewModel);
+            var inputModel = new QuestionInputModel(User.Identity)
+                            {
+                                Header = "Ask a Question"
+                            };
+            return View("Create", inputModel);
         }
 
         [HttpPost, Authorize]
@@ -39,13 +38,14 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    inputModel.CreatedByUserId = User.Identity.UserId;
-                    
-                    _questionService.Store(inputModel, DocumentSession);
+                    var question = Mapper.Map<QuestionInputModel, Core.Entities.Question>(inputModel);
+                    question.CreatedByUserId = User.Identity.UserId;
+
+                    _questionService.Store(question);
 
                     DocumentSession.SaveChanges();
 
-                    return RedirectToAction("Index", "Home", new { area = "" });
+                    return RedirectToAction("Index", "Home", new {area = ""});
                 }
             }
             catch (Exception exception)
@@ -53,9 +53,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 ModelState.AddModelError("RuRoh", exception.Message);
             }
 
-            CreateViewModel viewModel = Mapper.Map(inputModel,
-                                                   new CreateViewModel(User.Identity) { Header = "Ask a Question" });
-            return View("Create", viewModel);
+            return View("Create", inputModel);
         }
     }
 }

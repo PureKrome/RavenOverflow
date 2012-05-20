@@ -30,7 +30,7 @@ namespace RavenOverflow.Tests.Controllers
             IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
             // Arrange.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -82,7 +82,7 @@ namespace RavenOverflow.Tests.Controllers
             IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
             // Arrange.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -117,7 +117,7 @@ namespace RavenOverflow.Tests.Controllers
 
             // Arrange.
             // Note: we're faking that a user has authenticated.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController, displayName: "Pure.Krome");
 
 
@@ -147,7 +147,7 @@ namespace RavenOverflow.Tests.Controllers
 
             // Arrange.
             // Note: we're faking that no user has been authenticated.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -174,7 +174,7 @@ namespace RavenOverflow.Tests.Controllers
             IndexesToExecute = new List<Type> {typeof (Questions_Search)};
 
             // Arrange.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -212,7 +212,7 @@ namespace RavenOverflow.Tests.Controllers
 
             // Arrange.
             const string tag = "ravendb";
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -235,7 +235,7 @@ namespace RavenOverflow.Tests.Controllers
         {
             // Arrange.
             const string tag = "ravendb";
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -260,7 +260,7 @@ namespace RavenOverflow.Tests.Controllers
 
             // Arrange.
             const string tag = "ravendb";
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.
@@ -281,7 +281,7 @@ namespace RavenOverflow.Tests.Controllers
 
             // Arrange.
             const string tag = "ravne"; // Hardcoded Typo.
-            var homeController = new HomeController(DocumentStore);
+            var homeController = new HomeController(DocumentSession);
             ControllerUtilities.SetUpControllerContext(homeController);
 
             // Act.

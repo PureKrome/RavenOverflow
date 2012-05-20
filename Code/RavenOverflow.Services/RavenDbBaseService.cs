@@ -1,11 +1,11 @@
 ﻿using CuttingEdge.Conditions;
 using Raven.Client;
 
-namespace RavenOverflow.Web.Controllers
+namespace RavenOverflow.Services
 {
-    public abstract class RavenDbController : BaseController
+    public abstract class RavenDbBaseService
     {
-        protected RavenDbController(IDocumentSession documentSession)
+        protected RavenDbBaseService(IDocumentSession documentSession)
         {
             Condition.Requires(documentSession).IsNotNull();
 

@@ -29,6 +29,15 @@ namespace RavenOverflow.Web.DependencyResolution
                      }
                 )
                 .Named("RavenDB Document Store.");
+
+            For<IDocumentSession>()
+                .HttpContextScoped()
+                .Use(x =>
+                     {
+                         var documentStore = x.GetInstance<IDocumentStore>();
+                         return documentStore.OpenSession();
+                     })
+                .Named("RavenDb Session -> per Http Request.");
         }
     }
 }

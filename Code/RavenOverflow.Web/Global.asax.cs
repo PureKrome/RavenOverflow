@@ -46,7 +46,6 @@ namespace RavenOverflow.Web
 
             // Configure AutoMapper mappings.
             AutoMapperBootstrapper.ConfigureMappings();
-            Services.AutoMapper.AutoMapperBootstrapper.ConfigureMappings();
         }
 
         protected void Application_AuthenticateRequest()

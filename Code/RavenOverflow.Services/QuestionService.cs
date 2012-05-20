@@ -1,45 +1,62 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
-using CuttingEdge.Conditions;
+﻿using CuttingEdge.Conditions;
 using Raven.Client;
 using RavenOverflow.Core.Entities;
-using RavenOverflow.Services.Interfaces;
-using RavenOverflow.Services.Models;
+using RavenOverflow.Core.Services;
 
 namespace RavenOverflow.Services
 {
-    public class QuestionService : IQuestionService
+    public class QuestionService : RavenDbBaseService, IQuestionService
     {
+        public QuestionService(IDocumentSession documentSession) : base(documentSession)
+        {
+        }
+
         #region IQuestionService Members
 
-        public Question Store(QuestionInputModel questionInputModel, IDocumentSession documentSession)
+        public Question Store(Question question)
         {
-            Condition.Requires(questionInputModel).IsNotNull();
-            Condition.Requires(documentSession).IsNotNull();
+            Condition.Requires(question).IsNotNull();
 
             // First, validate the question.
-            Validator.ValidateObject(questionInputModel, new ValidationContext(questionInputModel, null, null), true);
-            Condition.Requires(questionInputModel.Tags).IsNotNull().IsLongerThan(0);
+            ValidateQuestion(question);
 
-            Question question = null;
-            if (questionInputModel.QuestionId > 0)
+            if (question.IdAsANumber > 0)
             {
-                question = documentSession.Load<Question>(questionInputModel.QuestionId);
-            }
+                var existingQuestion = DocumentSession.Load<Question>(question.Id);
+                if (existingQuestion != null)
+                {
+                    existingQuestion.Subject = question.Subject;
+                    existingQuestion.Content = question.Content;
+                    existingQuestion.Tags = question.Tags;
+                    existingQuestion.CreatedByUserId = question.CreatedByUserId;
 
-            if (question == null)
-            {
-                question = new Question();
+                    question = existingQuestion;
+                }
             }
-
-            Mapper.Map(questionInputModel, question);
 
             // Save.
-            documentSession.Store(question);
+            DocumentSession.Store(question);
 
             return question;
         }
 
         #endregion
+
+        private static void ValidateQuestion(Question question)
+        {
+            Condition.Requires(question).IsNotNull();
+
+            Condition.Requires(question.Subject)
+                .IsNotNullOrEmpty()
+                .IsGreaterOrEqual("5", "A subject is missing.");
+
+            Condition.Requires(question.Content)
+                .IsNotNullOrEmpty()
+                .IsGreaterThan("5", "A question is missing some content.");
+
+            Condition.Requires(question.Tags)
+                .IsNotNull()
+                .IsNotEmpty("At least one valid tag is required.");
+        }
     }
 }

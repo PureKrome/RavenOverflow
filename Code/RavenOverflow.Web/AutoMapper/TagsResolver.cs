@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using RavenOverflow.Services.Models;
+using RavenOverflow.Web.Areas.Question.Models;
 
-namespace RavenOverflow.Services.AutoMapper
+namespace RavenOverflow.Web.AutoMapper
 {
     public class TagsResolver : ValueResolver<QuestionInputModel, ICollection<string>>
     {
