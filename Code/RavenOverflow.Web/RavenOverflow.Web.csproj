@@ -86,6 +86,7 @@
     <Compile Include="App_Start\MagicalUnicornCustomErrorHandling.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Areas\Question\Controllers\QuestionsController.cs" />
+    <Compile Include="Areas\Question\Models\QuestionViewModel.cs" />
     <Compile Include="Areas\Question\Models\QuestionInputModel.cs" />
     <Compile Include="Areas\Question\QuestionAreaRegistration.cs" />
     <Compile Include="Areas\User\Controllers\UsersController.cs" />

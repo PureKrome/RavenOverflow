@@ -29,7 +29,7 @@ namespace RavenOverflow.Tests.Controllers
             var questionService = new QuestionService(DocumentSession);
             var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity);
+            var createInputModel = new QuestionInputModel();
 
             // Now pretend the model binding raised an error with the input model.
             questionsController.ModelState.AddModelError("key", "error message");
@@ -49,7 +49,7 @@ namespace RavenOverflow.Tests.Controllers
             var questionService = new QuestionService(DocumentSession);
             var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController);
-            var createInputModel = new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity);
+            var createInputModel = new QuestionInputModel();
 
             // Act.
             var result = questionsController.Create(createInputModel) as ViewResult;
@@ -67,7 +67,7 @@ namespace RavenOverflow.Tests.Controllers
             var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController, "users/1");
             var createInputModel =
-                new QuestionInputModel(questionsController.HttpContext.User.Identity as CustomIdentity)
+                new QuestionInputModel()
                 {
                     Subject = "aaaad fdds fsd ds",
                     Content = "sdhfskfhksd sd",

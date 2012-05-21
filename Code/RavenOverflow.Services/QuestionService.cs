@@ -48,11 +48,11 @@ namespace RavenOverflow.Services
 
             Condition.Requires(question.Subject)
                 .IsNotNullOrEmpty()
-                .IsGreaterOrEqual("5", "A subject is missing.");
+                .Evaluate(x => x.Length >= 5, "A subject is required and needs to be at least 5 characters.");
 
             Condition.Requires(question.Content)
                 .IsNotNullOrEmpty()
-                .IsGreaterThan("5", "A question is missing some content.");
+                .Evaluate(x => x.Length >= 5, "Some content is required and needs to be at least 5 characters.");
 
             Condition.Requires(question.Tags)
                 .IsNotNull()

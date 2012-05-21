@@ -24,7 +24,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var inputModel = new QuestionInputModel(User.Identity)
+            var inputModel = new QuestionViewModel(User.Identity)
                             {
                                 Header = "Ask a Question"
                             };
@@ -53,7 +53,10 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 ModelState.AddModelError("RuRoh", exception.Message);
             }
 
-            return View("Create", inputModel);
+            var viewModel = new QuestionViewModel(User.Identity);
+            Mapper.Map(inputModel, viewModel);
+
+            return View("Create", viewModel);
         }
     }
 }
