@@ -19,7 +19,8 @@ namespace RavenOverflow.Web.AutoMapper
                 .ForMember(dest => dest.Comments, opt => opt.Ignore());
 
             Mapper.CreateMap<QuestionInputModel, QuestionViewModel>()
-                .ForMember(dest => dest.CustomIdentity, opt => opt.Ignore());
+                .ForMember(dest => dest.CustomIdentity, opt => opt.Ignore())
+                .ForMember(dest => dest.Header, opt => opt.Ignore());
         }
     }
 }
