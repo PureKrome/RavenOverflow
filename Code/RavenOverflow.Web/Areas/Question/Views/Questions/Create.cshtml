@@ -37,7 +37,10 @@
         @Html.EditorFor(x => x.Tags, new { maxlength = "300"})
     </div>
 
-    @Html.ValidationSummary("Oops! Your question couldn't be submitted because:", new { @class="form-error"})
+    if (!@ViewData.ModelState.IsValid)
+    {
+          @Html.ValidationSummary("Oops! Your question couldn't be submitted because:", new { @class = "form-error" })
+    }
     
     <p>
         <input type="submit" value="Ask Question"/>
