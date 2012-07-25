@@ -39,7 +39,6 @@ namespace RavenOverflow.Web
 
             RegisterGlobalFilters(GlobalFilters.Filters);
 
-            ViewEngines.Engines.Clear();
             RegisterRazorViewEngine();
 
             RegisterRoutes(RouteTable.Routes);
