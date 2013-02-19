@@ -20,7 +20,7 @@ namespace RavenOverflow.Services
             // First, validate the question.
             ValidateQuestion(question);
 
-            if (question.IdAsANumber > 0)
+            if (!string.IsNullOrEmpty(question.Id))
             {
                 var existingQuestion = DocumentSession.Load<Question>(question.Id);
                 if (existingQuestion != null)

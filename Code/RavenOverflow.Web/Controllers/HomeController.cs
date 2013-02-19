@@ -181,7 +181,7 @@ namespace RavenOverflow.Web.Controllers
 
         public ActionResult Facets(string id)
         {
-            IDictionary<string, IEnumerable<FacetValue>> facets = DocumentSession.Query
+            var facets = DocumentSession.Query
                 <RecentPopularTagsMapOnly.ReduceResult, RecentPopularTagsMapOnly>()
                 .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
                 .ToFacets("Raven/Facets/Tags");

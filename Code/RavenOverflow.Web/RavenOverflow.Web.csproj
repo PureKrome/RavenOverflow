@@ -65,6 +65,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\RavenDB.Client.MvcIntegration.2.0.2261\lib\net40\Raven.Client.MvcIntegration.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="RouteDebugger, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
@@ -87,6 +90,12 @@
     <Reference Include="WebActivator, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebActivator.1.5\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WorldDomination.Web.Authentication">
+      <HintPath>..\..\packages\WorldDomination.Web.Authentication.0.16.0\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
+    </Reference>
+    <Reference Include="WorldDomination.Web.Authentication.Mvc">
+      <HintPath>..\..\packages\WorldDomination.Web.Authentication.Mvc.0.16.0\lib\net40\WorldDomination.Web.Authentication.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
