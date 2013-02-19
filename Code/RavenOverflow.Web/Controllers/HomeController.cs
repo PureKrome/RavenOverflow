@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using CuttingEdge.Conditions;
 using Raven.Abstractions.Data;
 using Raven.Client;
 using Raven.Client.Linq;
@@ -10,13 +11,40 @@ using RavenOverflow.Core.Extensions;
 using RavenOverflow.Core.Filters;
 using RavenOverflow.Web.Models.ViewModels;
 using RavenOverflow.Web.RavenDb.Indexes;
+using WorldDomination.Security;
 
 namespace RavenOverflow.Web.Controllers
 {
-    public class HomeController : RavenDbController
+    public class HomeController : BaseController
     {
-        public HomeController(IDocumentSession documentSession) : base(documentSession)
+        private readonly ICustomFormsAuthentication _customFormsAuthentication;
+
+        public HomeController(IDocumentSession documentSession, ICustomFormsAuthentication customCustomFormsAuthentication) : base(documentSession)
         {
+            Condition.Requires(customCustomFormsAuthentication).IsNotNull();
+
+            _customFormsAuthentication = customCustomFormsAuthentication;
+        }
+
+        [HttpGet]
+        public ActionResult Authenticate()
+        {
+            var userData = new UserData
+            {
+                UserId = "users/1",
+                DisplayName = "Leah Culver",
+                PictureUri = "/Content/LeahCulverAvatar.png"
+            };
+            _customFormsAuthentication.SignIn(userData);
+
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
+        [HttpGet]
+        public ActionResult SignOut()
+        {
+            _customFormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home", new { area = "" });
         }
 
         [HttpGet]
@@ -34,7 +62,7 @@ namespace RavenOverflow.Web.Controllers
             // 3. Log in user information.
             IQueryable<User> userQuery = UserQuery(displayName);
 
-            var viewModel = new IndexViewModel(User.Identity)
+            var viewModel = new IndexViewModel(ClaimsUser)
                                 {
                                     Header = header,
                                     QuestionListViewModel = new QuestionListViewModel
@@ -80,7 +108,7 @@ namespace RavenOverflow.Web.Controllers
             IQueryable<User> userQuery = UserQuery(displayName);
             Lazy<IEnumerable<User>> lazyUserQuery = (userQuery != null ? userQuery.Lazily() : null);
 
-            var viewModel = new IndexViewModel(User.Identity)
+            var viewModel = new IndexViewModel(ClaimsUser)
                                 {
                                     Header = header,
                                     QuestionListViewModel = new QuestionListViewModel
@@ -129,7 +157,7 @@ namespace RavenOverflow.Web.Controllers
                 IQueryable<User> userQuery = UserQuery(displayName);
                 Lazy<IEnumerable<User>> lazyUserQuery = (userQuery != null ? userQuery.Lazily() : null);
 
-                var viewModel = new IndexViewModel(User.Identity)
+                var viewModel = new IndexViewModel(ClaimsUser)
                                     {
                                         Header = header,
                                         QuestionListViewModel = new QuestionListViewModel

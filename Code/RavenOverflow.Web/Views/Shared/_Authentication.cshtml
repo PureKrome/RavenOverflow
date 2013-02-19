@@ -1,19 +1,21 @@
-﻿@using RavenOverflow.Web.Models.Authentication
-@model ICustomIdentity
+﻿@model RavenOverflow.Web.Models.ViewModels.AuthenticationViewModel
 <span id="hlinks-user">
-    @if (Model != null && !string.IsNullOrEmpty(Model.Name))
+    @if (Model != null && Model.IsAuthenticated)
     {
-        @:Welcome <strong>@Model.Name</strong>!
+        @:Welcome <strong>@Model.Name</strong>! 
+        if (!string.IsNullOrEmpty(Model.PictureUri))
+        {
+            <img src="@Model.PictureUri" alt="@Model.Name" height="24" width="24"/>
+        }
         <ul>
             <li>Settings</li>
-            <li>@Html.ActionLink("LogOff", "SignOut", "Users", new { Area = "User"}, null)</li>
+            <li>@Html.ActionLink("LogOff", "SignOut", "Home", new { Area = ""}, null)</li>
         </ul>
     }
     else
     {
         <ul>
-            <li>@Html.ActionLink("Register", "Authenticate", "Users", new { Area = "User"}, null)</li>
-            <li>@Html.ActionLink("Log On", "Authenticate",  "Users", new {Area = "User", returnUrl = HttpContext.Current.Request.RawUrl}, null)</li>
+            <li>@Html.ActionLink("Log On", "Authenticate",  "Home", new {Area = "", returnUrl = HttpContext.Current.Request.RawUrl}, null)</li>
         </ul>
     }
 </span>

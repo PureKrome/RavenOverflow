@@ -13,10 +13,7 @@ namespace RavenOverflow.Web.App_Start
         public static void Start()
         {
             IContainer container = IoC.Initialize();
-            DependencyResolver.SetResolver(new SmDependencyResolver(container));
-
-
-            RouteDebug.PreApplicationStart.Start();
+            DependencyResolver.SetResolver(new StructureMapDependencyResolver(container));
         }
     }
 }

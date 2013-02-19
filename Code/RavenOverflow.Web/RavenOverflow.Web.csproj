@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RavenOverflow.Web</RootNamespace>
     <AssemblyName>RavenOverflow.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\RavenOverflow\</SolutionDir>
@@ -27,6 +27,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +46,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=2.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -68,28 +71,32 @@
     <Reference Include="RestSharp">
       <HintPath>..\..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="RouteDebugger, Version=2.1.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
-    </Reference>
     <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebActivator.1.5\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WorldDomination.Security">
+      <HintPath>..\..\packages\WorldDomination.Security.0.4.0\lib\net45\WorldDomination.Security.dll</HintPath>
     </Reference>
     <Reference Include="WorldDomination.Web.Authentication">
       <HintPath>..\..\packages\WorldDomination.Web.Authentication.0.16.0\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
@@ -105,18 +112,14 @@
     <Compile Include="Areas\Question\Models\QuestionViewModel.cs" />
     <Compile Include="Areas\Question\Models\QuestionInputModel.cs" />
     <Compile Include="Areas\Question\QuestionAreaRegistration.cs" />
-    <Compile Include="Areas\User\Controllers\UsersController.cs" />
-    <Compile Include="Areas\User\UserAreaRegistration.cs" />
     <Compile Include="AutoMapper\TagsResolver.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="DependencyResolution\IoC.cs" />
+    <Compile Include="Models\ClaimsUser.cs" />
     <Compile Include="RavenDb\HelperUtilities.cs" />
     <Compile Include="RavenDb\Indexes\Questions_Search.cs" />
     <Compile Include="DependencyResolution\AuthenticationRegistry.cs" />
     <Compile Include="RavenDb\Indexes\RavenFacetTags.cs" />
-    <Compile Include="Models\Authentication\IOAuthAuthentication.cs" />
-    <Compile Include="Models\Authentication\OAuthAuthentication.cs" />
     <Compile Include="AutoMapper\AutoMapperBootstrapper.cs" />
     <Compile Include="DependencyResolution\ServiceRegistry.cs" />
     <Compile Include="RavenDb\DocumentStoreExtensions.cs" />
@@ -125,21 +128,15 @@
     <Compile Include="Models\ViewModels\TagListViewModel.cs" />
     <Compile Include="Models\ViewModels\UserTagListViewModel.cs" />
     <Compile Include="Models\_LayoutViewModel.cs" />
-    <Compile Include="Controllers\RavenDbController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DependencyResolution\RavenDbRegistry.cs" />
-    <Compile Include="DependencyResolution\SmDependencyResolver.cs" />
+    <Compile Include="DependencyResolution\StructureMapDependencyResolver.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="RavenDb\Indexes\RecentPopularTagsMapOnly.cs" />
     <Compile Include="RavenDb\Indexes\RecentPopularTags.cs" />
-    <Compile Include="Models\Authentication\CustomFormsAuthentication.cs" />
-    <Compile Include="Models\Authentication\CustomIdentity.cs" />
-    <Compile Include="Models\Authentication\CustomPrincipal.cs" />
-    <Compile Include="Models\Authentication\ICustomFormsAuthentication.cs" />
-    <Compile Include="Models\Authentication\ICustomIdentity.cs" />
-    <Compile Include="Models\Authentication\UserData.cs" />
     <Compile Include="Models\HtmlExtensions.cs" />
     <Compile Include="Models\_MainNavigationViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -148,6 +145,7 @@
   <ItemGroup>
     <Content Include="Content\Images\Error\NotFound.jpg" />
     <Content Include="Content\Images\Error\ServerError.jpg" />
+    <Content Include="Content\LeahCulverAvatar.png" />
     <Content Include="Content\logo-ravendb.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -165,8 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Question\Views\Shared\" />
-    <Folder Include="Areas\User\Models\" />
-    <Folder Include="Areas\User\Views\Shared\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
@@ -206,12 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_TagSearch.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\User\Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Areas\User\Views\Users\Authenticate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_TagListVertical.cshtml" />

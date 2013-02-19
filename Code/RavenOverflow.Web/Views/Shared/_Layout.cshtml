@@ -7,7 +7,7 @@
 
     <link rel="shortcut icon" href="http://cdn.sstatic.net/stackoverflow/img/favicon.ico">
     <link rel="apple-touch-icon" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
-    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("/Content/Site.css")" rel="stylesheet" type="text/css" />
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" type="text/css" rel="Stylesheet" />
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
@@ -20,7 +20,7 @@
 
     <noscript><div id="noscript-padding"></div></noscript>
 
-    @Html.Partial("_MainNavigation", new _MainNavigationViewModel { CustomIdentity = Model.CustomIdentity })
+    @Html.Partial("_MainNavigation", new _MainNavigationViewModel { AuthenticationViewModel = Model.AuthenticationViewModel})
 
     <div id="notify-container"></div>
     <div id="overlay-header"></div>
@@ -29,7 +29,7 @@
         <div id="header">
             
             <div id="hlinks">
-                @Html.Partial("_Authentication", Model.CustomIdentity)
+                @Html.Partial("_Authentication", Model.AuthenticationViewModel)
             </div>
             <div id="hsearch">
                 @Html.Partial("_TagSearch")

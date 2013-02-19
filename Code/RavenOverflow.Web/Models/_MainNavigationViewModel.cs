@@ -1,11 +1,13 @@
-﻿using RavenOverflow.Web.Models.Authentication;
+﻿using RavenOverflow.Web.Models.ViewModels;
 
 namespace RavenOverflow.Web.Models
 {
     // ReSharper disable InconsistentNaming
+
     public class _MainNavigationViewModel
-        // ReSharper restore InconsistentNaming
     {
-        public ICustomIdentity CustomIdentity { get; set; }
+        public AuthenticationViewModel AuthenticationViewModel { get; set; }
     }
+
+    // ReSharper restore InconsistentNaming
 }

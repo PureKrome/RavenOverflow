@@ -1,16 +1,24 @@
 ﻿using System.Web.Mvc;
-using RavenOverflow.Web.Models.Authentication;
+using CuttingEdge.Conditions;
+using Raven.Client;
+using RavenOverflow.Web.Models;
 
 namespace RavenOverflow.Web.Controllers
 {
     public abstract class BaseController : Controller
     {
-        /// <summary>
-        /// Override the custom User property with our own -custom- Principal/Identity implimentation.
-        /// </summary>
-        public new virtual CustomPrincipal User
+        protected BaseController(IDocumentSession documentSession)
         {
-            get { return base.User as CustomPrincipal; }
+            Condition.Requires(documentSession).IsNotNull();
+
+            DocumentSession = documentSession;
+        }
+
+        protected IDocumentSession DocumentSession { get; private set; }
+
+        protected ClaimsUser ClaimsUser
+        {
+            get { return User == null ? null : new ClaimsUser(User); }
         }
     }
 }

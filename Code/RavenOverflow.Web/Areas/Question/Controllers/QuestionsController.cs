@@ -9,7 +9,7 @@ using RavenOverflow.Web.Controllers;
 
 namespace RavenOverflow.Web.Areas.Question.Controllers
 {
-    public class QuestionsController : RavenDbController
+    public class QuestionsController : BaseController
     {
         private readonly IQuestionService _questionService;
 
@@ -24,7 +24,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var inputModel = new QuestionViewModel(User.Identity)
+            var inputModel = new QuestionViewModel(ClaimsUser)
                             {
                                 Header = "Ask a Question"
                             };
@@ -39,7 +39,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 if (ModelState.IsValid)
                 {
                     var question = Mapper.Map<QuestionInputModel, Core.Entities.Question>(inputModel);
-                    question.CreatedByUserId = User.Identity.UserId;
+                    question.CreatedByUserId = ClaimsUser == null ? null : ClaimsUser.Id;
 
                     _questionService.Store(question);
 
@@ -53,7 +53,7 @@ namespace RavenOverflow.Web.Areas.Question.Controllers
                 ModelState.AddModelError("RuRoh", exception.Message);
             }
 
-            var viewModel = new QuestionViewModel(User.Identity);
+            var viewModel = new QuestionViewModel(ClaimsUser);
             Mapper.Map(inputModel, viewModel);
 
             return View("Create", viewModel);

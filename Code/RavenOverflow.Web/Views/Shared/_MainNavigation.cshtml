@@ -2,7 +2,7 @@
 @model _MainNavigationViewModel
 <div id="topbar">
     @{
-        int number = Model.CustomIdentity != null && Model.CustomIdentity.IsAuthenticated ? 3 : 2;
+        int number = Model.AuthenticationViewModel != null && Model.AuthenticationViewModel.IsAuthenticated ? 3 : 2;
     }
     <h3>@Html.ActionLink("Index - " + number + " DB roundtrips", "Index", "Home", new {Area = ""}, new {}) ||
         @Html.ActionLink("BatchedIndex - 1 DB roundtrip", "BatchedIndex", "Home", new {Area = ""}, new {}) ||

@@ -11,11 +11,7 @@ namespace RavenOverflow.Web.DependencyResolution
                                          {
                                              x.AddRegistry(
                                                  new RavenDbRegistry(ConfigurationManager.ConnectionStrings[0].Name));
-                                             x.AddRegistry(
-                                                 new AuthenticationRegistry(
-                                                     ConfigurationManager.AppSettings["FacebookAppId"],
-                                                     ConfigurationManager.AppSettings["FacebookSecret"]
-                                                     ));
+                                             x.AddRegistry(new AuthenticationRegistry());
                                              x.AddRegistry(new ServiceRegistry());
                                          });
             return ObjectFactory.Container;
