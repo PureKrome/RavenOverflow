@@ -1,12 +1,9 @@
 ﻿using System.Web.Mvc;
 using AutoMapper;
-using FizzWare.NBuilder;
-using RavenOverflow.Core.Services;
 using RavenOverflow.Services;
 using RavenOverflow.Web.Areas.Question.Controllers;
 using RavenOverflow.Web.Areas.Question.Models;
 using RavenOverflow.Web.AutoMapper;
-using RavenOverflow.Web.Models.Authentication;
 using Xunit;
 
 namespace RavenOverflow.Tests.Controllers
@@ -67,7 +64,7 @@ namespace RavenOverflow.Tests.Controllers
             var questionsController = new QuestionsController(DocumentSession, questionService);
             ControllerUtilities.SetUpControllerContext(questionsController, "users/1");
             var createInputModel =
-                new QuestionInputModel()
+                new QuestionInputModel
                 {
                     Subject = "aaaad fdds fsd ds",
                     Content = "sdhfskfhksd sd",

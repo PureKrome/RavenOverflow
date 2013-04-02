@@ -19,7 +19,8 @@ namespace RavenOverflow.Web.Controllers
     {
         private readonly ICustomFormsAuthentication _customFormsAuthentication;
 
-        public HomeController(IDocumentSession documentSession, ICustomFormsAuthentication customCustomFormsAuthentication) : base(documentSession)
+        public HomeController(IDocumentSession documentSession,
+                              ICustomFormsAuthentication customCustomFormsAuthentication) : base(documentSession)
         {
             Condition.Requires(customCustomFormsAuthentication).IsNotNull();
 
@@ -37,14 +38,14 @@ namespace RavenOverflow.Web.Controllers
             };
             _customFormsAuthentication.SignIn(userData);
 
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         [HttpGet]
         public ActionResult SignOut()
         {
             _customFormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home", new { area = "" });
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
 
         [HttpGet]
@@ -63,31 +64,31 @@ namespace RavenOverflow.Web.Controllers
             IQueryable<User> userQuery = UserQuery(displayName);
 
             var viewModel = new IndexViewModel(ClaimsUser)
-                                {
-                                    Header = header,
-                                    QuestionListViewModel = new QuestionListViewModel
-                                                                {
-                                                                    Questions = questionsQuery.ToList()
-                                                                },
-                                    RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserFavoriteTagListViewModel = new UserTagListViewModel
-                                                                       {
-                                                                           Header = "Favorite Tags",
-                                                                           DivId1 = "interesting-tags",
-                                                                           DivId2 = "interestingtags",
-                                                                           Tags = userQuery == null
-                                                                                      ? null
-                                                                                      : (userQuery.SingleOrDefault() ??
-                                                                                         new User()).FavoriteTags
-                                                                       },
-                                    UserIgnoredTagList = new UserTagListViewModel
-                                                             {
-                                                                 Header = "Ignored Tags",
-                                                                 DivId1 = "ignored-tags",
-                                                                 DivId2 = "ignoredtags",
-                                                                 Tags = null
-                                                             }
-                                };
+            {
+                Header = header,
+                QuestionListViewModel = new QuestionListViewModel
+                {
+                    Questions = questionsQuery.ToList()
+                },
+                RecentPopularTags = recentPopularTags.ToDictionary(x => x.Tag, x => x.Count),
+                UserFavoriteTagListViewModel = new UserTagListViewModel
+                {
+                    Header = "Favorite Tags",
+                    DivId1 = "interesting-tags",
+                    DivId2 = "interestingtags",
+                    Tags = userQuery == null
+                               ? null
+                               : (userQuery.SingleOrDefault() ??
+                                  new User()).FavoriteTags
+                },
+                UserIgnoredTagList = new UserTagListViewModel
+                {
+                    Header = "Ignored Tags",
+                    DivId1 = "ignored-tags",
+                    DivId2 = "ignoredtags",
+                    Tags = null
+                }
+            };
 
             return View(viewModel);
         }
@@ -109,32 +110,32 @@ namespace RavenOverflow.Web.Controllers
             Lazy<IEnumerable<User>> lazyUserQuery = (userQuery != null ? userQuery.Lazily() : null);
 
             var viewModel = new IndexViewModel(ClaimsUser)
-                                {
-                                    Header = header,
-                                    QuestionListViewModel = new QuestionListViewModel
-                                                                {
-                                                                    Questions = questionsQuery.Value.ToList()
-                                                                },
-                                    RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                    UserFavoriteTagListViewModel = new UserTagListViewModel
-                                                                       {
-                                                                           Header = "Favorite Tags",
-                                                                           DivId1 = "interesting-tags",
-                                                                           DivId2 = "interestingtags",
-                                                                           Tags = lazyUserQuery == null
-                                                                                      ? null
-                                                                                      : (lazyUserQuery.Value.
-                                                                                             SingleOrDefault() ??
-                                                                                         new User()).FavoriteTags
-                                                                       },
-                                    UserIgnoredTagList = new UserTagListViewModel
-                                                             {
-                                                                 Header = "Ignored Tags",
-                                                                 DivId1 = "ignored-tags",
-                                                                 DivId2 = "ignoredtags",
-                                                                 Tags = null
-                                                             }
-                                };
+            {
+                Header = header,
+                QuestionListViewModel = new QuestionListViewModel
+                {
+                    Questions = questionsQuery.Value.ToList()
+                },
+                RecentPopularTags = recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
+                UserFavoriteTagListViewModel = new UserTagListViewModel
+                {
+                    Header = "Favorite Tags",
+                    DivId1 = "interesting-tags",
+                    DivId2 = "interestingtags",
+                    Tags = lazyUserQuery == null
+                               ? null
+                               : (lazyUserQuery.Value.
+                                                SingleOrDefault() ??
+                                  new User()).FavoriteTags
+                },
+                UserIgnoredTagList = new UserTagListViewModel
+                {
+                    Header = "Ignored Tags",
+                    DivId1 = "ignored-tags",
+                    DivId2 = "ignoredtags",
+                    Tags = null
+                }
+            };
 
             return View("Index", viewModel);
         }
@@ -158,33 +159,33 @@ namespace RavenOverflow.Web.Controllers
                 Lazy<IEnumerable<User>> lazyUserQuery = (userQuery != null ? userQuery.Lazily() : null);
 
                 var viewModel = new IndexViewModel(ClaimsUser)
-                                    {
-                                        Header = header,
-                                        QuestionListViewModel = new QuestionListViewModel
-                                                                    {
-                                                                        Questions = questionsQuery.Value.ToList()
-                                                                    },
-                                        RecentPopularTags =
-                                            recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
-                                        UserFavoriteTagListViewModel = new UserTagListViewModel
-                                                                           {
-                                                                               Header = "Favorite Tags",
-                                                                               DivId1 = "interesting-tags",
-                                                                               DivId2 = "interestingtags",
-                                                                               Tags = lazyUserQuery == null
-                                                                                          ? null
-                                                                                          : (lazyUserQuery.Value.
-                                                                                                 SingleOrDefault() ??
-                                                                                             new User()).FavoriteTags
-                                                                           },
-                                        UserIgnoredTagList = new UserTagListViewModel
-                                                                 {
-                                                                     Header = "Ignored Tags",
-                                                                     DivId1 = "ignored-tags",
-                                                                     DivId2 = "ignoredtags",
-                                                                     Tags = null
-                                                                 }
-                                    };
+                {
+                    Header = header,
+                    QuestionListViewModel = new QuestionListViewModel
+                    {
+                        Questions = questionsQuery.Value.ToList()
+                    },
+                    RecentPopularTags =
+                        recentPopularTags.Value.ToDictionary(x => x.Tag, x => x.Count),
+                    UserFavoriteTagListViewModel = new UserTagListViewModel
+                    {
+                        Header = "Favorite Tags",
+                        DivId1 = "interesting-tags",
+                        DivId2 = "interestingtags",
+                        Tags = lazyUserQuery == null
+                                   ? null
+                                   : (lazyUserQuery.Value.
+                                                    SingleOrDefault() ??
+                                      new User()).FavoriteTags
+                    },
+                    UserIgnoredTagList = new UserTagListViewModel
+                    {
+                        Header = "Ignored Tags",
+                        DivId1 = "ignored-tags",
+                        DivId2 = "ignoredtags",
+                        Tags = null
+                    }
+                };
 
                 return View("Index", viewModel);
             }
@@ -194,25 +195,25 @@ namespace RavenOverflow.Web.Controllers
         {
             RavenQueryStatistics stats;
             List<Question> questions = DocumentSession.Query<Question>()
-                .Statistics(out stats)
-                .OrderByCreatedByDescending()
-                .Take(20)
-                .Where(x => x.Tags.Any(tag => tag == id))
-                .ToList();
+                                                      .Statistics(out stats)
+                                                      .OrderByCreatedByDescending()
+                                                      .Take(20)
+                                                      .Where(x => x.Tags.Any(tag => tag == id))
+                                                      .ToList();
 
             return Json(new
-                            {
-                                Questions = questions,
-                                stats.TotalResults
-                            }, JsonRequestBehavior.AllowGet);
+            {
+                Questions = questions,
+                stats.TotalResults
+            }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Facets(string id)
         {
             var facets = DocumentSession.Query
                 <RecentPopularTagsMapOnly.ReduceResult, RecentPopularTagsMapOnly>()
-                .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
-                .ToFacets("Raven/Facets/Tags");
+                                        .Where(x => x.LastSeen > DateTime.UtcNow.AddMonths(-1).ToUtcToday())
+                                        .ToFacets("Raven/Facets/Tags");
 
             return Json(facets, JsonRequestBehavior.AllowGet);
         }
@@ -257,8 +258,8 @@ namespace RavenOverflow.Web.Controllers
             header = "Top Questions";
 
             IQueryable<Question> questionsQuery = DocumentSession.Query<Question, Questions_Search>()
-                .OrderByCreatedByDescending()
-                .Take(20);
+                                                                 .OrderByCreatedByDescending()
+                                                                 .Take(20);
 
             // Filter Questions by Tags?
             if (!string.IsNullOrEmpty(tag))
@@ -275,9 +276,9 @@ namespace RavenOverflow.Web.Controllers
         {
             IQueryable<RecentPopularTags.ReduceResult> recentPopularTags =
                 DocumentSession.Query<RecentPopularTags.ReduceResult, RecentPopularTags>()
-                    .WithinTheLastMonth(1)
-                    .OrderByCountDescending()
-                    .Take(20);
+                               .WithinTheLastMonth(1)
+                               .OrderByCountDescending()
+                               .Take(20);
 
             return recentPopularTags;
         }

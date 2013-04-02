@@ -23,12 +23,7 @@ namespace RavenOverflow.FakeData
                 .Build();
         }
 
-        public static ICollection<User> CreateFakeUsers()
-        {
-            return CreateFakeUsers(GetRandom.Int(20, 100));
-        }
-
-        public static ICollection<User> CreateFakeUsers(int numberOfFakeUsers)
+        public static ICollection<User> CreateFakeUsers(int numberOfFakeUsers = 20)
         {
             var fixedUsers = CreateFixedFakeUsers();
             Condition.Requires(numberOfFakeUsers).IsNotLessThan(fixedUsers.Count);

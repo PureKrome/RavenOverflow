@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
 using CuttingEdge.Conditions;
 using Moq;
-using RavenOverflow.Web.Models.Authentication;
 
 namespace RavenOverflow.Tests.Controllers
 {
@@ -17,6 +16,7 @@ namespace RavenOverflow.Tests.Controllers
             Condition.Requires(controller);
 
             // Some fake Authentication stuff.
+            // TODO: Replace with CLAIMS.
             var customIdentity = new CustomIdentity(userId, displayName);
             var customPrincipal = new CustomPrincipal(customIdentity, roles);
 
