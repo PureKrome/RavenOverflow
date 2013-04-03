@@ -60,7 +60,7 @@ namespace RavenOverflow.Web.Controllers
             // StackOverflow calls it 'recent tags'.
             IQueryable<RecentPopularTags.ReduceResult> recentPopularTags = RecentPopularTagsQuery();
 
-            // 3. Log in user information.
+            // 3. Logged in user information.
             IQueryable<User> userQuery = UserQuery(displayName);
 
             var viewModel = new IndexViewModel(ClaimsUser)

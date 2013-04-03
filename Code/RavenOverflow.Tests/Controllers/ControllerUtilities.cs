@@ -1,6 +1,8 @@
 ﻿using System.Web.Mvc;
 using CuttingEdge.Conditions;
 using Moq;
+using WorldDomination.Security;
+using System.Security.Claims;
 
 namespace RavenOverflow.Tests.Controllers
 {
@@ -10,15 +12,19 @@ namespace RavenOverflow.Tests.Controllers
         //            Yes .. Nerd Dinner to the rescue! and we come full circle...
         public static void SetUpControllerContext(ControllerBase controller,
                                                   string userId = null,
-                                                  string displayName = null,
-                                                  string[] roles = null)
+                                                  string displayName = null)
         {
             Condition.Requires(controller);
 
             // Some fake Authentication stuff.
             // TODO: Replace with CLAIMS.
-            var customIdentity = new CustomIdentity(userId, displayName);
-            var customPrincipal = new CustomPrincipal(customIdentity, roles);
+            var userData = new UserData
+                {
+                    UserId = userId,
+                    DisplayName = displayName
+                };
+            var customIdentity = new ClaimsIdentity(userData.ToClaims(), "Forms");
+            var customPrincipal = new ClaimsPrincipal(customIdentity);
 
             var mockControllerContext = new Mock<ControllerContext>();
             mockControllerContext.Setup(x => x.HttpContext.User).Returns(customPrincipal);
