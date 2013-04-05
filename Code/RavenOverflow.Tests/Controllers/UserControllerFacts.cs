@@ -5,7 +5,7 @@ namespace RavenOverflow.Tests.Controllers
 {
     // ReSharper disable InconsistentNaming
 
-    public class UserControllerFacts : RavenDbFactBase
+    public class UserControllerFacts
     {
         public UserControllerFacts()
         {

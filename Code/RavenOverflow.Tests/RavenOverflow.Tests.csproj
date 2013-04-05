@@ -90,7 +90,6 @@
     <Compile Include="Controllers\HomeControllerFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\QuestionServiceFacts.cs" />
-    <Compile Include="RavenDbFactBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ using RavenOverflow.Web.AutoMapper;
 using RavenOverflow.Web.Controllers;
 using RavenOverflow.Web.Models.ViewModels;
 using RavenOverflow.Web.RavenDb.Indexes;
+using WorldDomination.Raven.Tests.Helpers;
 using WorldDomination.Security;
 using Xunit;
 
@@ -16,9 +18,9 @@ namespace RavenOverflow.Tests.Controllers
 {
     // ReSharper disable InconsistentNaming
 
-    public class HomeControllerFacts : RavenDbFactBase
-    {   
-        public class IndexFacts : RavenDbFactBase
+    public class HomeControllerFacts
+    {
+        public class IndexFacts : RavenDbTestBase
         {
             public IndexFacts()
             {
@@ -30,9 +32,10 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestions_Index_ReturnsTheMostRecentQuestions()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable> {FakeQuestions.CreateFakeQuestions()};
                 IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
-                // Arrange.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
 
@@ -82,9 +85,10 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestions_Index_ReturnsTheMostRecentPopularTagsInTheLast30Days()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable> {FakeQuestions.CreateFakeQuestions()};
                 IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
-                // Arrange.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
 
@@ -116,9 +120,9 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenNoAuthenticatedUser_Index_ReturnsFavouriteTagsViewModelWithNoTags()
             {
+                // Arrange.
                 IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
-                // Arrange.
                 // Note: we're faking that no user has been authenticated.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
@@ -144,9 +148,9 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestionsAndATag_Index_ReturnsAViewResult()
             {
+                // Arrange.
                 IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
-                // Arrange.
                 const string tag = "ravendb";
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
@@ -169,9 +173,15 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenAnAuthenticatedUserWithSomeFavouriteTags_Index_ReturnsAFavouriteTagsViewModelWithContent()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable>
+                                 {
+                                     FakeQuestions.CreateFakeQuestions(),
+                                     FakeUsers.CreateFakeUsers()
+                                 };
+
                 IndexesToExecute = new List<Type> {typeof (Questions_Search), typeof (RecentPopularTags)};
 
-                // Arrange.
                 // Note: we're faking that a user has authenticated.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController, displayName: "Pure.Krome");
@@ -199,9 +209,14 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestionsAndNoDisplayNameAndNoTags_Index_ReturnsAJsonViewOfMostRecentQuestions()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable>
+                                 {
+                                     FakeQuestions.CreateFakeQuestions(new[] {"users/1", "users/2", "users/3"}),
+                                     FakeUsers.CreateFakeUsers()
+                                 };
                 IndexesToExecute = new List<Type> {typeof (Questions_Search)};
 
-                // Arrange.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
 
@@ -234,40 +249,7 @@ namespace RavenOverflow.Tests.Controllers
             }
         }
 
-        public class TagsFacts : RavenDbFactBase
-        {
-            public TagsFacts()
-            {
-                // WebSite requires AutoMapper mappings.
-                AutoMapperBootstrapper.ConfigureMappings();
-                Mapper.AssertConfigurationIsValid();
-            }
-
-            [Fact]
-            public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
-            {
-                // Arrange.
-                const string tag = "ravendb";
-                var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
-                ControllerUtilities.SetUpControllerContext(homeController);
-
-                // Act.
-                var result = homeController.Tag(tag) as JsonResult;
-
-                // Assert.
-                Assert.NotNull(result);
-
-                dynamic model = result.Data;
-                Assert.NotNull(model);
-
-                // At least 5 questions are hardcoded to include the RavenDb tag.
-                Assert.NotNull(model.Questions);
-                Assert.True(model.Questions.Count >= 5);
-                Assert.True(model.TotalResults >= 5);
-            }
-        }
-
-        public class SearchFacts : RavenDbFactBase
+        public class SearchFacts : RavenDbTestBase
         {
             public SearchFacts()
             {
@@ -279,9 +261,10 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestionsAndAnExistingTag_Search_ReturnsAListOfTags()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable> {FakeQuestions.CreateFakeQuestions()};
                 IndexesToExecute = new List<Type> {typeof (RecentPopularTags)};
 
-                // Arrange.
                 const string tag = "ravendb";
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
@@ -300,9 +283,10 @@ namespace RavenOverflow.Tests.Controllers
             [Fact]
             public void GivenSomeQuestionsAndAnExistingPartialTag_Search_ReturnsAListOfTaggedQuestions()
             {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable> {FakeQuestions.CreateFakeQuestions()};
                 IndexesToExecute = new List<Type> {typeof (RecentPopularTags)};
 
-                // Arrange.
                 const string tag = "ravne"; // Hardcoded Typo.
                 var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
                 ControllerUtilities.SetUpControllerContext(homeController);
@@ -317,6 +301,41 @@ namespace RavenOverflow.Tests.Controllers
                 Assert.NotNull(model);
                 Assert.Equal(1, model.Count);
                 Assert.Equal("ravendb", model[0]);
+            }
+        }
+
+        public class TagsFacts : RavenDbTestBase
+        {
+            public TagsFacts()
+            {
+                // WebSite requires AutoMapper mappings.
+                AutoMapperBootstrapper.ConfigureMappings();
+                Mapper.AssertConfigurationIsValid();
+            }
+
+            [Fact]
+            public void GivenSomeQuestionsAndAnExistingTag_Tags_ReturnsAListOfTaggedQuestions()
+            {
+                // Arrange.
+                DataToBeSeeded = new List<IEnumerable> {FakeQuestions.CreateFakeQuestions()};
+
+                const string tag = "ravendb";
+                var homeController = new HomeController(DocumentSession, new CustomFormsAuthentication());
+                ControllerUtilities.SetUpControllerContext(homeController);
+
+                // Act.
+                var result = homeController.Tag(tag) as JsonResult;
+
+                // Assert.
+                Assert.NotNull(result);
+
+                dynamic model = result.Data;
+                Assert.NotNull(model);
+
+                // At least 5 questions are hardcoded to include the RavenDb tag.
+                Assert.NotNull(model.Questions);
+                Assert.True(model.Questions.Count >= 5);
+                Assert.True(model.TotalResults >= 5);
             }
         }
     }
