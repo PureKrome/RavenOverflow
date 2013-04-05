@@ -20,7 +20,7 @@ Like [Racoon Blog](https://github.com/ayende/RaccoonBlog) (another sample applic
 
 ### What it Uses
 
-* [RavenDb](http://ravendb.net/) v88 / RavenDb Embedded v888
+* [RavenDb](http://ravendb.net/) v2.0.3 (Client and Embedded)
 * [xUnit](http://xunit.codeplex.com/) for Tests
 * [ASP.NET MVC3](http://asp.net/mvc/)
 * [StructureMap](http://structuremap.net/structuremap/) for IoC
